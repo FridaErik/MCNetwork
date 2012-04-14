@@ -1,0 +1,2 @@
+serviceClass: com.TDDD27.MCNetwork.client.GreetingService
+path: D2C8BFD32B8D868D6E2DA6B11D840CD7.gwt.rpc

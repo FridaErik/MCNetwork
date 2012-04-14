@@ -1,0 +1,3 @@
+# Module mcnetwork
+# RPC service class, partial path of RPC policy file
+com.TDDD27.MCNetwork.client.GreetingService, D2C8BFD32B8D868D6E2DA6B11D840CD7.gwt.rpc
