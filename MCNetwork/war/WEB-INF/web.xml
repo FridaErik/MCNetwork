@@ -13,7 +13,7 @@
   
   <servlet-mapping>
     <servlet-name>greetServlet</servlet-name>
-    <url-pattern>/mcnetwork/greet</url-pattern>
+    <url-pattern>/mcnetwork/network</url-pattern>
   </servlet-mapping>
   
   <!-- Default page to serve -->

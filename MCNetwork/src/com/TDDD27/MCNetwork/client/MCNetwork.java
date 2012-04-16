@@ -1,6 +1,8 @@
 package com.TDDD27.MCNetwork.client;
 
+
 import com.TDDD27.MCNetwork.shared.FieldVerifier;
+import com.TDDD27.MCNetwork.shared.User;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -9,6 +11,7 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
@@ -29,17 +32,50 @@ public class MCNetwork implements EntryPoint {
 			+ "attempting to contact the server. Please check your network "
 			+ "connection and try again.";
 
-	/**
+/*	*//**
 	 * Create a remote service proxy to talk to the server-side Greeting service.
-	 */
+	 *//*
 	private final GreetingServiceAsync greetingService = GWT
-			.create(GreetingService.class);
+			.create(GreetingService.class);*/
+	
+	private static TestServiceAsync testService = GWT.create(TestService.class);
 
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-		final Button sendButton = new Button("Send");
+		
+		User tester = new User("Lars");
+		
+		if (testService == null) {
+			testService = GWT.create(TestService.class);
+			ServiceDefTarget endpoint = (ServiceDefTarget) testService;
+			endpoint.setServiceEntryPoint(GWT.getModuleBaseURL() + "data");
+		}
+
+		// Set up the callback object.
+		AsyncCallback<String> callback = new AsyncCallback<String>() {
+			public void onFailure(Throwable caught) {
+				
+			}
+
+			@Override
+			public void onSuccess(String result) {
+				System.out.println(result);
+			}
+		};
+
+
+		// Make the call to server
+		testService.storeUser(tester, callback);
+		
+		
+		
+		
+		
+		
+		
+		/*final Button sendButton = new Button("Send");
 		final TextBox nameField = new TextBox();
 		nameField.setText("Dummy");
 		final Label errorLabel = new Label();
@@ -87,25 +123,25 @@ public class MCNetwork implements EntryPoint {
 
 		// Create a handler for the sendButton and nameField
 		class MyHandler implements ClickHandler, KeyUpHandler {
-			/**
+			*//**
 			 * Fired when the user clicks on the sendButton.
-			 */
+			 *//*
 			public void onClick(ClickEvent event) {
 				sendNameToServer();
 			}
 
-			/**
+			*//**
 			 * Fired when the user types in the nameField.
-			 */
+			 *//*
 			public void onKeyUp(KeyUpEvent event) {
 				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
 					sendNameToServer();
 				}
 			}
 
-			/**
+			*//**
 			 * Send the name from the nameField to the server and wait for a response.
-			 */
+			 *//*
 			private void sendNameToServer() {
 				// First, we validate the input.
 				errorLabel.setText("");
@@ -146,6 +182,6 @@ public class MCNetwork implements EntryPoint {
 		// Add a handler to send the name to the server
 		MyHandler handler = new MyHandler();
 		sendButton.addClickHandler(handler);
-		nameField.addKeyUpHandler(handler);
+		nameField.addKeyUpHandler(handler);*/
 	}
 }
