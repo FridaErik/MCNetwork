@@ -7,12 +7,12 @@
 
   <!-- Servlets -->
   <servlet>
-    <servlet-name>greetServlet</servlet-name>
-    <servlet-class>com.TDDD27.MCNetwork.server.GreetingServiceImpl</servlet-class>
+    <servlet-name>networkServlet</servlet-name>
+    <servlet-class>com.TDDD27.MCNetwork.server.TestServiceImpl</servlet-class>
   </servlet>
   
   <servlet-mapping>
-    <servlet-name>greetServlet</servlet-name>
+    <servlet-name>networkServlet</servlet-name>
     <url-pattern>/mcnetwork/network</url-pattern>
   </servlet-mapping>
   
