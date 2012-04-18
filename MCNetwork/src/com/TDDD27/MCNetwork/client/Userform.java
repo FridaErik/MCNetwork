@@ -23,7 +23,7 @@ import com.google.gwt.user.client.ui.Widget;
  *
  */
 public class Userform extends FormPanel {
-
+	//SNälla
 	private Grid grid = new Grid(11, 2);
 	private FileUpload upload = new FileUpload();
 	private TextBox textBoxFnamn = new TextBox();
