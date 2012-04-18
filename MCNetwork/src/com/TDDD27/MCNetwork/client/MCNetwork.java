@@ -39,6 +39,7 @@ public class MCNetwork implements EntryPoint {
 	 */
 	public void onModuleLoad() {
 		//Test
+		//Test från hämtat projekt
 		
 		/*User tester = new User("Lars", "Larsson", 1977, "lars.larrson@gmail.com", "Larsstad", null, null, 0);
 		addTestUser(tester);*/
