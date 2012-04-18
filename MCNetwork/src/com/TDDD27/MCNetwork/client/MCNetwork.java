@@ -38,7 +38,7 @@ public class MCNetwork implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-		
+		//Test
 		
 		/*User tester = new User("Lars", "Larsson", 1977, "lars.larrson@gmail.com", "Larsstad", null, null, 0);
 		addTestUser(tester);*/
