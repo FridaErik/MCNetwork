@@ -9,4 +9,6 @@ public interface TestServiceAsync {
 
 	void storeUser(User tester, AsyncCallback<List<User>> asyncCallback);
 
+	void getUser(Long id, AsyncCallback<User> callback);
+
 }

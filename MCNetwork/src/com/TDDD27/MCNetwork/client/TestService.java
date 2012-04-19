@@ -13,4 +13,6 @@ public interface TestService extends RemoteService {
 
 	List<User> storeUser(User tester);
 
+	User getUser(Long id);
+
 }

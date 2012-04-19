@@ -36,4 +36,10 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 		 return returnList;
 	}
 
+	@Override
+	public User getUser(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
