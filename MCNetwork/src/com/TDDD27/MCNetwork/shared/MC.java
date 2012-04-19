@@ -2,19 +2,23 @@ package com.TDDD27.MCNetwork.shared;
 
 import java.io.Serializable;
 
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+
+
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class MC implements Serializable{
 	
 	
-	 @PrimaryKey
-	 @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-	 private Long id;
+	@PrimaryKey
+	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+	@Extension(vendorName="datanucleus", key="gae.encoded-pk", value="true")
+	private String id;
 	 
 	 @Persistent
 	 private String brand;
@@ -30,7 +34,14 @@ public class MC implements Serializable{
 	 
 	 @Persistent
 	 private String image;
+	 
+	 @Persistent
+	 private User owner;
 
+	 public MC(){
+		 
+	 }
+	 
 	public String getBrand() {
 		return brand;
 	}
@@ -71,8 +82,10 @@ public class MC implements Serializable{
 		this.image = image;
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
+
+	
 
 }

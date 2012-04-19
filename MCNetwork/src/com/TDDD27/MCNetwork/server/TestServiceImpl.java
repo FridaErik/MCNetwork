@@ -8,6 +8,7 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 
 import com.TDDD27.MCNetwork.client.TestService;
+import com.TDDD27.MCNetwork.shared.MC;
 import com.TDDD27.MCNetwork.shared.User;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -22,6 +23,8 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<User> storeUser(User tester) {
+		//ArrayList<MC> mcList = new ArrayList<MC>();
+		//tester.setMcList(mcList);
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		pm.makePersistent(tester);
 		

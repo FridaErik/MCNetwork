@@ -55,29 +55,5 @@ public class MCNetwork implements EntryPoint {
 	
 	
 
-	private void addTestUser(User tester) {
-		if (testService == null) {
-			testService = GWT.create(TestService.class);
-		}
-
-		// Set up the callback object.
-		AsyncCallback<List<User>> callback = new AsyncCallback<List<User>>() {
-			public void onFailure(Throwable caught) {
-				
-			}
-
-			@Override
-			public void onSuccess(List<User> result) {
-				for( User u : result){
-					System.out.println(u.getfirstName());
-				}
-				
-			}
-		};
-
-
-		// Make the call to server
-		testService.storeUser(tester, callback);
-		
-	}
+	
 }

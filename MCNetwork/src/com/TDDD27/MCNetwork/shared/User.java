@@ -46,17 +46,18 @@ public class User implements Serializable
     @Persistent
     private String gender;
     
-    @Persistent
-    private ArrayList<MC> mcList;
+    @Persistent(mappedBy = "owner")
+    private MCList<MC> mcList;
     
     @Persistent
     private int milesDriven;
+    
     public User(){
     	
     }
     
     public User(String firstName, String lastName, int birthYear, 
-    		String eMail, String city, String gender, ArrayList<MC> mcList,
+    		String eMail, String city, String gender, MCList<MC> mcList,
     		int milesDriven){
     	
     	this.firstName=firstName;
@@ -140,11 +141,11 @@ public class User implements Serializable
 		this.gender = gender;
 	}
 
-	public ArrayList<MC> getMcList() {
+	public MCList<MC> getMcList() {
 		return mcList;
 	}
 
-	public void setMcList(ArrayList<MC> mcList) {
+	public void setMcList(MCList<MC> mcList) {
 		this.mcList = mcList;
 	}
 
