@@ -29,6 +29,7 @@ public class UserView extends VerticalPanel{
 			public void  onSuccess(User result) {
 				System.out.println("succes in get user");
 				if(!(result.getId()==null)){
+					User user = new User();
 					user = result;
 
 				}
