@@ -23,7 +23,7 @@ import com.google.gwt.user.client.ui.Widget;
  *
  */
 public class Userform extends FormPanel {
-
+	//SNälla
 	private Grid grid = new Grid(11, 2);
 	private FileUpload upload = new FileUpload();
 	private TextBox textBoxFnamn = new TextBox();
@@ -40,6 +40,9 @@ public class Userform extends FormPanel {
 	private RadioButton btn2 = new RadioButton("group", "Kvinna");
 	private RadioButton btn3 = new RadioButton("group", "Okänd");
 	private HorizontalPanel radioBtnPanel = new HorizontalPanel();
+	
+	private TextBox textBoxBYear = new TextBox();
+	private Label textLabelBYear = new Label("Födelseår");
 	
 	private Label fileLabel = new Label("Upload Something");
 	private Button submit = new Button("Submit");
@@ -66,6 +69,8 @@ public class Userform extends FormPanel {
         radioBtnPanel.add(btn2);
         radioBtnPanel.add(btn3);
         grid.setWidget(4, 1, radioBtnPanel);
+        grid.setWidget(5, 0, textLabelBYear);
+        grid.setWidget(5, 1, textBoxBYear);
         
         upload.setName("upload");
         grid.setWidget(9, 0, fileLabel);
