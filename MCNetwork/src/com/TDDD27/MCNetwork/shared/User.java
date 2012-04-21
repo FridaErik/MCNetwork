@@ -4,7 +4,7 @@
 package com.TDDD27.MCNetwork.shared;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
@@ -47,7 +47,7 @@ public class User implements Serializable
     private String gender;
     
     @Persistent(mappedBy = "owner")
-    private MCList<MC> mcList;
+    private List<MC> mcList;
     
     @Persistent
     private int milesDriven;
@@ -141,11 +141,11 @@ public class User implements Serializable
 		this.gender = gender;
 	}
 
-	public MCList<MC> getMcList() {
+	public List<MC> getMcList() {
 		return mcList;
 	}
 
-	public void setMcList(MCList<MC> mcList) {
+	public void setMcList(List<MC> mcList) {
 		this.mcList = mcList;
 	}
 

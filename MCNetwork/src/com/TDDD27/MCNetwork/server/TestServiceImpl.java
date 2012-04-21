@@ -22,13 +22,13 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<User> storeUser(User tester) {
-		//ArrayList<MC> mcList = new ArrayList<MC>();
-		//tester.setMcList(mcList);
+	public User storeUser(User tester) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
-		pm.makePersistent(tester);
+		User storedUser = pm.makePersistent(tester);
+		User TempUser= new User();
+		return TempUser;
 		
-		String query = "select from "+User.class.getName();
+		/*String query = "select from "+User.class.getName();
 		List<User> users = (List<User>) pm.newQuery(query).execute();
 		List<User> returnList = new ArrayList<User>();
 
@@ -36,13 +36,30 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 		 {
 		     returnList.add(user);
 		 }
-		 return returnList;
+		 return returnList;*/
 	}
 
 	@Override
 	public User getUser(Long id) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<MC> storeMC(MC mc) {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		MC storedMC = pm.makePersistent(mc);
+		
+		String query = "select from "+User.class.getName();
+		List<MC> mcs = (List<MC>) pm.newQuery(query).execute();
+		List<MC> returnList = new ArrayList<MC>();
+
+		 for(MC tempMc: mcs)
+		 {
+		     returnList.add(mc);
+		 }
+		 return returnList;
 	}
 
 }

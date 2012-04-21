@@ -3,7 +3,7 @@
  */
 package com.TDDD27.MCNetwork.client;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 import com.TDDD27.MCNetwork.shared.MC;
@@ -14,7 +14,9 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.FileUpload;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -61,14 +63,22 @@ public class Userform extends FormPanel {
 	private TextBox textBoxMiles = new TextBox();
 	private Label textLabelMiles = new Label("Antal körda mil (ca)");
 	private Label errorMiles = new Label("");
+
+
+	DisclosurePanel MCDiscPanel = new DisclosurePanel();
 	private Boolean submitOK = true;
 
 	private Label fileLabel = new Label("Upload Something");
 	private Button submit = new Button("Submit");
+	
+	private String mcBrand;
+	private String mcModel;
+	private int mcYear;
+	private String mcUrl;
 
 	public Userform() {
 		super();
-		
+
 		textBoxFnamn.setName("textBoxFnamn");
 		textBoxLnamn.setName("textBoxLnamn");
 		textBoxEmail.setName("textBoxEmail");
@@ -101,8 +111,31 @@ public class Userform extends FormPanel {
 		grid.setWidget(6, 1, textBoxMiles);
 		grid.setWidget(6, 2, errorMiles);
 		upload.setName("upload");
-		grid.setWidget(9, 0, fileLabel);
-		grid.setWidget(9, 1, upload);
+		grid.setWidget(7, 0, fileLabel);
+		grid.setWidget(7, 1, upload);
+
+		FlowPanel pnlHeader = new FlowPanel();
+		Label btnCollapseExpand = new Label();
+		btnCollapseExpand.setText('\u25BA' + "Registrera MC");
+		btnCollapseExpand.setTitle("expand/collapse");
+		pnlHeader.add(btnCollapseExpand);
+		//pnlHeader.add(new Label("Registrera MC"));
+		MCDiscPanel.setWidth("100%");
+		final MCForm mcForm = new MCForm();
+		MCDiscPanel.setContent(mcForm);
+		btnCollapseExpand.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				MCDiscPanel.setOpen(!MCDiscPanel.isOpen());
+			}
+		});
+
+		grid.setWidget(8, 0, pnlHeader);
+		grid.setWidget(8, 1, MCDiscPanel);
+
+
+		grid.setWidget(10, 0, submit);
+
 
 		submit.addClickHandler(new ClickHandler() {
 
@@ -110,9 +143,7 @@ public class Userform extends FormPanel {
 				submit();	
 			}
 		});
-		grid.setWidget(10, 0, submit);
 
-		//setAction("/someAction");
 
 		setEncoding(FormPanel.ENCODING_MULTIPART);
 		setMethod(FormPanel.METHOD_POST);
@@ -124,7 +155,7 @@ public class Userform extends FormPanel {
 			@Override
 			public void onSubmit(SubmitEvent event) {				
 				submitOK = true;
-				
+
 				String fn = textBoxFnamn.getText();
 				checkFName(fn);
 				String ln = textBoxLnamn.getText();
@@ -159,71 +190,139 @@ public class Userform extends FormPanel {
 					errorBYear.setText("Ogiltigt årtal");
 					submitOK=false;
 				}
-				
-				
+
+				mcBrand = mcForm.getBrand();
+				checkBrand(mcBrand);
+				mcModel = mcForm.getModel();
+				checkModel(mcModel);
+				mcYear=0;
+				if(mcForm.getYear()!= ""){
+					try {
+						mcYear = Integer.parseInt(mcForm.getYear());
+					} catch (NumberFormatException e) {
+						mcForm.setErrorYear("Ogiltigt årtal");
+						submitOK=false;
+					}
+				}
+
+				mcUrl = mcForm.getUrl();
+				checkUrl(mcUrl);
+
 
 				if(submitOK){
 					User user = new User(fn, ln, by, em, c, g, m);
 					addUser(user);
+					//MC mc = new MC(mcBrand, mcModel, mcYear, mcUrl, user);
+					//addMc(mc);
+					//List<MC> list = new ArrayList<MC>();
+					//list.add(mc);
+					//user.setMcList(list);
+					
 				}
 
 
+			}
+
+			private void checkUrl(String mcUrl) {
+				// TODO Auto-generated method stub
+
+			}
+
+			private void checkYear(String mcYear) {
+				// TODO Auto-generated method stub
+
+			}
+
+			private void checkBrand(String mcBrand) {
+				// TODO Auto-generated method stub
+
+			}
+
+			protected void checkModel(String mcModel) {
+				// TODO Auto-generated method stub
+
+			}
+
+			protected void checkLEmail(String em) {
+				String[] tokens = em.split("@");
+				if(tokens.length != 2 ||
+						tokens[0].isEmpty() || 
+						tokens[1].isEmpty() ){
+					errorEmail.setText("ogiltig email");
+					submitOK=false;
+				}
+
+			}
+			protected void checkFName(String text) {
+				boolean valid = text.matches("[a-öA-Ö]*");	
+				if(!valid || text.equals("") || text.length()<2){
+					errorFnamn.setText("Ogiltigt namn");
+					submitOK=false;
+				}
+			}
+			protected void checkLName(String text) {
+				boolean valid = text.matches("[a-öA-Ö]*");	
+				if(!valid || text.equals("") || text.length()<2){
+					errorLnamn.setText("Ogiltigt namn");
+					submitOK=false;
+				}
 			}
 
 		});
 	}
 
-	protected void checkLEmail(String em) {
-		String[] tokens = em.split("@");
-	    if(tokens.length != 2 ||
-	    		 tokens[0].isEmpty() || 
-	    		 tokens[1].isEmpty() ){
-	    	errorEmail.setText("ogiltig email");
-	    	submitOK=false;
-	    }
-		
-	}
-	protected void checkFName(String text) {
-		boolean valid = text.matches("[a-öA-Ö]*");	
-		if(!valid || text.equals("") || text.length()<2){
-			errorFnamn.setText("Ogiltigt namn");
-			submitOK=false;
-		}
-	}
-	protected void checkLName(String text) {
-		boolean valid = text.matches("[a-öA-Ö]*");	
-		if(!valid || text.equals("") || text.length()<2){
-			errorLnamn.setText("Ogiltigt namn");
-			submitOK=false;
-		}
-	}
+
 
 	private void addUser(User user) {
+		User returnUser = null;
 		if (testService == null) {
 			testService = GWT.create(TestService.class);
 		}
 
 		// Set up the callback object.
-		AsyncCallback<List<User>> callback = new AsyncCallback<List<User>>() {
+		AsyncCallback<User> callback = new AsyncCallback<User>() {
 			public void onFailure(Throwable caught) {
 
 			}
 
 			@Override
-			public void onSuccess(List<User> result) {
-				for( User u : result){
-					System.out.println(u.getfirstName());
-				}
+			public void onSuccess(User result) {
+				//MC mc = new MC(mcBrand, mcModel, mcYear, mcUrl, result);
+				//addMc(mc);
+				//User tempUser=result;
+				//System.out.println(result.getfirstName());
+				
+
+			}
+		};
+
+
+		testService.storeUser(user, callback);
+
+	}
+
+	private void addMc(MC mc) {
+		if (testService == null) {
+			testService = GWT.create(TestService.class);
+		}
+
+		// Set up the callback object.
+		AsyncCallback<List<MC>> callback = new AsyncCallback<List<MC>>() {
+			public void onFailure(Throwable caught) {
+
+			}
+
+			@Override
+			public void onSuccess(List<MC> result) {
+
 
 			}
 		};
 
 
 		// Make the call to server
-		testService.storeUser(user, callback);
+		testService.storeMC(mc, callback);
 
 	}
-
-
 
 }
