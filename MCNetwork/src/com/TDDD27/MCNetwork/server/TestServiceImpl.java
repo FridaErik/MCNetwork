@@ -22,21 +22,13 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public User storeUser(User tester) {
+	public Long storeUser(User user) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
-		User storedUser = pm.makePersistent(tester);
-		User TempUser= new User();
-		return TempUser;
+		User storedUser = pm.makePersistent(user);
+		User tempUser= new User();
+		tempUser=storedUser;
 		
-		/*String query = "select from "+User.class.getName();
-		List<User> users = (List<User>) pm.newQuery(query).execute();
-		List<User> returnList = new ArrayList<User>();
-
-		 for(User user: users)
-		 {
-		     returnList.add(user);
-		 }
-		 return returnList;*/
+		return tempUser.getId();//Test
 	}
 
 	@Override
@@ -47,19 +39,23 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<MC> storeMC(MC mc) {
+	public MC storeMC(MC mc) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		MC storedMC = pm.makePersistent(mc);
-		
-		String query = "select from "+User.class.getName();
-		List<MC> mcs = (List<MC>) pm.newQuery(query).execute();
-		List<MC> returnList = new ArrayList<MC>();
 
-		 for(MC tempMc: mcs)
-		 {
-		     returnList.add(mc);
-		 }
-		 return returnList;
+		 return storedMC;
+	}
+
+	@Override
+	public Long storeUserMC(User user, MC mc) {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		User storedUser = pm.makePersistent(user);
+		mc.setOwner(storedUser);
+		MC storedMC = pm.makePersistent(mc);
+		User tempUser= new User();
+		tempUser=storedUser;
+		
+		return tempUser.getId();//Test
 	}
 
 }

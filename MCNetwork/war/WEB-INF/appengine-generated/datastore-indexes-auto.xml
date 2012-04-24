@@ -1,10 +1,4 @@
-<!-- Indices written at Sat, 21 Apr 2012 17:47:24 CEST -->
+<!-- Indices written at Tue, 24 Apr 2012 21:21:28 CEST -->
 
-<datastore-indexes>
+<datastore-indexes/>
 
-    <!-- Used 1 time in query history -->
-    <datastore-index kind="MC" ancestor="true" source="auto">
-        <property name="mcList_INTEGER_IDX" direction="asc"/>
-    </datastore-index>
-
-</datastore-indexes>

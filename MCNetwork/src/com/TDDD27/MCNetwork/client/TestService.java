@@ -12,10 +12,12 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("network")
 public interface TestService extends RemoteService {
 
-	User storeUser(User tester);
+	Long storeUser(User tester);
 
 	User getUser(Long id);
 
-	List<MC> storeMC(MC mc);
+	MC storeMC(MC mc);
+
+	Long storeUserMC(User user, MC mc);
 
 }

@@ -11,7 +11,7 @@ import javax.jdo.annotations.PrimaryKey;
 
 
 
-@PersistenceCapable(identityType = IdentityType.APPLICATION)
+@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "true")
 public class MC implements Serializable{
 
 
@@ -53,6 +53,12 @@ public class MC implements Serializable{
 		year=y;
 		url=u;
 		setOwner(us);
+	}
+	public MC(String b, String m, int y, String u){
+		brand=b;
+		model=m;
+		year=y;
+		url=u;
 	}
 
 	public String getBrand() {

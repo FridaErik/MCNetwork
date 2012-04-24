@@ -8,7 +8,7 @@ import com.google.gwt.user.client.ui.TextBox;
 
 public class MCForm extends FormPanel{
 	
-	private Grid grid = new Grid(11, 3);
+	private Grid grid = new Grid(4, 3);
 	private FileUpload upload = new FileUpload();
 	private TextBox textBoxBrand = new TextBox();
 	private Label textLabelBrand = new Label("Märke");
@@ -114,6 +114,15 @@ public class MCForm extends FormPanel{
 
 	public void setErrorUrl(String errorUrl) {
 		this.errorUrl.setText(errorUrl);
+	}
+
+	public void clearFields() {
+		textBoxBrand.setText("");
+		textBoxModel.setText("");
+		textBoxYear.setText("");
+		textBoxUrl.setText("");
+		
+	
 	}
 
 

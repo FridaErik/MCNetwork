@@ -11,6 +11,7 @@ import com.TDDD27.MCNetwork.shared.User;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -70,7 +71,7 @@ public class Userform extends FormPanel {
 
 	private Label fileLabel = new Label("Upload Something");
 	private Button submit = new Button("Submit");
-	
+	private final MCForm mcForm = new MCForm();
 	private String mcBrand;
 	private String mcModel;
 	private int mcYear;
@@ -78,6 +79,7 @@ public class Userform extends FormPanel {
 
 	public Userform() {
 		super();
+		this.addStyleName("MainUserForm");
 
 		textBoxFnamn.setName("textBoxFnamn");
 		textBoxLnamn.setName("textBoxLnamn");
@@ -121,7 +123,7 @@ public class Userform extends FormPanel {
 		pnlHeader.add(btnCollapseExpand);
 		//pnlHeader.add(new Label("Registrera MC"));
 		MCDiscPanel.setWidth("100%");
-		final MCForm mcForm = new MCForm();
+
 		MCDiscPanel.setContent(mcForm);
 		btnCollapseExpand.addClickHandler(new ClickHandler() {
 			@Override
@@ -153,94 +155,141 @@ public class Userform extends FormPanel {
 		addSubmitHandler(new SubmitHandler() {
 
 			@Override
-			public void onSubmit(SubmitEvent event) {				
-				submitOK = true;
+			public void onSubmit(SubmitEvent event) {	
+				//Om användaren fyllt i info om motorcykel
+				if(!MCDiscPanel.isOpen() || mcForm.getBrand()==""){
+					System.out.println("if");
+					submitOK = true;
 
-				String fn = textBoxFnamn.getText();
-				checkFName(fn);
-				String ln = textBoxLnamn.getText();
-				checkLName(ln);
-				String em = textBoxEmail.getText();
-				checkLEmail(em);
-				String c = textBoxCity.getText();
-				String g;
-				if (btn1.getValue()){
-					g="Man";
-				}
-				else if(btn2.getValue()){
-					g="Kvinna";
+					String fn = textBoxFnamn.getText();
+					checkFName(fn);
+					String ln = textBoxLnamn.getText();
+					checkLName(ln);
+					String em = textBoxEmail.getText();
+					checkLEmail(em);
+					String c = textBoxCity.getText();
+					String g;
+					if (btn1.getValue()){
+						g="Man";
+					}
+					else if(btn2.getValue()){
+						g="Kvinna";
+					}
+					else{
+						g="okänd";
+					}
+					int by=0;
+					System.out.println("1. by = "+by);
+					try {
+						by = Integer.parseInt(textBoxBYear.getValue());
+					} catch (NumberFormatException e) {
+						errorBYear.setText("Ogiltigt årtal");
+						submitOK=false;
+					}
+					int m=0;
+					try {
+						m = Integer.parseInt(textBoxMiles.getValue());
+					} catch (NumberFormatException e) {
+						errorMiles.setText("Ogiltig input");
+						submitOK=false;
+					}
+
+					if(submitOK){
+						User user = new User(fn, ln, by, em, c, g, m);
+						addUser(user);
+
+					}
 				}
 				else{
-					g="okänd";
-				}
-				int by=0;
-				System.out.println("1. by = "+by);
-				try {
-					by = Integer.parseInt(textBoxBYear.getValue());
-					System.out.println("2. by= "+by);
-				} catch (NumberFormatException e) {
-					errorBYear.setText("Ogiltigt årtal");
-					submitOK=false;
-				}
-				System.out.println("3. by= "+by);
-				int m=0;
-				try {
-					m = Integer.parseInt(textBoxMiles.getValue());
-				} catch (NumberFormatException e) {
-					errorBYear.setText("Ogiltigt årtal");
-					submitOK=false;
-				}
+					System.out.println("else");
+					submitOK = true;
 
-				mcBrand = mcForm.getBrand();
-				checkBrand(mcBrand);
-				mcModel = mcForm.getModel();
-				checkModel(mcModel);
-				mcYear=0;
-				if(mcForm.getYear()!= ""){
+					String fn = textBoxFnamn.getText();
+					checkFName(fn);
+					String ln = textBoxLnamn.getText();
+					checkLName(ln);
+					String em = textBoxEmail.getText();
+					checkLEmail(em);
+					String c = textBoxCity.getText();
+					String g;
+					if (btn1.getValue()){
+						g="Man";
+					}
+					else if(btn2.getValue()){
+						g="Kvinna";
+					}
+					else{
+						g="okänd";
+					}
+					int by=0;
 					try {
-						mcYear = Integer.parseInt(mcForm.getYear());
+						by = Integer.parseInt(textBoxBYear.getValue());
 					} catch (NumberFormatException e) {
-						mcForm.setErrorYear("Ogiltigt årtal");
+						errorBYear.setText("Ogiltigt årtal");
 						submitOK=false;
+					}
+					int m=0;
+					try {
+						m = Integer.parseInt(textBoxMiles.getValue());
+					} catch (NumberFormatException e) {
+						errorMiles.setText("Ogiltig input");
+						submitOK=false;
+					}
+
+					mcBrand = mcForm.getBrand();
+					checkBrand(mcBrand);
+					mcModel = mcForm.getModel();
+					checkModel(mcModel);
+					mcYear=0;
+					if(mcForm.getYear()!= ""){
+						try {
+							mcYear = Integer.parseInt(mcForm.getYear());
+						} catch (NumberFormatException e) {
+							mcForm.setErrorYear("Ogiltigt årtal");
+							submitOK=false;
+						}
+					}
+
+					mcUrl = mcForm.getUrl();
+					checkUrl(mcUrl);
+
+
+					if(submitOK){
+						User user = new User(fn, ln, by, em, c, g, m);
+						MC mc = new MC(mcBrand, mcModel, mcYear, mcUrl);
+						user.getMcList().add(mc);
+						addUserMC(user, mc);
+
+
 					}
 				}
 
-				mcUrl = mcForm.getUrl();
-				checkUrl(mcUrl);
 
 
-				if(submitOK){
-					User user = new User(fn, ln, by, em, c, g, m);
-					addUser(user);
-					//MC mc = new MC(mcBrand, mcModel, mcYear, mcUrl, user);
-					//addMc(mc);
-					//List<MC> list = new ArrayList<MC>();
-					//list.add(mc);
-					//user.setMcList(list);
-					
+			}
+
+
+
+			private void checkUrl(String url) {
+				//TODO
+			}
+
+
+
+
+			private void checkBrand(String text) {
+				boolean valid = text.matches("[a-öA-Ö]*");	
+				if(!valid){
+					mcForm.setErrorBrand("Ogiltigt");
+					submitOK=false;
 				}
-
-
 			}
-
-			private void checkUrl(String mcUrl) {
-				// TODO Auto-generated method stub
-
-			}
-
-			private void checkYear(String mcYear) {
-				// TODO Auto-generated method stub
-
-			}
-
-			private void checkBrand(String mcBrand) {
-				// TODO Auto-generated method stub
-
-			}
-
-			protected void checkModel(String mcModel) {
-				// TODO Auto-generated method stub
-
+			private void checkModel(String mcModel) {
+				boolean valid = mcModel.matches("[a-öA-Ö0-9]*");	
+				if(!valid){
+					mcForm.setErrorModel("Ogiltigt");
+					submitOK=false;
+				}
 			}
 
 			protected void checkLEmail(String em) {
@@ -273,6 +322,48 @@ public class Userform extends FormPanel {
 
 
 
+	protected void addUserMC(User user, MC mc) {
+		if (testService == null) {
+			testService = GWT.create(TestService.class);
+		}
+
+		// Set up the callback object.
+		AsyncCallback<Long> callback = new AsyncCallback<Long>() {
+			public void onFailure(Throwable caught) {
+
+			}
+
+			@Override
+			public void onSuccess(Long result) {
+				System.out.println("Key: "+result);
+				clearUserForm();
+				mcForm.clearFields();
+
+			}
+		};
+
+
+		testService.storeUserMC(user, mc, callback);
+
+	}
+
+
+
+	protected void clearUserForm() {
+		textBoxFnamn.setText("");
+		textBoxLnamn.setText("");
+		textBoxEmail.setText("");
+		textBoxCity.setText("");
+		textBoxFnamn.setText("");
+		textBoxBYear.setText("");
+		textBoxMiles.setText("");
+		this.removeFromParent();
+
+
+	}
+
+
+
 	private void addUser(User user) {
 		User returnUser = null;
 		if (testService == null) {
@@ -280,18 +371,15 @@ public class Userform extends FormPanel {
 		}
 
 		// Set up the callback object.
-		AsyncCallback<User> callback = new AsyncCallback<User>() {
+		AsyncCallback<Long> callback = new AsyncCallback<Long>() {
 			public void onFailure(Throwable caught) {
 
 			}
 
 			@Override
-			public void onSuccess(User result) {
-				//MC mc = new MC(mcBrand, mcModel, mcYear, mcUrl, result);
-				//addMc(mc);
-				//User tempUser=result;
-				//System.out.println(result.getfirstName());
-				
+			public void onSuccess(Long result) {
+				//TODO
+				clearUserForm();
 
 			}
 		};
@@ -307,14 +395,14 @@ public class Userform extends FormPanel {
 		}
 
 		// Set up the callback object.
-		AsyncCallback<List<MC>> callback = new AsyncCallback<List<MC>>() {
+		AsyncCallback<MC> callback = new AsyncCallback<MC>() {
 			public void onFailure(Throwable caught) {
 
 			}
 
 			@Override
-			public void onSuccess(List<MC> result) {
-
+			public void onSuccess(MC result) {
+				System.out.println("MC lagrad");
 
 			}
 		};
