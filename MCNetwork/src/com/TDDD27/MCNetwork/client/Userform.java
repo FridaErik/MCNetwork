@@ -20,6 +20,7 @@ import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PasswordTextBox;
@@ -39,37 +40,37 @@ public class Userform extends FormPanel {
 	private Grid grid = new Grid(11, 3);
 	private FileUpload upload = new FileUpload();
 	private TextBox textBoxFnamn = new TextBox();
-	private Label textLabelFnamn = new Label("Förnamn");
-	private Label errorFnamn = new Label("");
+	private HTML textHTMLFnamn = new HTML("<p>F&ouml;rnamn</p>", true);
+	private HTML errorFnamn = new HTML("", true);
 	private TextBox textBoxLnamn = new TextBox();
-	private Label textLabelLnamn = new Label("Efternamn");
-	private Label errorLnamn = new Label("");
+	private HTML textHTMLLnamn = new HTML("<p>Efternamn</p>", true);
+	private HTML errorLnamn = new HTML("", true);
 	private TextBox textBoxEmail = new TextBox();
-	private Label textLabelEmail = new Label("Email");
-	private Label errorEmail = new Label("");
+	private HTML textHTMLEmail = new HTML("Email", true);
+	private HTML errorEmail = new HTML("", true);
 	private TextBox textBoxCity = new TextBox();
-	private Label textLabelCity = new Label("Stad");
-	private Label errorCity = new Label("");
+	private HTML textHTMLCity = new HTML("Stad", true);
+	private HTML errorCity = new HTML("", true);
 
-	private Label textLabelGender = new Label("Kön");
+	private HTML textHTMLGender = new HTML("K&ouml;n", true);
 	private RadioButton btn1 = new RadioButton("group", "Man");
 	private RadioButton btn2 = new RadioButton("group", "Kvinna");
-	private RadioButton btn3 = new RadioButton("group", "Okänd");
+	private RadioButton btn3 = new RadioButton("group", "Vill ej ange");
 	private HorizontalPanel radioBtnPanel = new HorizontalPanel();
-	private Label errorGender = new Label("");
+	private HTML errorGender = new HTML("", true);
 
 	private TextBox textBoxBYear = new TextBox();
-	private Label textLabelBYear = new Label("Födelseår");
-	private Label errorBYear = new Label("");
+	private HTML textHTMLBYear = new HTML("F&ouml;delse&aring;r", true);
+	private HTML errorBYear = new HTML("", true);
 	private TextBox textBoxMiles = new TextBox();
-	private Label textLabelMiles = new Label("Antal körda mil (ca)");
-	private Label errorMiles = new Label("");
+	private HTML textHTMLMiles = new HTML("Antal k&ouml;rda mil (ca)", true);
+	private HTML errorMiles = new HTML("", true);
 
 
 	DisclosurePanel MCDiscPanel = new DisclosurePanel();
 	private Boolean submitOK = true;
 
-	private Label fileLabel = new Label("Upload Something");
+	private HTML fileHTML = new HTML("Upload Something", true);
 	private Button submit = new Button("Submit");
 	private final MCForm mcForm = new MCForm();
 	private String mcBrand;
@@ -88,32 +89,32 @@ public class Userform extends FormPanel {
 		textBoxBYear.setName("textBoxBYear");
 
 
-		grid.setWidget(0, 0, textLabelFnamn);
+		grid.setWidget(0, 0, textHTMLFnamn);
 		grid.setWidget(0, 1, textBoxFnamn);
 		grid.setWidget(0, 2, errorFnamn);
-		grid.setWidget(1, 0, textLabelLnamn);
+		grid.setWidget(1, 0, textHTMLLnamn);
 		grid.setWidget(1, 1, textBoxLnamn);
 		grid.setWidget(1, 2, errorLnamn);
-		grid.setWidget(2, 0, textLabelEmail);
+		grid.setWidget(2, 0, textHTMLEmail);
 		grid.setWidget(2, 1, textBoxEmail);
 		grid.setWidget(2, 2, errorEmail);
-		grid.setWidget(3, 0, textLabelCity);
+		grid.setWidget(3, 0, textHTMLCity);
 		grid.setWidget(3, 1, textBoxCity);
 		grid.setWidget(3, 2, errorCity);
-		grid.setWidget(4, 0, textLabelGender);
+		grid.setWidget(4, 0, textHTMLGender);
 		radioBtnPanel.add(btn1);
 		radioBtnPanel.add(btn2);
 		radioBtnPanel.add(btn3);
 		grid.setWidget(4, 1, radioBtnPanel);
 		grid.setWidget(4, 2, errorGender);
-		grid.setWidget(5, 0, textLabelBYear);
+		grid.setWidget(5, 0, textHTMLBYear);
 		grid.setWidget(5, 1, textBoxBYear);
 		grid.setWidget(5, 2, errorBYear);
-		grid.setWidget(6, 0, textLabelMiles);
+		grid.setWidget(6, 0, textHTMLMiles);
 		grid.setWidget(6, 1, textBoxMiles);
 		grid.setWidget(6, 2, errorMiles);
 		upload.setName("upload");
-		grid.setWidget(7, 0, fileLabel);
+		grid.setWidget(7, 0, fileHTML);
 		grid.setWidget(7, 1, upload);
 
 		FlowPanel pnlHeader = new FlowPanel();
@@ -158,7 +159,7 @@ public class Userform extends FormPanel {
 			public void onSubmit(SubmitEvent event) {	
 				//Om användaren fyllt i info om motorcykel
 				if(!MCDiscPanel.isOpen() || mcForm.getBrand()==""){
-					System.out.println("if");
+					//System.out.println("if");
 					submitOK = true;
 
 					String fn = textBoxFnamn.getText();
@@ -179,19 +180,22 @@ public class Userform extends FormPanel {
 						g="okänd";
 					}
 					int by=0;
-					System.out.println("1. by = "+by);
+
 					try {
 						by = Integer.parseInt(textBoxBYear.getValue());
 					} catch (NumberFormatException e) {
-						errorBYear.setText("Ogiltigt årtal");
+						errorBYear.setHTML("Ogiltigt &aring;rtal");
+						//errorBYear.setText("Ogiltigt &aring;rtal");
 						submitOK=false;
 					}
 					int m=0;
-					try {
-						m = Integer.parseInt(textBoxMiles.getValue());
-					} catch (NumberFormatException e) {
-						errorMiles.setText("Ogiltig input");
-						submitOK=false;
+					if(!textBoxMiles.getText().equals("")){
+						try {
+							m = Integer.parseInt(textBoxMiles.getValue());
+						} catch (NumberFormatException e) {
+							errorMiles.setText("Ogiltig input");
+							submitOK=false;
+						}
 					}
 
 					if(submitOK){
@@ -201,7 +205,7 @@ public class Userform extends FormPanel {
 					}
 				}
 				else{
-					System.out.println("else");
+					//System.out.println("else");
 					submitOK = true;
 
 					String fn = textBoxFnamn.getText();
@@ -211,6 +215,7 @@ public class Userform extends FormPanel {
 					String em = textBoxEmail.getText();
 					checkLEmail(em);
 					String c = textBoxCity.getText();
+
 					String g;
 					if (btn1.getValue()){
 						g="Man";
@@ -225,15 +230,17 @@ public class Userform extends FormPanel {
 					try {
 						by = Integer.parseInt(textBoxBYear.getValue());
 					} catch (NumberFormatException e) {
-						errorBYear.setText("Ogiltigt årtal");
+						errorBYear.setText("Ogiltigt &aring;rtal");
 						submitOK=false;
 					}
 					int m=0;
-					try {
-						m = Integer.parseInt(textBoxMiles.getValue());
-					} catch (NumberFormatException e) {
-						errorMiles.setText("Ogiltig input");
-						submitOK=false;
+					if(textBoxMiles.getValue()!= ""){
+						try {
+							m = Integer.parseInt(textBoxMiles.getValue());
+						} catch (NumberFormatException e) {
+							errorMiles.setText("Ogiltig input");
+							submitOK=false;
+						}
 					}
 
 					mcBrand = mcForm.getBrand();
@@ -245,7 +252,7 @@ public class Userform extends FormPanel {
 						try {
 							mcYear = Integer.parseInt(mcForm.getYear());
 						} catch (NumberFormatException e) {
-							mcForm.setErrorYear("Ogiltigt årtal");
+							mcForm.setErrorYear("Ogiltigt &aring;rtal");
 							submitOK=false;
 						}
 					}
@@ -357,7 +364,10 @@ public class Userform extends FormPanel {
 		textBoxFnamn.setText("");
 		textBoxBYear.setText("");
 		textBoxMiles.setText("");
-		this.removeFromParent();
+		this.clear();
+		HTML SuccesLabel = new HTML("<H1>Ny anv&auml;ndar registrerad</H1>", true);
+		this.add(SuccesLabel);
+		//this.removeFromParent();
 
 
 	}
