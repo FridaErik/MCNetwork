@@ -80,7 +80,7 @@ public class Userform extends FormPanel {
 
 	public Userform() {
 		super();
-		this.addStyleName("MainUserForm");
+		grid.addStyleName("MainUserForm");
 
 		textBoxFnamn.setName("textBoxFnamn");
 		textBoxLnamn.setName("textBoxLnamn");

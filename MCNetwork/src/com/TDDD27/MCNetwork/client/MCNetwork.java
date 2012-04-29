@@ -10,9 +10,13 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.FormHandler;
 import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -33,23 +37,50 @@ public class MCNetwork implements EntryPoint {
 
 	
 	private static TestServiceAsync testService = GWT.create(TestService.class);
+	
+	public DockPanel structurePanel;
+	public VerticalPanel centerPanel;
+	private MyMenu menuBar;
 
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-		//Test
-		//Test från hämtat projekt lalalla
+		VerticalPanel northPanel = new VerticalPanel();
+		HTML northwidget = new HTML("<MainTitle> MC Network</MainTitle>", true);
+		northPanel.add(northwidget);
+		VerticalPanel centerwidget = new VerticalPanel();
+		centerPanel=new VerticalPanel();
+		centerPanel.addStyleName("centerPanel");
+		centerPanel.setWidth("900px");
+		//.setPixelSize(214, 200);
+		HTML starttext = new HTML("<H1>V&auml;lkommen till MC Network<H1/>", true);
+		centerwidget.add(starttext);
+		centerPanel.clear();
+		centerPanel.add(centerwidget);
+		structurePanel=new DockPanel();
+		structurePanel.addStyleName("structurePanel");
+		menuBar=new MyMenu(this);
+		menuBar.setWidth("898px");
+		northPanel.add(menuBar);
+		structurePanel.add(northPanel, DockPanel.NORTH);
+		structurePanel.add(centerPanel, DockPanel.CENTER);
+		VerticalPanel southwidget = new VerticalPanel();
+		southwidget.setWidth("900px");
+		southwidget.addStyleName("southwidget");
+		HTML bottomtext = new HTML("<subtext>Developed by Frik, frik@gmail.com</subtext>", true);
+		southwidget.add(bottomtext);
+		structurePanel.add(southwidget, DockPanel.SOUTH);
 		
-		/*User tester = new User("Lars", "Larsson", 1977, "lars.larrson@gmail.com", "Larsstad", null, null, 0);
-		addTestUser(tester);*/
+		RootPanel.get().add(structurePanel);
 		
-		Userform e = new Userform();
+		/*Userform e = new Userform();
 	    
-	    RootPanel.get().add(e);	
+	    RootPanel.get().add(e);	*/
 		
 		
 	}
+	
 	
 	
 	
