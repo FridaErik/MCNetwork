@@ -8,12 +8,6 @@ import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 
-/* --OBS--  --OBS--  --OBS--  --OBS--  --OBS--  --OBS--  --OBS--  --OBS--  --OBS--  --OBS-- 
-
-//OBS alla widgets som skall läggas till i mitten på structruePanel skall heta centerwidget
-
- --OBS--  --OBS--  --OBS--  --OBS--  --OBS--  --OBS--  --OBS--  --OBS--  --OBS--  --OBS-- */
-
 public class MyMenu extends MenuBar {
 	public static MCNetwork myParent;
 
