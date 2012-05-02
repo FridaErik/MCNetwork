@@ -29,7 +29,9 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-/**
+/** Formluär för att lägga
+ * till ny användare, behöver länkas med
+ * Google-konto
  * @author Frida
  *
  */
