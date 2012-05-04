@@ -45,10 +45,16 @@ public class User implements Serializable
     private String city;
     
     @Persistent
+    private String region;
+    
+    @Persistent
     private String gender;
     
     @Persistent(mappedBy = "owner")
     private ArrayList<MC> mcList = new ArrayList<MC>();
+    
+    /*@Persistent(mappedBy = "id")
+    private ArrayList<User> friendsList = new ArrayList<User>();*/
     
     @Persistent
     private int milesDriven;
@@ -58,7 +64,7 @@ public class User implements Serializable
     }
     
     public User(String firstName, String lastName, int birthYear, 
-    		String eMail, String city, String gender, ArrayList<MC> mcList,
+    		String eMail, String city, String region, String gender, ArrayList<MC> mcList,
     		int milesDriven){
     	
     	this.firstName=firstName;
@@ -66,6 +72,7 @@ public class User implements Serializable
     	this.birthYear=birthYear;
     	this.eMail=eMail;
     	this.city=city;
+    	this.region=region;
     	this.gender=gender;
     	this.mcList=mcList;
     	this.milesDriven=milesDriven;
@@ -74,13 +81,14 @@ public class User implements Serializable
     
     //Tillägg 2012-04-17
     public User(String firstName, String lastName, int birthYear, 
-    		String eMail, String city, String gender, int milesDriven){
+    		String eMail, String city, String region, String gender, int milesDriven){
     	
     	this.firstName=firstName;
     	this.lastName=lastName;
     	this.birthYear=birthYear;
     	this.eMail=eMail;
     	this.city=city;
+    	this.region=region;
     	this.gender=gender;
     	this.milesDriven=milesDriven;
     	
@@ -157,4 +165,14 @@ public class User implements Serializable
 	public void setMilesDriven(int milesDriven) {
 		this.milesDriven = milesDriven;
 	}
+
+	public String getRegion() {
+		return region;
+	}
+
+	public void setRegion(String region) {
+		this.region = region;
+	}
+
+
 }

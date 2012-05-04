@@ -1,5 +1,6 @@
 package com.TDDD27.MCNetwork.client;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.TDDD27.MCNetwork.shared.MC;
@@ -19,5 +20,10 @@ public interface TestService extends RemoteService {
 	MC storeMC(MC mc);
 
 	Long storeUserMC(User user, MC mc);
+
+	ArrayList<User> searchUsers(int yearup, int yeardown, int milesup,
+			int milesdown, String lan, String city, String fname, String lname);
+
+
 
 }

@@ -1,5 +1,6 @@
 package com.TDDD27.MCNetwork.client;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.TDDD27.MCNetwork.shared.MC;
@@ -15,5 +16,8 @@ public interface TestServiceAsync {
 	void storeMC(MC mc, AsyncCallback<MC> callback);
 
 	void storeUserMC(User user, MC mc, AsyncCallback<Long> callback);
+
+	void searchUsers(int yearup, int yeardown, int milesup, int milesdown,
+			String lan, String city, String fname, String lname, AsyncCallback<ArrayList<User>> callback);
 
 }

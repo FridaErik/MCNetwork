@@ -23,6 +23,7 @@ import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.TextBox;
@@ -53,7 +54,9 @@ public class Userform extends FormPanel {
 	private TextBox textBoxCity = new TextBox();
 	private HTML textHTMLCity = new HTML("Stad", true);
 	private HTML errorCity = new HTML("", true);
-
+	private ListBox regionList;
+	private HTML textHTMLRegion = new HTML("L&auml;n", true);
+	private HTML errorRegion = new HTML("", true);
 	private HTML textHTMLGender = new HTML("K&ouml;n", true);
 	private RadioButton btn1 = new RadioButton("group", "Man");
 	private RadioButton btn2 = new RadioButton("group", "Kvinna");
@@ -61,7 +64,7 @@ public class Userform extends FormPanel {
 	private HorizontalPanel radioBtnPanel = new HorizontalPanel();
 	private HTML errorGender = new HTML("", true);
 
-	private TextBox textBoxBYear = new TextBox();
+	private ListBox yearList;
 	private HTML textHTMLBYear = new HTML("F&ouml;delse&aring;r", true);
 	private HTML errorBYear = new HTML("", true);
 	private TextBox textBoxMiles = new TextBox();
@@ -88,7 +91,7 @@ public class Userform extends FormPanel {
 		textBoxLnamn.setName("textBoxLnamn");
 		textBoxEmail.setName("textBoxEmail");
 		textBoxCity.setName("textBoxCity");
-		textBoxBYear.setName("textBoxBYear");
+
 
 
 		grid.setWidget(0, 0, textHTMLFnamn);
@@ -103,21 +106,30 @@ public class Userform extends FormPanel {
 		grid.setWidget(3, 0, textHTMLCity);
 		grid.setWidget(3, 1, textBoxCity);
 		grid.setWidget(3, 2, errorCity);
-		grid.setWidget(4, 0, textHTMLGender);
+		
+		regionList = getListBoxLan();
+		grid.setWidget(4, 0, textHTMLRegion);
+		grid.setWidget(4, 1, regionList);
+		grid.setWidget(4, 2, errorRegion);
+		
+		
+		
+		grid.setWidget(5, 0, textHTMLGender);
 		radioBtnPanel.add(btn1);
 		radioBtnPanel.add(btn2);
 		radioBtnPanel.add(btn3);
-		grid.setWidget(4, 1, radioBtnPanel);
-		grid.setWidget(4, 2, errorGender);
-		grid.setWidget(5, 0, textHTMLBYear);
-		grid.setWidget(5, 1, textBoxBYear);
-		grid.setWidget(5, 2, errorBYear);
-		grid.setWidget(6, 0, textHTMLMiles);
-		grid.setWidget(6, 1, textBoxMiles);
-		grid.setWidget(6, 2, errorMiles);
+		grid.setWidget(5, 1, radioBtnPanel);
+		grid.setWidget(5, 2, errorGender);
+		grid.setWidget(6, 0, textHTMLBYear);
+		yearList=getListBoxYears();
+		grid.setWidget(6, 1, yearList);
+		grid.setWidget(6, 2, errorBYear);
+		grid.setWidget(7, 0, textHTMLMiles);
+		grid.setWidget(7, 1, textBoxMiles);
+		grid.setWidget(7, 2, errorMiles);
 		upload.setName("upload");
-		grid.setWidget(7, 0, fileHTML);
-		grid.setWidget(7, 1, upload);
+		grid.setWidget(8, 0, fileHTML);
+		grid.setWidget(8, 1, upload);
 
 		FlowPanel pnlHeader = new FlowPanel();
 		Label btnCollapseExpand = new Label();
@@ -135,8 +147,8 @@ public class Userform extends FormPanel {
 			}
 		});
 
-		grid.setWidget(8, 0, pnlHeader);
-		grid.setWidget(8, 1, MCDiscPanel);
+		grid.setWidget(9, 0, pnlHeader);
+		grid.setWidget(9, 1, MCDiscPanel);
 
 
 		grid.setWidget(10, 0, submit);
@@ -171,6 +183,7 @@ public class Userform extends FormPanel {
 					String em = textBoxEmail.getText();
 					checkLEmail(em);
 					String c = textBoxCity.getText();
+					String r = regionList.getItemText(regionList.getSelectedIndex());
 					String g;
 					if (btn1.getValue()){
 						g="Man";
@@ -184,7 +197,7 @@ public class Userform extends FormPanel {
 					int by=0;
 
 					try {
-						by = Integer.parseInt(textBoxBYear.getValue());
+						by = Integer.parseInt(yearList.getItemText(regionList.getSelectedIndex()));
 					} catch (NumberFormatException e) {
 						errorBYear.setHTML("Ogiltigt &aring;rtal");
 						//errorBYear.setText("Ogiltigt &aring;rtal");
@@ -201,7 +214,7 @@ public class Userform extends FormPanel {
 					}
 
 					if(submitOK){
-						User user = new User(fn, ln, by, em, c, g, m);
+						User user = new User(fn, ln, by, em, c, r, g, m);
 						addUser(user);
 
 					}
@@ -217,7 +230,8 @@ public class Userform extends FormPanel {
 					String em = textBoxEmail.getText();
 					checkLEmail(em);
 					String c = textBoxCity.getText();
-
+					checkCity(c);
+					String r = regionList.getItemText(regionList.getSelectedIndex());
 					String g;
 					if (btn1.getValue()){
 						g="Man";
@@ -230,7 +244,7 @@ public class Userform extends FormPanel {
 					}
 					int by=0;
 					try {
-						by = Integer.parseInt(textBoxBYear.getValue());
+						by = Integer.parseInt(regionList.getItemText(regionList.getSelectedIndex()));
 					} catch (NumberFormatException e) {
 						errorBYear.setText("Ogiltigt &aring;rtal");
 						submitOK=false;
@@ -264,7 +278,7 @@ public class Userform extends FormPanel {
 
 
 					if(submitOK){
-						User user = new User(fn, ln, by, em, c, g, m);
+						User user = new User(fn, ln, by, em, c, r, g, m);
 						MC mc = new MC(mcBrand, mcModel, mcYear, mcUrl);
 						user.getMcList().add(mc);
 						addUserMC(user, mc);
@@ -282,7 +296,13 @@ public class Userform extends FormPanel {
 			private void checkUrl(String url) {
 				//TODO
 			}
-
+			private void checkCity(String city) {
+				boolean valid = city.matches("[a-öA-Ö]*");	
+				if(!valid){
+					mcForm.setErrorBrand("Ogiltigt");
+					submitOK=false;
+				}
+			}
 
 
 
@@ -331,6 +351,10 @@ public class Userform extends FormPanel {
 
 
 
+	
+
+
+
 	protected void addUserMC(User user, MC mc) {
 		if (testService == null) {
 			testService = GWT.create(TestService.class);
@@ -364,7 +388,6 @@ public class Userform extends FormPanel {
 		textBoxEmail.setText("");
 		textBoxCity.setText("");
 		textBoxFnamn.setText("");
-		textBoxBYear.setText("");
 		textBoxMiles.setText("");
 		this.clear();
 		HTML SuccesLabel = new HTML("<H1>Ny anv&auml;ndar registrerad</H1>", true);
@@ -396,7 +419,7 @@ public class Userform extends FormPanel {
 			}
 		};
 
-
+		System.out.println("Region: "+ user.getRegion());
 		testService.storeUser(user, callback);
 
 	}
@@ -419,10 +442,117 @@ public class Userform extends FormPanel {
 			}
 		};
 
-
+		
 		// Make the call to server
 		testService.storeMC(mc, callback);
 
+	}
+	private ListBox getListBoxLan() {
+		ListBox widget = new ListBox();
+	    widget.addStyleName("demo-ListBox");
+	    widget.addItem("Blekinge");
+	    widget.addItem("Dalarna");
+	    widget.addItem("Gotland");
+	    widget.addItem("Gavleborg");
+	    widget.addItem("Halland");
+	    widget.addItem("Jamtland");
+	    widget.addItem("Jonkoping");
+	    widget.addItem("Kalmar");
+	    widget.addItem("Kronoberg");
+	    widget.addItem("Norrbotten");
+	    widget.addItem("Skane");
+	    widget.addItem("Stockholm");
+	    widget.addItem("Sodermanland");
+	    widget.addItem("Uppsala");
+	    widget.addItem("Varmland");
+	    widget.addItem("Vasterbotten");
+	    widget.addItem("Vasternorrland");
+	    widget.addItem("Vastmanland");
+	    widget.addItem("Vasta Gotaland");
+	    widget.addItem("Orebro");
+	    widget.addItem("Ostergotland");
+	    widget.setVisibleItemCount(1);
+	    return widget;
+	}
+	
+	private ListBox getListBoxYears() {
+		ListBox widget = new ListBox();
+	    widget.addStyleName("demo-ListBox");
+	    widget.addItem("2002");
+	    widget.addItem("2001");
+	    widget.addItem("2000");
+	    widget.addItem("1999");
+	    widget.addItem("1998");
+	    widget.addItem("1997");
+	    widget.addItem("1996");
+	    widget.addItem("1995");
+	    widget.addItem("1994");
+	    widget.addItem("1993");
+	    widget.addItem("1992");
+	    widget.addItem("1991");
+	    widget.addItem("1990");
+	    widget.addItem("1989");
+	    widget.addItem("1988");
+	    widget.addItem("1987");
+	    widget.addItem("1986");
+	    widget.addItem("1985");
+	    widget.addItem("1984");
+	    widget.addItem("1983");
+	    widget.addItem("1982");
+	    widget.addItem("1981");
+	    widget.addItem("1980");
+	    widget.addItem("1979");
+	    widget.addItem("1978");
+	    widget.addItem("1977");
+	    widget.addItem("1976");
+	    widget.addItem("1975");
+	    widget.addItem("1974");
+	    widget.addItem("1973");
+	    widget.addItem("1972");
+	    widget.addItem("1971");
+	    widget.addItem("1970");
+	    widget.addItem("1969");
+	    widget.addItem("1968");
+	    widget.addItem("1967");
+	    widget.addItem("1966");
+	    widget.addItem("1965");
+	    widget.addItem("1964");
+	    widget.addItem("1963");
+	    widget.addItem("1962");
+	    widget.addItem("1961");
+	    widget.addItem("1960");
+	    widget.addItem("1959");
+	    widget.addItem("1958");
+	    widget.addItem("1957");
+	    widget.addItem("1956");
+	    widget.addItem("1955");
+	    widget.addItem("1954");
+	    widget.addItem("1953");
+	    widget.addItem("1952");
+	    widget.addItem("1951");
+	    widget.addItem("1950");
+	    widget.addItem("1949");
+	    widget.addItem("1948");
+	    widget.addItem("1947");
+	    widget.addItem("1946");
+	    widget.addItem("1945");
+	    widget.addItem("1944");
+	    widget.addItem("1943");
+	    widget.addItem("1942");
+	    widget.addItem("1941");
+	    widget.addItem("1940");
+	    widget.addItem("1939");
+	    widget.addItem("1938");
+	    widget.addItem("1937");
+	    widget.addItem("1936");
+	    widget.addItem("1935");
+	    widget.addItem("1934");
+	    widget.addItem("1933");
+	    widget.addItem("1932");
+	    widget.addItem("1931");
+	    widget.addItem("1930");
+	    widget.setVisibleItemCount(1);
+	    return widget;
 	}
 
 }

@@ -20,6 +20,8 @@ public class MyMenu extends MenuBar {
 		this.addItem(hemMI);
 		MenuItem regMI = new MenuItem("Registrering", registerUserCmd);
 		this.addItem(regMI);
+		MenuItem filterMI = new MenuItem("Hitta andra", filterCmd);
+		this.addItem(filterMI);
 		
 	}
 
@@ -40,6 +42,15 @@ public class MyMenu extends MenuBar {
 			VerticalPanel centerwidget = new VerticalPanel();
 			HTML starttext = new HTML("<H1>V&auml;lkommen till MC Network<H1/>", true);
 			centerwidget.add(starttext);
+			myParent.centerPanel.clear();
+			myParent.centerPanel.add(centerwidget);
+		}
+	};
+	static Command filterCmd = new Command()
+	{
+		public void execute()
+		{
+			FilterForm centerwidget = new FilterForm();
 			myParent.centerPanel.clear();
 			myParent.centerPanel.add(centerwidget);
 		}

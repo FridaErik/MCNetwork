@@ -58,4 +58,69 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 		return tempUser.getId();//Test
 	}
 
+	@Override
+	public ArrayList<User> searchUsers(int yearup, int yeardown, int milesup,
+			int milesdown, String lan, String city, String fname, String lname) {
+
+		ArrayList<User> result = new ArrayList<User>();
+		if(lan.equals("Alla") && city.equals("") && fname.equals("") && lname.equals("")){
+			//Sök bara med födelseår och miles
+		}
+		else if(lan.equals("Alla") && city.equals("") && fname.equals("") && !lname.equals("")){
+			//Sök med födelseår, miles och lname
+		}
+		else if(lan.equals("Alla") && city.equals("") && !fname.equals("") && lname.equals("")){
+			//Sök med födelseår, miles, fname
+		}
+		else if(lan.equals("Alla") && city.equals("") && !fname.equals("") && !lname.equals("")){
+			//Sök med födelseår, miles, lname och fname
+		}
+		else if(lan.equals("Alla") && !city.equals("") && fname.equals("") && lname.equals("")){
+			//Sök med födelseår, miles, city
+		}
+		else if(lan.equals("Alla") && !city.equals("") && fname.equals("") && !lname.equals("")){
+			//Sök med födelseår, miles, lname, city
+		}
+		else if(lan.equals("Alla") && !city.equals("") && !fname.equals("") && lname.equals("")){
+			//Sök med födelseår, miles, fname, city
+		}
+		else if(lan.equals("Alla") && !city.equals("") && !fname.equals("") && !lname.equals("")){
+			//Sök med födelseår, miles, lname, fname, city
+		}
+		else if(!lan.equals("Alla") && city.equals("") && fname.equals("") && lname.equals("")){
+			//Sök med födelseår, miles, lan
+		}///////////////////////
+		else if(!lan.equals("Alla") && city.equals("") && fname.equals("") && !lname.equals("")){
+			//Sök med födelseår, miles, lan, lname
+		}
+		else if(!lan.equals("Alla") && city.equals("") && !fname.equals("") && lname.equals("")){
+			//Sök med födelseår, miles,lan, fname
+		}
+		else if(!lan.equals("Alla") && city.equals("") && !fname.equals("") && !lname.equals("")){
+			//Sök med födelseår, miles, lan, lname och fname
+		}
+		else if(!lan.equals("Alla") && !city.equals("") && fname.equals("") && lname.equals("")){
+			//Sök med födelseår, miles, lan, city
+		}
+		else if(!lan.equals("Alla") && !city.equals("") && fname.equals("") && !lname.equals("")){
+			//Sök med födelseår, miles, lan, lname, city
+		}
+		else if(!lan.equals("Alla") && !city.equals("") && !fname.equals("") && lname.equals("")){
+			//Sök med födelseår, miles, lan, fname, city
+		}
+		else if(!lan.equals("Alla") && !city.equals("") && !fname.equals("") && !lname.equals("")){
+			//Sök med födelseår, miles, lan, lname, fname, city
+		}
+		else{
+			//OM man kommer hit har vi missat nåt fall eller nåt funkar inte så det är tänkte. 
+			//Alla möjliga utfall ska vara täckta.
+			
+			System.out.println("Vi har missat ett sök fall i filter funktionen");
+		}
+		
+		
+		
+		return result;
+	}
+
 }

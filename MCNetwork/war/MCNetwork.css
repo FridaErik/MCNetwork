@@ -3,7 +3,7 @@ h1 {
 	font-size: 2em;
 	font-weight: bold;
 	color: #777777;
-	margin: 40px 0px 70px;
+	margin: 10px 0px 5px;
 	text-align: center;
 }
 body {
@@ -14,7 +14,39 @@ body {
 	padding: 4px; 
 	font-family: sans-serif;
 }
-
+.searchPanel{
+	margin-left: 250px;
+	margin-top: 10px;
+}
+searchp{
+	vertical-align:bottom;
+}
+filterH1 {
+	font-size: 2em;
+	font-weight: bold;
+	color: #777777;
+	margin: 10px 0px 5px;
+	text-align: left;
+}
+filterH2 {
+	font-size: 1em;
+	font-weight: bold;
+	color: black;
+	margin: 10px 0px 15px;
+	text-align: left;
+}
+filterp {
+	font-size: 14px;
+	color: black;
+	margin: 2px 0px 2px;
+	text-align: left;
+}
+error {
+	font-size: 14px;
+	color: red;
+	margin: 2px 0px 2px;
+	text-align: left;
+}
 .structurePanel{
 	background-color: #87CDB9;
 	margin: auto;

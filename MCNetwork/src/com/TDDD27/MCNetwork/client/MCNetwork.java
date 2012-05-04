@@ -47,12 +47,18 @@ public class MCNetwork implements EntryPoint {
 	 */
 	public void onModuleLoad() {
 		VerticalPanel northPanel = new VerticalPanel();
-		HTML northwidget = new HTML("<MainTitle> MC Network</MainTitle>", true);
-		northPanel.add(northwidget);
+		HorizontalPanel topNorth = new HorizontalPanel();
+		HTML northwidget1 = new HTML("<MainTitle> MC Network</MainTitle>", true);
+		SearchPanel searchpanel = new SearchPanel();
+		searchpanel.addStyleName("searchPanel");
+		topNorth.add(northwidget1);
+		topNorth.add(searchpanel);
+		northPanel.add(topNorth);
 		VerticalPanel centerwidget = new VerticalPanel();
 		centerPanel=new VerticalPanel();
 		centerPanel.addStyleName("centerPanel");
 		centerPanel.setWidth("900px");
+		centerPanel.setHeight("400px");
 		//.setPixelSize(214, 200);
 		HTML starttext = new HTML("<H1>V&auml;lkommen till MC Network<H1/>", true);
 		centerwidget.add(starttext);
@@ -71,14 +77,7 @@ public class MCNetwork implements EntryPoint {
 		HTML bottomtext = new HTML("<subtext>Developed by Frik, frik@gmail.com</subtext>", true);
 		southwidget.add(bottomtext);
 		structurePanel.add(southwidget, DockPanel.SOUTH);
-		
-		RootPanel.get().add(structurePanel);
-		
-		/*Userform e = new Userform();
-	    
-	    RootPanel.get().add(e);	*/
-		
-		
+		RootPanel.get().add(structurePanel);		
 	}
 	
 	
