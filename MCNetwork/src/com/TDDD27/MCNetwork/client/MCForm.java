@@ -3,6 +3,7 @@ package com.TDDD27.MCNetwork.client;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 
@@ -11,16 +12,16 @@ public class MCForm extends FormPanel{
 	private Grid grid = new Grid(4, 3);
 	private FileUpload upload = new FileUpload();
 	private TextBox textBoxBrand = new TextBox();
-	private Label textLabelBrand = new Label("Märke");
+	private HTML textLabelBrand = new HTML("M&auml;rke", true);
 	private Label errorBrand = new Label("");
 	private TextBox textBoxModel = new TextBox();
-	private Label textLabelModel = new Label("Model	");
+	private HTML textLabelModel = new HTML("Model	", true);
 	private Label errorModel = new Label("");
 	private TextBox textBoxYear = new TextBox();
-	private Label textLabelYear = new Label("År");
+	private HTML textLabelYear = new HTML("&Aring;r", true);
 	private Label errorYear = new Label("");
 	private TextBox textBoxUrl = new TextBox();
-	private Label textLabelUrl = new Label("Länk för info om modellen");
+	private HTML textLabelUrl = new HTML("L&auml;nk f&ouml;r info om modellen", true);
 	private Label errorUrl = new Label("");
 	
 	public MCForm() {

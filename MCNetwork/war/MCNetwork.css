@@ -7,15 +7,15 @@ h1 {
 	text-align: center;
 }
 body {
-	background-color: #538C7C;
+	/*background-color: #538C7C;*/
 	width: 22em; 
 	position: absolute; 
-	border: 1px solid red; 
+	/*border: 1px solid red;*/ 
 	padding: 4px; 
 	font-family: sans-serif;
 }
 .searchPanel{
-	margin-left: 250px;
+	margin-left: 290px;
 	margin-top: 10px;
 }
 searchp{
@@ -46,6 +46,23 @@ error {
 	color: red;
 	margin: 2px 0px 2px;
 	text-align: left;
+}
+.resultTable{
+	float: right;
+	background-color: #DEF4EE;
+	margin: 70px 5px 0px 60px;
+	width: 320px;
+}
+.resultTableRowStyle:hover{
+	background-color: #B7DED3;
+	cursor: pointer;
+}
+.resultTableHeader{
+	background-color: #538C7C;
+	font-weight: bold;
+}
+.cursor{
+	cursor: pointer;
 }
 .structurePanel{
 	background-color: #87CDB9;

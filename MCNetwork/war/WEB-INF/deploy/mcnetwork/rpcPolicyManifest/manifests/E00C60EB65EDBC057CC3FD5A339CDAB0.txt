@@ -1,2 +1,0 @@
-serviceClass: com.TDDD27.MCNetwork.client.TestService
-path: 6B63CB1304DC2497C9E381C198965342.gwt.rpc

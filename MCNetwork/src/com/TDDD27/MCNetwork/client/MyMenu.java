@@ -50,7 +50,7 @@ public class MyMenu extends MenuBar {
 	{
 		public void execute()
 		{
-			FilterForm centerwidget = new FilterForm();
+			FilterForm centerwidget = new FilterForm(myParent);
 			myParent.centerPanel.clear();
 			myParent.centerPanel.add(centerwidget);
 		}

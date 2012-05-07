@@ -62,6 +62,8 @@ public class MCNetwork implements EntryPoint {
 		//.setPixelSize(214, 200);
 		HTML starttext = new HTML("<H1>V&auml;lkommen till MC Network<H1/>", true);
 		centerwidget.add(starttext);
+		//UserView test = new UserView((long) 44);
+		//centerwidget.add(test);
 		centerPanel.clear();
 		centerPanel.add(centerwidget);
 		structurePanel=new DockPanel();

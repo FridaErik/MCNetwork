@@ -94,9 +94,6 @@ public class User implements Serializable
     	
     }
     
-    public String getfirstName(){
-    	return firstName;
-    }
 
 	public Long getId() {
 		return id;

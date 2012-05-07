@@ -4,6 +4,7 @@
 package com.TDDD27.MCNetwork.client;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.TDDD27.MCNetwork.shared.MC;
 import com.TDDD27.MCNetwork.shared.User;
@@ -12,9 +13,12 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HTMLTable.Cell;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -28,8 +32,10 @@ import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
 public class FilterForm extends FormPanel{
 	private static TestServiceAsync testService = GWT.create(TestService.class);
 
-	private VerticalPanel frame = new VerticalPanel();
+	private VerticalPanel formframe = new VerticalPanel();
+	private HorizontalPanel frame = new HorizontalPanel();
 	private Grid grid = new Grid(13, 3);
+	private final FlexTable resultTable = new FlexTable();
 	private HTML textHTMLFname = new HTML("<filterH2>F&ouml;rnamn:</filterH2>", true);
 	private HTML textHTMLLname = new HTML("<filterH2>Efternamn:</filterH2>", true);
 	private TextBox fNameBox=new TextBox();
@@ -49,20 +55,22 @@ public class FilterForm extends FormPanel{
 	private HTML textHTMLCity = new HTML("<filterH2>Stad:</filterH2>", true);
 	private TextBox cityBox=new TextBox();
 	private HTML errorOnSubmit = new HTML("", true);
+	private MCNetwork myParent;
 	/**
 	 * 
 	 */
-	public FilterForm() {
+	public FilterForm(MCNetwork parent) {
 		super();
+		myParent=parent;
 		HTML titleText = new HTML("<FilterH1>H&auml;r kan du hitta andra medlemmar</FilterH1>", true);
 		HTML infoText = new HTML("<p>Ange parametrar f&ouml;r att begr&auml;nsa s&ouml;komr&aring;det. " +
 				"De parametrar du l&auml;mnar som de &auml;r begr&auml;nsar inte s&ouml;kningen", true);
-		infoText.setWidth("350px");
+		infoText.setWidth("290px");
 
 
 		grid.addStyleName("MainFilterForm");
-		milesUpBox.setWidth("50px");
-		milesDownBox.setWidth("50px");
+		milesUpBox.setWidth("40px");
+		milesDownBox.setWidth("40px");
 
 		yearList1=getListBoxYears();
 		yearList1.setItemSelected(0, true);
@@ -92,11 +100,12 @@ public class FilterForm extends FormPanel{
 
 		setEncoding(FormPanel.ENCODING_MULTIPART);
 		setMethod(FormPanel.METHOD_POST);
-		frame.add(titleText);
-		frame.add(infoText);
-		frame.add(grid);
+		formframe.add(titleText);
+		formframe.add(infoText);
+		formframe.add(grid);
+		formframe.setWidth("290px");
+		frame.add(formframe);
 		setWidget(frame);
-
 
 		submit.addClickHandler(new ClickHandler() {
 
@@ -136,7 +145,7 @@ public class FilterForm extends FormPanel{
 						submitOK =false;
 						System.out.println("Nånting gick snett när värdena från ListBox försök 2");
 						errorOnSubmit = new HTML("<error>De parametrar du angett &auml;r ej giltiga, kontrollera s&aring; du angett siffor ej text f&ouml;r k&ouml;rda mil</error>", true);
-						frame.add(errorOnSubmit);
+						formframe.add(errorOnSubmit);
 					}
 				}
 				String fname = fNameBox.getText();
@@ -147,11 +156,12 @@ public class FilterForm extends FormPanel{
 
 
 				if(submitOK){
+					resultTable.clear();
 					sendSearchParameters(yearup, yeardown, milesup, milesdown, lan, city, lname, fname);
 				}
 				else{
 					errorOnSubmit = new HTML("<error>De parametrar du angett &auml;r ej giltiga, kontrollera s&aring; &ouml;vre gr&auml;ns > undre gr&auml;ns samt stadsnamnet</error>", true);
-					frame.add(errorOnSubmit);
+					formframe.add(errorOnSubmit);
 				}
 
 			}
@@ -174,13 +184,67 @@ public class FilterForm extends FormPanel{
 
 			@Override
 			public void onSuccess(ArrayList<User> result) {
-
-
+				addResult(result);
 			}
 		};
 
 
 		testService.searchUsers(yearup, yeardown, milesup, milesdown, lan, city, fname, lname, callback);
+
+	}
+
+	protected void addResult(final List<User> result) {
+		
+		ClickHandler userRowCheck = new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				Cell src = resultTable.getCellForEvent(event);
+				int rowIndex = src.getRowIndex();
+				System.out.println("Cell Selected: userRowCheck Handler, rowIndex: " + rowIndex);
+				User user = result.get(rowIndex-1);
+				System.out.println("User id: " + user.getId());
+				SendToUserPage(user);
+			}
+		};
+		resultTable.addClickHandler(userRowCheck);
+		resultTable.setStyleName("resultTable");
+		resultTable.setWidget(0, 0, new HTML("F&ouml;rnamn:", true));
+		resultTable.getCellFormatter().addStyleName(0, 0, "resultTableHeader");
+		resultTable.setWidget(0, 1, new HTML("Efternamn:", true));
+		resultTable.getCellFormatter().addStyleName(0, 1, "resultTableHeader");
+		resultTable.setWidget(0, 2, new HTML("F&ouml;delse&aring;r:", true));
+		resultTable.getCellFormatter().addStyleName(0, 2, "resultTableHeader");
+		resultTable.setWidget(0, 3, new HTML("L&auml;n:", true));
+		resultTable.getCellFormatter().addStyleName(0, 3, "resultTableHeader");
+		resultTable.setWidget(0, 4, new HTML("Bostadsort:", true));
+		resultTable.getCellFormatter().addStyleName(0, 4, "resultTableHeader");
+		resultTable.setWidget(0, 5, new HTML("K&ouml;rda mil:", true));
+		resultTable.getCellFormatter().addStyleName(0, 5, "resultTableHeader");
+		if(!result.isEmpty()){
+			for(int i=1; i<=result.size(); i++){
+				resultTable.getRowFormatter().addStyleName(i, "resultTableRowStyle");
+				HTML fnameHTML = new HTML(result.get(i-1).getFirstName(), true);
+				resultTable.setWidget(i, 0, fnameHTML);
+				HTML lnameHTML = new HTML(result.get(i-1).getLastName(), true);
+				resultTable.setWidget(i, 1, lnameHTML);
+				HTML bYearHTML = new HTML(Integer.toString(result.get(i-1).getBirthYear()), true);
+				resultTable.setWidget(i, 2, bYearHTML);
+				HTML regionHTML = new HTML(result.get(i-1).getRegion(), true);
+				resultTable.setWidget(i, 3, regionHTML);
+				HTML cityHTML = new HTML(result.get(i-1).getCity(), true);
+				resultTable.setWidget(i, 4, cityHTML);
+				HTML milesHTML = new HTML(Integer.toString(result.get(i-1).getMilesDriven()), true);
+				resultTable.setWidget(i, 5, milesHTML);
+			}
+		}
+		frame.add(resultTable);
+
+
+	}
+
+	protected void SendToUserPage(User user) {
+		UserView centerwidget = new UserView(user);
+		myParent.centerPanel.clear();
+		myParent.centerPanel.add(centerwidget);
 
 	}
 
@@ -195,7 +259,7 @@ public class FilterForm extends FormPanel{
 		}
 		return true;
 	}
-	
+
 
 
 	private ListBox getListBoxLan() {

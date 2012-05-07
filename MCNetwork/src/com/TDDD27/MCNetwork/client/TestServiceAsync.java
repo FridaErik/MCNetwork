@@ -18,6 +18,7 @@ public interface TestServiceAsync {
 	void storeUserMC(User user, MC mc, AsyncCallback<Long> callback);
 
 	void searchUsers(int yearup, int yeardown, int milesup, int milesdown,
-			String lan, String city, String fname, String lname, AsyncCallback<ArrayList<User>> callback);
+			String lan, String city, String fname, String lname,
+			AsyncCallback<ArrayList<User>> callback);
 
 }

@@ -4,6 +4,14 @@
 package com.TDDD27.MCNetwork.client;
 
 
+
+
+
+import gwtupload.client.IUploadStatus.Status;
+import gwtupload.client.IUploader;
+import gwtupload.client.IUploader.OnFinishUploaderHandler;
+import gwtupload.client.MultiUploader;
+
 import java.util.List;
 
 import com.TDDD27.MCNetwork.shared.MC;
@@ -41,7 +49,8 @@ public class Userform extends FormPanel {
 
 
 	private Grid grid = new Grid(11, 3);
-	private FileUpload upload = new FileUpload();
+	//private MultiUploader  upload = new MultiUploader ();
+	
 	private TextBox textBoxFnamn = new TextBox();
 	private HTML textHTMLFnamn = new HTML("<p>F&ouml;rnamn</p>", true);
 	private HTML errorFnamn = new HTML("", true);
@@ -76,6 +85,7 @@ public class Userform extends FormPanel {
 	private Boolean submitOK = true;
 
 	private HTML fileHTML = new HTML("Upload Something", true);
+	private String bildPath ="";
 	private Button submit = new Button("Submit");
 	private final MCForm mcForm = new MCForm();
 	private String mcBrand;
@@ -85,6 +95,9 @@ public class Userform extends FormPanel {
 
 	public Userform() {
 		super();
+		// Add a finish handler which will load the image once the upload finishes
+		//MultiUploader  upload = new MultiUploader ();
+		//upload.addOnFinishUploadHandler(onFinishUploaderHandler);
 		grid.addStyleName("MainUserForm");
 
 		textBoxFnamn.setName("textBoxFnamn");
@@ -127,9 +140,9 @@ public class Userform extends FormPanel {
 		grid.setWidget(7, 0, textHTMLMiles);
 		grid.setWidget(7, 1, textBoxMiles);
 		grid.setWidget(7, 2, errorMiles);
-		upload.setName("upload");
-		grid.setWidget(8, 0, fileHTML);
-		grid.setWidget(8, 1, upload);
+		
+		//grid.setWidget(8, 0, fileHTML);
+		//grid.setWidget(8, 1, upload);
 
 		FlowPanel pnlHeader = new FlowPanel();
 		Label btnCollapseExpand = new Label();
@@ -197,7 +210,7 @@ public class Userform extends FormPanel {
 					int by=0;
 
 					try {
-						by = Integer.parseInt(yearList.getItemText(regionList.getSelectedIndex()));
+						by = Integer.parseInt(yearList.getItemText(yearList.getSelectedIndex()));
 					} catch (NumberFormatException e) {
 						errorBYear.setHTML("Ogiltigt &aring;rtal");
 						//errorBYear.setText("Ogiltigt &aring;rtal");
@@ -244,7 +257,7 @@ public class Userform extends FormPanel {
 					}
 					int by=0;
 					try {
-						by = Integer.parseInt(regionList.getItemText(regionList.getSelectedIndex()));
+						by = Integer.parseInt(yearList.getItemText(yearList.getSelectedIndex()));
 					} catch (NumberFormatException e) {
 						errorBYear.setText("Ogiltigt &aring;rtal");
 						submitOK=false;
@@ -326,7 +339,7 @@ public class Userform extends FormPanel {
 				if(tokens.length != 2 ||
 						tokens[0].isEmpty() || 
 						tokens[1].isEmpty() ){
-					errorEmail.setText("ogiltig email");
+					errorEmail.setText("Ogiltig email");
 					submitOK=false;
 				}
 
@@ -349,7 +362,19 @@ public class Userform extends FormPanel {
 		});
 	}
 
+	/*private IUploader.OnFinishUploaderHandler onFinishUploaderHandler = new IUploader.OnFinishUploaderHandler() {
+		public void onFinish(IUploader uploader) {
+			if (uploader.getStatus() == Status.SUCCESS) {
+				System.out.println("Serverresponse: " +uploader.getServerResponse());
 
+				String info = uploader.getServerResponse();
+				int endIndex = info.indexOf("<");
+				bildPath = info.substring(39, endIndex);
+				System.out.println("bildPath:" + bildPath);
+
+			}
+		}
+	};*/
 
 	
 
