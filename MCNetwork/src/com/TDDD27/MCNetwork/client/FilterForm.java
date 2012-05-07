@@ -20,6 +20,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLTable.Cell;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
@@ -33,7 +34,9 @@ public class FilterForm extends FormPanel{
 	private static TestServiceAsync testService = GWT.create(TestService.class);
 
 	private VerticalPanel formframe = new VerticalPanel();
-	private HorizontalPanel frame = new HorizontalPanel();
+	private ScrollPanel resultframe = new ScrollPanel();
+	private HorizontalPanel mainframe = new HorizontalPanel();
+	
 	private Grid grid = new Grid(13, 3);
 	private final FlexTable resultTable = new FlexTable();
 	private HTML textHTMLFname = new HTML("<filterH2>F&ouml;rnamn:</filterH2>", true);
@@ -104,8 +107,8 @@ public class FilterForm extends FormPanel{
 		formframe.add(infoText);
 		formframe.add(grid);
 		formframe.setWidth("290px");
-		frame.add(formframe);
-		setWidget(frame);
+		mainframe.add(formframe);
+		setWidget(mainframe);
 
 		submit.addClickHandler(new ClickHandler() {
 
@@ -207,6 +210,7 @@ public class FilterForm extends FormPanel{
 		};
 		resultTable.addClickHandler(userRowCheck);
 		resultTable.setStyleName("resultTable");
+		resultframe.setStyleName("resultFrame");
 		resultTable.setWidget(0, 0, new HTML("F&ouml;rnamn:", true));
 		resultTable.getCellFormatter().addStyleName(0, 0, "resultTableHeader");
 		resultTable.setWidget(0, 1, new HTML("Efternamn:", true));
@@ -236,7 +240,9 @@ public class FilterForm extends FormPanel{
 				resultTable.setWidget(i, 5, milesHTML);
 			}
 		}
-		frame.add(resultTable);
+		resultframe.add(resultTable);
+		resultframe.setSize("430px", "450px");
+		mainframe.add(resultframe);
 
 
 	}

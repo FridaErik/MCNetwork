@@ -48,10 +48,12 @@ error {
 	text-align: left;
 }
 .resultTable{
-	float: right;
 	background-color: #DEF4EE;
-	margin: 70px 5px 0px 60px;
 	width: 320px;
+}
+.resultFrame{
+	float: right;
+	margin: 70px 5px 0px 60px;
 }
 .resultTableRowStyle:hover{
 	background-color: #B7DED3;
