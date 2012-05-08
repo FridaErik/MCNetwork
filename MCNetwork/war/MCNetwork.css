@@ -7,20 +7,26 @@ h1 {
 	text-align: center;
 }
 body {
-	/*background-color: #538C7C;*/
 	width: 22em; 
 	position: absolute; 
-	/*border: 1px solid red;*/ 
 	padding: 4px; 
 	font-family: sans-serif;
 }
-.searchPanel{
+error {
+	font-size: 14px;
+	color: red;
+	margin: 2px 0px 2px;
+	text-align: left;
+}
+/*--------------------Sökpanel--------------------*/
+.searchPanel {
 	margin-left: 290px;
 	margin-top: 10px;
 }
-searchp{
+searchp {
 	vertical-align:bottom;
 }
+/*--------------------FILTER--------------------*/
 filterH1 {
 	font-size: 2em;
 	font-weight: bold;
@@ -41,58 +47,75 @@ filterp {
 	margin: 2px 0px 2px;
 	text-align: left;
 }
-error {
-	font-size: 14px;
-	color: red;
-	margin: 2px 0px 2px;
-	text-align: left;
+.FormFrame {
+	border: 1px solid red; 
 }
-.resultTable{
+.resultTable {
 	background-color: #DEF4EE;
 	width: 320px;
 }
-.resultFrame{
+.resultFrame {
 	float: right;
-	margin: 70px 5px 0px 60px;
+	margin: 90px 5px 0px 50px;
 }
-.resultTableRowStyle:hover{
+.resultTableRowStyle:hover {
 	background-color: #B7DED3;
 	cursor: pointer;
 }
-.resultTableHeader{
+.resultTableHeader {
 	background-color: #538C7C;
 	font-weight: bold;
 }
-.cursor{
+.cursor {
 	cursor: pointer;
 }
-.structurePanel{
+/*--------------------Huvudsidan--------------------*/
+.structurePanel {
 	background-color: #87CDB9;
 	margin: auto;
 	border: 15px solid #CAF0E5; 
 	padding: 20px 0px 0px 0px;
 	font-family: sans-serif;
 }
-MainTitle {
-	/*test*/
-	font-size: 3em;
-	font-weight: bold;
-	color: #456C61;
-	padding-left: 10px;
-	text-align: left;
-}
 .centerPanel {
 	padding: 15px;
 }
-
-.MainUserForm {
-	
-}
-
 .southwidget {
 	padding: 10px 10px 10px 10px;
 	background-color: #CAF0E5;
 }
 subtext {
 	color: white;
+}
+/*--------------------Startsidan--------------------*/
+MainTitle {
+	font-size: 3em;
+	font-weight: bold;
+	color: #456C61;
+	padding-left: 10px;
+	text-align: left;
+}
+/*--------------------Userview--------------------*/
+userH1 {
+	font-size: 2em;
+	font-weight: bold;
+	color: #777777;
+	margin: 2px 0px 5px;
+	text-align: center;
+}
+bold {
+	font-weight: bold;
+	font-family: sans-serif;
+}
+.topPanel {
+	border: 2px solid red;
+}
+.bottomPanel {
+	border: 2px solid blue;
+}
+.rightPanel {
+	border: 2px solid green;
+}
+.leftPanel {
+	border: 2px solid pink;
 }

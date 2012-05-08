@@ -67,11 +67,11 @@ public class FilterForm extends FormPanel{
 		myParent=parent;
 		HTML titleText = new HTML("<FilterH1>H&auml;r kan du hitta andra medlemmar</FilterH1>", true);
 		HTML infoText = new HTML("<p>Ange parametrar f&ouml;r att begr&auml;nsa s&ouml;komr&aring;det. " +
-				"De parametrar du l&auml;mnar som de &auml;r begr&auml;nsar inte s&ouml;kningen", true);
+				"De parametrar du l&auml;mnar som de &auml;r begr&auml;nsar inte s&ouml;kningen</p>", true);
 		infoText.setWidth("290px");
 
 
-		grid.addStyleName("MainFilterForm");
+		formframe.addStyleName("FormFrame");
 		milesUpBox.setWidth("40px");
 		milesDownBox.setWidth("40px");
 
@@ -240,6 +240,7 @@ public class FilterForm extends FormPanel{
 				resultTable.setWidget(i, 5, milesHTML);
 			}
 		}
+		resultframe.addStyleName("ResultFrame");
 		resultframe.add(resultTable);
 		resultframe.setSize("430px", "450px");
 		mainframe.add(resultframe);
