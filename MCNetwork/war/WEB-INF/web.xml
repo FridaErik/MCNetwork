@@ -23,7 +23,7 @@
 
   <servlet-mapping>
     <servlet-name>loginService</servlet-name>
-    <url-pattern>/mcnetwork/network</url-pattern>
+    <url-pattern>/mcnetwork/login</url-pattern>
   </servlet-mapping>
 
   

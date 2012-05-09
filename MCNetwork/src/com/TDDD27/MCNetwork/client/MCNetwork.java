@@ -4,6 +4,7 @@ package com.TDDD27.MCNetwork.client;
 import java.util.List;
 
 import com.TDDD27.MCNetwork.shared.FieldVerifier;
+import com.TDDD27.MCNetwork.shared.LoginInfo;
 import com.TDDD27.MCNetwork.shared.MCUser;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -12,6 +13,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.HistoryListener;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DockPanel;
@@ -39,18 +41,56 @@ public class MCNetwork implements EntryPoint, ValueChangeHandler {
 			+ "connection and try again.";
 
 
-	
+
 	private static TestServiceAsync testService = GWT.create(TestService.class);
-	
+
 	public DockPanel structurePanel;
 	public VerticalPanel centerPanel;
 	public VerticalPanel centerwidget = new VerticalPanel();
 	private MyMenu menuBar;
 
+
+	private LoginInfo loginInfo = null;
+	private VerticalPanel loginPanel = new VerticalPanel();
+	private Label loginLabel = new Label("Please sign in to your Google Account to access the StockWatcher application.");
+	private Anchor signInLink = new Anchor("Sign In");
+	private Anchor signOutLink = new Anchor("Sign Out");
+
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
+		// Check login status using login service.
+		LoginServiceAsync loginService = GWT.create(LoginService.class);
+		loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
+			public void onFailure(Throwable error) {
+			}
+
+			public void onSuccess(LoginInfo result) {
+				loginInfo = result;
+				if(loginInfo.isLoggedIn()) {
+					System.out.println("loggedIn");
+					loadMCNetwork();
+				} else {
+					System.out.println("Not loggedIn");
+					loadLogin();
+				}
+			}
+		});
+	}
+
+	private void loadLogin() {
+		// Assemble login panel.
+		signInLink.setHref(loginInfo.getLoginUrl());
+		loginPanel.add(loginLabel);
+		loginPanel.add(signInLink);
+		//RootPanel.get("stockList").add(loginPanel);
+		RootPanel.get().add(loginPanel);
+	}
+
+	private void loadMCNetwork() {
+		// Set up sign out hyperlink.
+	    signOutLink.setHref(loginInfo.getLogoutUrl());
 		VerticalPanel northPanel = new VerticalPanel();
 		HorizontalPanel topNorth = new HorizontalPanel();
 		HTML northwidget1 = new HTML("<MainTitle> MC Network</MainTitle>", true);
@@ -58,8 +98,9 @@ public class MCNetwork implements EntryPoint, ValueChangeHandler {
 		searchpanel.addStyleName("searchPanel");
 		topNorth.add(northwidget1);
 		topNorth.add(searchpanel);
+		northPanel.add(signOutLink);
 		northPanel.add(topNorth);
-		
+
 		centerPanel=new VerticalPanel();
 		centerPanel.addStyleName("centerPanel");
 		centerPanel.setWidth("900px");
@@ -91,23 +132,24 @@ public class MCNetwork implements EntryPoint, ValueChangeHandler {
 			History.newItem("start");
 		}
 		History.fireCurrentHistoryState();
+
 	}
 
-	
+
 	@Override
 	public void onValueChange(ValueChangeEvent event) {
-System.out.println("Current State : " + event.getValue());
-        
-        if (event.getValue().equals("start")){
-            centerPanel.clear();
-            centerPanel.add(centerwidget);
-        }
-	}
-	
-	
-	
-	
-	
+		System.out.println("Current State : " + event.getValue());
 
-	
+		if (event.getValue().equals("start")){
+			centerPanel.clear();
+			centerPanel.add(centerwidget);
+		}
+	}
+
+
+
+
+
+
+
 }
