@@ -6,10 +6,13 @@ import java.util.ArrayList;
 
 
 
-import com.TDDD27.MCNetwork.shared.User;
+import com.TDDD27.MCNetwork.shared.MCUser;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException;
@@ -28,8 +31,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 
 
-public class UserView extends VerticalPanel{
-
+public class UserView extends VerticalPanel implements ValueChangeHandler{
+	private MCNetwork parent;
 	private static TestServiceAsync testService = GWT.create(TestService.class);
 	private HorizontalPanel topPanel = new HorizontalPanel();
 	private HorizontalPanel bottomPanel = new HorizontalPanel();
@@ -39,9 +42,10 @@ public class UserView extends VerticalPanel{
 	private FlexTable infoTable = new FlexTable();
 	private HTML title = new HTML("", true);
 
-	public UserView(Long id) {
+	public UserView(Long id, MCNetwork myparent) {
+		parent=myparent;
 		this.add(title);
-		User user = getUser(id);
+		MCUser mcuser = getUser(id);
 		Image img = new Image("images/question-mark-icon_21147438.jpg");
 		img.setHeight("100px");
 		leftPanel.add(img);
@@ -60,14 +64,25 @@ public class UserView extends VerticalPanel{
 		bottomPanel.addStyleName("bottomPanel");
 		leftPanel.addStyleName("leftPanel");
 		rightPanel.addStyleName("rightPanel");
-		
+		//HISTORY
+				History.addValueChangeHandler(this);
+				String initToken = History.getToken();
+				if(initToken.length()==0){
+					History.newItem("mcuser");
+					System.out.println("HistoryToken = 0");
+				}
+				History.newItem("mcuser");
+				History.fireCurrentHistoryState();		
+				//HISTORY
 	}
-	public UserView(User user) {
+	@SuppressWarnings("unchecked")
+	public UserView(MCUser mcuser, MCNetwork myparent) {
+		parent=myparent;
 		this.add(title);
 		Image img = new Image("images/question-mark-icon_21147438.jpg");
 		img.setHeight("100px");
 		leftPanel.add(img);
-		setUserInfo(user);
+		setUserInfo(mcuser);
 		topPanel.add(leftPanel);
 		topPanel.add(rightPanel);
 		this.add(bottomPanel);
@@ -83,22 +98,32 @@ public class UserView extends VerticalPanel{
 		bottomPanel.addStyleName("bottomPanel");
 		leftPanel.addStyleName("leftPanel");
 		rightPanel.addStyleName("rightPanel");
+		//HISTORY
+				History.addValueChangeHandler(this);
+				String initToken = History.getToken();
+				if(initToken.length()==0){
+					History.newItem("mcuser");
+					System.out.println("HistoryToken = 0");
+				}
+				History.newItem("mcuser");
+				History.fireCurrentHistoryState();		
+				//HISTORY
 	}
 
-	protected void setUserInfo(User user) {
-		System.out.println("<userH1>"+user.getFirstName()+" "+user.getLastName()+"</userH1>");
-		title = new HTML("<h1>"+user.getFirstName()+" "+user.getLastName()+"<h1>", true);
+	protected void setUserInfo(MCUser mcuser) {
+		System.out.println("<userH1>"+mcuser.getFirstName()+" "+mcuser.getLastName()+"</userH1>");
+		title = new HTML("<h1>"+mcuser.getFirstName()+" "+mcuser.getLastName()+"<h1>", true);
 		this.add(title);
-		infoTable.setWidget(2, 1, new HTML("<bold>E-mail: </bold>"+user.geteMail(), true));
-		infoTable.setWidget(3, 1, new HTML("<bold>Bostadsort: </bold>"+user.getRegion() + ", " + user.getCity(), true));
-		infoTable.setWidget(4, 1, new HTML("<bold>Antal k&ouml;rda mil: </bold>"+Integer.toString(user.getMilesDriven()), true));	
+		infoTable.setWidget(2, 1, new HTML("<bold>E-mail: </bold>"+mcuser.geteMail(), true));
+		infoTable.setWidget(3, 1, new HTML("<bold>Bostadsort: </bold>"+mcuser.getRegion() + ", " + mcuser.getCity(), true));
+		infoTable.setWidget(4, 1, new HTML("<bold>Antal k&ouml;rda mil: </bold>"+Integer.toString(mcuser.getMilesDriven()), true));	
 
 		leftPanel.add(infoTable);
 	}
 
-	private User getUser(Long id){
+	private MCUser getUser(Long id){
 		final Long userid = id;
-		AsyncCallback<User> callback = new AsyncCallback<User>() {
+		AsyncCallback<MCUser> callback = new AsyncCallback<MCUser>() {
 			public void onFailure(Throwable caught) {
 				System.out.println("failure in getUser");
 				try {
@@ -114,7 +139,7 @@ public class UserView extends VerticalPanel{
 			}
 
 			@Override
-			public void onSuccess(User result) {
+			public void onSuccess(MCUser result) {
 				System.out.println("succes in get user");
 				if(!(result.getFirstName()==null)){
 					System.out.println(result.getFirstName());
@@ -132,5 +157,14 @@ public class UserView extends VerticalPanel{
 	private void setErrorMessage(Long userid) {
 		HTML errorLabel = new HTML("Ooops! N&aring;got gick fel.", true);
 		add(errorLabel);
+	}
+	@Override
+	public void onValueChange(ValueChangeEvent event) {
+		if (event.getValue().equals("mcuser")){
+            parent.centerPanel.clear();
+            parent.centerPanel.add(this);
+        }
+		
+		
 	}
 }

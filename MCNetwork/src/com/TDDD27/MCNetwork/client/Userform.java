@@ -15,11 +15,14 @@ import gwtupload.client.MultiUploader;
 import java.util.List;
 
 import com.TDDD27.MCNetwork.shared.MC;
-import com.TDDD27.MCNetwork.shared.User;
+import com.TDDD27.MCNetwork.shared.MCUser;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.regexp.shared.RegExp;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -44,10 +47,10 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Frida
  *
  */
-public class Userform extends FormPanel {
+public class Userform extends FormPanel implements ValueChangeHandler {
 	private static TestServiceAsync testService = GWT.create(TestService.class);
 
-
+	private MCNetwork parent;
 	private Grid grid = new Grid(11, 3);
 	//private MultiUploader  upload = new MultiUploader ();
 	
@@ -93,8 +96,10 @@ public class Userform extends FormPanel {
 	private int mcYear;
 	private String mcUrl;
 
-	public Userform() {
+	@SuppressWarnings("unchecked")
+	public Userform(MCNetwork theparent) {
 		super();
+		parent=theparent;
 		// Add a finish handler which will load the image once the upload finishes
 		//MultiUploader  upload = new MultiUploader ();
 		//upload.addOnFinishUploadHandler(onFinishUploaderHandler);
@@ -178,6 +183,16 @@ public class Userform extends FormPanel {
 		setEncoding(FormPanel.ENCODING_MULTIPART);
 		setMethod(FormPanel.METHOD_POST);
 		setWidget(grid);
+		//HISTORY
+		History.addValueChangeHandler(this);
+		String initToken = History.getToken();
+		if(initToken.length()==0){
+			History.newItem("registration");
+			System.out.println("HistoryToken = 0");
+		}
+		History.newItem("registration");
+		History.fireCurrentHistoryState();		
+		//HISTORY
 		setStyleName("formPanel");
 
 		addSubmitHandler(new SubmitHandler() {
@@ -227,8 +242,8 @@ public class Userform extends FormPanel {
 					}
 
 					if(submitOK){
-						User user = new User(fn, ln, by, em, c, r, g, m);
-						addUser(user);
+						MCUser mcuser = new MCUser(fn, ln, by, em, c, r, g, m);
+						addUser(mcuser);
 
 					}
 				}
@@ -291,10 +306,10 @@ public class Userform extends FormPanel {
 
 
 					if(submitOK){
-						User user = new User(fn, ln, by, em, c, r, g, m);
+						MCUser mcuser = new MCUser(fn, ln, by, em, c, r, g, m);
 						MC mc = new MC(mcBrand, mcModel, mcYear, mcUrl);
-						user.getMcList().add(mc);
-						addUserMC(user, mc);
+						mcuser.getMcList().add(mc);
+						addUserMC(mcuser, mc);
 
 
 					}
@@ -380,7 +395,7 @@ public class Userform extends FormPanel {
 
 
 
-	protected void addUserMC(User user, MC mc) {
+	protected void addUserMC(MCUser mcuser, MC mc) {
 		if (testService == null) {
 			testService = GWT.create(TestService.class);
 		}
@@ -401,7 +416,7 @@ public class Userform extends FormPanel {
 		};
 
 
-		testService.storeUserMC(user, mc, callback);
+		testService.storeUserMC(mcuser, mc, callback);
 
 	}
 
@@ -424,8 +439,8 @@ public class Userform extends FormPanel {
 
 
 
-	private void addUser(User user) {
-		User returnUser = null;
+	private void addUser(MCUser mcuser) {
+		MCUser returnUser = null;
 		if (testService == null) {
 			testService = GWT.create(TestService.class);
 		}
@@ -444,8 +459,8 @@ public class Userform extends FormPanel {
 			}
 		};
 
-		System.out.println("Region: "+ user.getRegion());
-		testService.storeUser(user, callback);
+		System.out.println("Region: "+ mcuser.getRegion());
+		testService.storeUser(mcuser, callback);
 
 	}
 
@@ -578,6 +593,19 @@ public class Userform extends FormPanel {
 	    widget.addItem("1930");
 	    widget.setVisibleItemCount(1);
 	    return widget;
+	}
+
+	@Override
+	public void onValueChange(ValueChangeEvent event) {
+		/*if (event.getValue().equals("start")){
+            parent.centerPanel.clear();
+            parent.centerPanel.add(parent.centerwidget);
+        }*/
+		if (event.getValue().equals("registration")){
+            parent.centerPanel.clear();
+            parent.centerPanel.add(this);
+        }
+		
 	}
 
 }

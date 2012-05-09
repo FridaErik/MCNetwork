@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.TDDD27.MCNetwork.shared.MC;
-import com.TDDD27.MCNetwork.shared.User;
+import com.TDDD27.MCNetwork.shared.MCUser;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
@@ -13,15 +13,15 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("network")
 public interface TestService extends RemoteService {
 
-	Long storeUser(User tester);
+	Long storeUser(MCUser tester);
 
-	User getUser(Long id);
+	MCUser getUser(Long id);
 
 	MC storeMC(MC mc);
 
-	Long storeUserMC(User user, MC mc);
+	Long storeUserMC(MCUser mcuser, MC mc);
 
-	ArrayList<User> searchUsers(int yearup, int yeardown, int milesup,
+	ArrayList<MCUser> searchUsers(int yearup, int yeardown, int milesup,
 			int milesdown, String lan, String city, String fname, String lname);
 
 

@@ -16,6 +16,17 @@
     <url-pattern>/mcnetwork/network</url-pattern>
   </servlet-mapping>
   
+    <servlet>
+    <servlet-name>loginService</servlet-name>
+    <servlet-class>com.TDDD27.MCNetwork.server.LoginServiceImpl</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>loginService</servlet-name>
+    <url-pattern>/mcnetwork/network</url-pattern>
+  </servlet-mapping>
+
+  
   <!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>MCNetwork.html</welcome-file>

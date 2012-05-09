@@ -30,7 +30,7 @@ public class MyMenu extends MenuBar {
 	{
 		public void execute()
 		{
-			Userform centerwidget = new Userform();
+			Userform centerwidget = new Userform(myParent);
 			myParent.centerPanel.clear();
 			myParent.centerPanel.add(centerwidget);
 		}

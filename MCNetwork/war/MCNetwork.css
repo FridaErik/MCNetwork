@@ -46,10 +46,10 @@ filterp {
 	color: black;
 	margin: 2px 0px 2px;
 	text-align: left;
-}
+}/*
 .FormFrame {
 	border: 1px solid red; 
-}
+}*/
 .resultTable {
 	background-color: #DEF4EE;
 	width: 320px;
@@ -107,6 +107,7 @@ bold {
 	font-weight: bold;
 	font-family: sans-serif;
 }
+/*
 .topPanel {
 	border: 2px solid red;
 }
@@ -117,5 +118,5 @@ bold {
 	border: 2px solid green;
 }
 .leftPanel {
-	border: 2px solid pink;
+	border: 2px solid pink;*/
 }

@@ -1,4 +1,11 @@
-<!-- Indices written at Mon, 7 May 2012 20:21:40 CEST -->
+<!-- Indices written at Wed, 9 May 2012 09:02:45 CEST -->
 
-<datastore-indexes/>
+<datastore-indexes>
 
+    <!-- Used 1 time in query history -->
+    <datastore-index kind="User" ancestor="false" source="auto">
+        <property name="city" direction="asc"/>
+        <property name="birthYear" direction="asc"/>
+    </datastore-index>
+
+</datastore-indexes>

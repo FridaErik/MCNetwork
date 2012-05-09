@@ -41,13 +41,13 @@ public class MC implements Serializable{
 	private String image;
 
 	@Persistent
-	private User owner;
+	private MCUser owner;
 
 	public MC(){
 
 	}
 
-	public MC(String b, String m, int y, String u, User us){
+	public MC(String b, String m, int y, String u, MCUser us){
 		brand=b;
 		model=m;
 		year=y;
@@ -105,11 +105,11 @@ public class MC implements Serializable{
 		return id;
 	}
 
-	public User getOwner() {
+	public MCUser getOwner() {
 		return owner;
 	}
 
-	public void setOwner(User owner) {
+	public void setOwner(MCUser owner) {
 		this.owner = owner;
 	}
 

@@ -4,9 +4,13 @@ package com.TDDD27.MCNetwork.client;
 import java.util.List;
 
 import com.TDDD27.MCNetwork.shared.FieldVerifier;
-import com.TDDD27.MCNetwork.shared.User;
+import com.TDDD27.MCNetwork.shared.MCUser;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.HistoryListener;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -25,7 +29,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class MCNetwork implements EntryPoint {
+public class MCNetwork implements EntryPoint, ValueChangeHandler {
 	/**
 	 * The message displayed to the user when the server cannot be reached or
 	 * returns an error.
@@ -40,6 +44,7 @@ public class MCNetwork implements EntryPoint {
 	
 	public DockPanel structurePanel;
 	public VerticalPanel centerPanel;
+	public VerticalPanel centerwidget = new VerticalPanel();
 	private MyMenu menuBar;
 
 	/**
@@ -54,7 +59,7 @@ public class MCNetwork implements EntryPoint {
 		topNorth.add(northwidget1);
 		topNorth.add(searchpanel);
 		northPanel.add(topNorth);
-		VerticalPanel centerwidget = new VerticalPanel();
+		
 		centerPanel=new VerticalPanel();
 		centerPanel.addStyleName("centerPanel");
 		centerPanel.setWidth("900px");
@@ -79,7 +84,24 @@ public class MCNetwork implements EntryPoint {
 		HTML bottomtext = new HTML("<subtext>Developed by Frik, frik@gmail.com</subtext>", true);
 		southwidget.add(bottomtext);
 		structurePanel.add(southwidget, DockPanel.SOUTH);
-		RootPanel.get().add(structurePanel);		
+		RootPanel.get().add(structurePanel);
+		History.addValueChangeHandler(this);
+		String initToken = History.getToken();
+		if(initToken.length()==0){
+			History.newItem("start");
+		}
+		History.fireCurrentHistoryState();
+	}
+
+	
+	@Override
+	public void onValueChange(ValueChangeEvent event) {
+System.out.println("Current State : " + event.getValue());
+        
+        if (event.getValue().equals("start")){
+            centerPanel.clear();
+            centerPanel.add(centerwidget);
+        }
 	}
 	
 	

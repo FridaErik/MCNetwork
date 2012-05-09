@@ -13,12 +13,14 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+import com.google.appengine.api.users.User;
+
 /**
  * @author Frida
  *
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
-public class User implements Serializable
+public class MCUser implements Serializable
 {
     /**
 	 * 
@@ -29,6 +31,10 @@ public class User implements Serializable
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private Long id;
 
+    //För att lagra id för com.google.appengine.api.users.User (getUserId())
+    @Persistent
+    private String userID;
+    
     @Persistent
     private String firstName;
     
@@ -59,11 +65,11 @@ public class User implements Serializable
     @Persistent
     private int milesDriven;
     
-    public User(){
+    public MCUser(){
     	
     }
     
-    public User(String firstName, String lastName, int birthYear, 
+    public MCUser(String firstName, String lastName, int birthYear, 
     		String eMail, String city, String region, String gender, ArrayList<MC> mcList,
     		int milesDriven){
     	
@@ -80,7 +86,7 @@ public class User implements Serializable
     }
     
     //Tillägg 2012-04-17
-    public User(String firstName, String lastName, int birthYear, 
+    public MCUser(String firstName, String lastName, int birthYear, 
     		String eMail, String city, String region, String gender, int milesDriven){
     	
     	this.firstName=firstName;
@@ -170,6 +176,15 @@ public class User implements Serializable
 	public void setRegion(String region) {
 		this.region = region;
 	}
+
+	public String getUserID() {
+		return userID;
+	}
+
+	public void setUserID(String userID) {
+		this.userID = userID;
+	}
+
 
 
 }

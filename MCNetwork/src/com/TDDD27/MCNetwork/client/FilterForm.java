@@ -7,10 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.TDDD27.MCNetwork.shared.MC;
-import com.TDDD27.MCNetwork.shared.User;
+import com.TDDD27.MCNetwork.shared.MCUser;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -30,9 +33,9 @@ import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
  * @author Frida
  *
  */
-public class FilterForm extends FormPanel{
+public class FilterForm extends FormPanel implements ValueChangeHandler{
 	private static TestServiceAsync testService = GWT.create(TestService.class);
-
+	private MCNetwork parent;
 	private VerticalPanel formframe = new VerticalPanel();
 	private ScrollPanel resultframe = new ScrollPanel();
 	private HorizontalPanel mainframe = new HorizontalPanel();
@@ -58,13 +61,13 @@ public class FilterForm extends FormPanel{
 	private HTML textHTMLCity = new HTML("<filterH2>Stad:</filterH2>", true);
 	private TextBox cityBox=new TextBox();
 	private HTML errorOnSubmit = new HTML("", true);
-	private MCNetwork myParent;
+
 	/**
 	 * 
 	 */
-	public FilterForm(MCNetwork parent) {
+	public FilterForm(MCNetwork myparent) {
 		super();
-		myParent=parent;
+		parent=myparent;
 		HTML titleText = new HTML("<FilterH1>H&auml;r kan du hitta andra medlemmar</FilterH1>", true);
 		HTML infoText = new HTML("<p>Ange parametrar f&ouml;r att begr&auml;nsa s&ouml;komr&aring;det. " +
 				"De parametrar du l&auml;mnar som de &auml;r begr&auml;nsar inte s&ouml;kningen</p>", true);
@@ -109,6 +112,16 @@ public class FilterForm extends FormPanel{
 		formframe.setWidth("290px");
 		mainframe.add(formframe);
 		setWidget(mainframe);
+		//HISTORY
+		History.addValueChangeHandler(this);
+		String initToken = History.getToken();
+		if(initToken.length()==0){
+			History.newItem("filter");
+			System.out.println("HistoryToken = 0");
+		}
+		History.newItem("filter");
+		History.fireCurrentHistoryState();	
+		//HISTORY
 
 		submit.addClickHandler(new ClickHandler() {
 
@@ -180,13 +193,13 @@ public class FilterForm extends FormPanel{
 		}
 
 		// Set up the callback object.
-		AsyncCallback<ArrayList<User>> callback = new AsyncCallback<ArrayList<User>>() {
+		AsyncCallback<ArrayList<MCUser>> callback = new AsyncCallback<ArrayList<MCUser>>() {
 			public void onFailure(Throwable caught) {
 
 			}
 
 			@Override
-			public void onSuccess(ArrayList<User> result) {
+			public void onSuccess(ArrayList<MCUser> result) {
 				addResult(result);
 			}
 		};
@@ -196,16 +209,16 @@ public class FilterForm extends FormPanel{
 
 	}
 
-	protected void addResult(final List<User> result) {
+	protected void addResult(final List<MCUser> result) {
 		
 		ClickHandler userRowCheck = new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				Cell src = resultTable.getCellForEvent(event);
 				int rowIndex = src.getRowIndex();
 				System.out.println("Cell Selected: userRowCheck Handler, rowIndex: " + rowIndex);
-				User user = result.get(rowIndex-1);
-				System.out.println("User id: " + user.getId());
-				SendToUserPage(user);
+				MCUser mcuser = result.get(rowIndex-1);
+				System.out.println("User id: " + mcuser.getId());
+				SendToUserPage(mcuser);
 			}
 		};
 		resultTable.addClickHandler(userRowCheck);
@@ -248,10 +261,10 @@ public class FilterForm extends FormPanel{
 
 	}
 
-	protected void SendToUserPage(User user) {
-		UserView centerwidget = new UserView(user);
-		myParent.centerPanel.clear();
-		myParent.centerPanel.add(centerwidget);
+	protected void SendToUserPage(MCUser mcuser) {
+		UserView centerwidget = new UserView(mcuser, parent);
+		parent.centerPanel.clear();
+		parent.centerPanel.add(centerwidget);
 
 	}
 
@@ -376,6 +389,16 @@ public class FilterForm extends FormPanel{
 		widget.addItem("1930");
 		widget.setVisibleItemCount(1);
 		return widget;
+	}
+
+	@Override
+	public void onValueChange(ValueChangeEvent event) {
+		if (event.getValue().equals("filter")){
+            parent.centerPanel.clear();
+            parent.centerPanel.add(this);
+        }
+		
+		
 	}
 
 }
