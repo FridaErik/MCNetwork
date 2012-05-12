@@ -557,7 +557,23 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 	}
 	@Override
 	public long updateUser(MCUser mcuser) {
-		// TODO Auto-generated method stub
+		System.out.println("Försöker göra en update, id är :"+mcuser.getId());
+		/*PersistenceManager pm = PMF.get().getPersistenceManager();
+	    try {
+	        MCUser e = pm.getObjectById(MCUser.class, mcuser.getId());
+	        e.setBirthYear(mcuser.getBirthYear());
+	        e.setCity(mcuser.getCity());
+	        e.seteMail(mcuser.geteMail());
+	        e.setFirstName(mcuser.getFirstName());
+	        e.setLastName(mcuser.getLastName());
+	        e.setMilesDriven(mcuser.getMilesDriven());
+	        e.setRegion(mcuser.getRegion());
+	        e.setGender(mcuser.getGender());
+	        e.setUserID(mcuser.getUserID());
+	        
+	    } finally {
+	        pm.close();
+	    }*/
 		return 0;
 	}
 

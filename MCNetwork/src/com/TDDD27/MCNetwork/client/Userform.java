@@ -332,11 +332,11 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 
 				if(submitOK){
 					MCUser mcuser = new MCUser(fn, ln, by, em, c, r, g, m, loginInfo.getUserID());
-					if(loggedInUser!=null){
+					if(loggedInUser==null){
 						addUser(mcuser);
 					}
 					else{
-						updateUser(mcuser);
+						//updateUser(mcuser);
 					}
 				}
 			}
@@ -357,7 +357,8 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 				clearUserForm();
 			}
 		};
-
+		System.out.println("Försöker göra en update, id är :"+mcuser.getId());
+		mcuser.setUserID(loggedInUser.getUserID());
 		testService.updateUser(mcuser, callback);
 
 	}
