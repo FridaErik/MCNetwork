@@ -12,8 +12,10 @@ import gwtupload.client.IUploader;
 import gwtupload.client.IUploader.OnFinishUploaderHandler;
 import gwtupload.client.MultiUploader;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.TDDD27.MCNetwork.shared.LoginInfo;
 import com.TDDD27.MCNetwork.shared.MC;
 import com.TDDD27.MCNetwork.shared.MCUser;
 import com.google.gwt.core.client.GWT;
@@ -51,9 +53,10 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 	private static TestServiceAsync testService = GWT.create(TestService.class);
 
 	private MCNetwork parent;
+	private MCUser loggedInUser=null;
 	private Grid grid = new Grid(11, 3);
 	//private MultiUploader  upload = new MultiUploader ();
-	
+
 	private TextBox textBoxFnamn = new TextBox();
 	private HTML textHTMLFnamn = new HTML("<p>F&ouml;rnamn</p>", true);
 	private HTML errorFnamn = new HTML("", true);
@@ -90,28 +93,144 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 	private HTML fileHTML = new HTML("Upload Something", true);
 	private String bildPath ="";
 	private Button submit = new Button("Submit");
-	private final MCForm mcForm = new MCForm();
-	private String mcBrand;
-	private String mcModel;
-	private int mcYear;
-	private String mcUrl;
+	private LoginInfo loginInfo = null;
+
 
 	@SuppressWarnings("unchecked")
 	public Userform(MCNetwork theparent) {
 		super();
+		System.out.println("Skapar ny UserForm");
 		parent=theparent;
+		LoginServiceAsync loginService = GWT.create(LoginService.class);
+		loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
+			public void onFailure(Throwable error) {
+				setWidget(new HTML("<H1>Det verkar inte finnas en inloggad användare men då ska inte fliken uppdatera" +
+						" din uppgifter synas i menyn, nåt blir fel</H1>", true));
+			}
+			public void onSuccess(LoginInfo result) {
+				System.out.println("Userform har registrerat att en användare är inloggad");
+				loginInfo = result;
+				getDBUser(loginInfo.getUserID());
+			}
+		});
+
+
+	}
+
+	private MCUser getDBUser(String userID) {
+		if (testService == null) {
+			testService = GWT.create(TestService.class);
+		}
+		// Set up the callback object.
+		AsyncCallback<ArrayList<MCUser>> callback = new AsyncCallback<ArrayList<MCUser>>() {
+			public void onFailure(Throwable caught) {
+
+			}
+			@Override
+			public void onSuccess(ArrayList<MCUser> result) {
+				System.out.println("Hämtat DBUSer med ID från Google");
+				if(result==null){
+					System.out.println("Använderan finns inte i databasen");
+					setEmptyForm();
+				}
+				else if(result.size()>1){
+					System.out.println("Dubble ID i Databasen!!!!!!");
+				}
+				else{
+					loggedInUser=result.get(0);
+					setEmptyForm();
+					System.out.println("Hittade en!!!!");
+					fillForm(loggedInUser);
+					//setfilledForm();
+				}
+			}
+		};
+
+
+		testService.getUserByID(userID, callback);
+		return null;
+	}
+
+
+
+	@SuppressWarnings("deprecation")
+	protected void fillForm(MCUser currentUser) {
+		textBoxFnamn.setText(currentUser.getFirstName());
+		textBoxLnamn.setText(currentUser.getLastName());
+		textBoxEmail.setText(currentUser.geteMail());
+		textBoxCity.setText(currentUser.getCity());
+		int index1 = 0;
+		for(int i=0; i<=regionList.getItemCount()-1; i++){
+			if(regionList.getItemText(i).equals(currentUser.getRegion())){
+				index1=i;
+			}
+		}
+		regionList.setSelectedIndex(index1);
+		if(currentUser.getGender().equals("Man")){
+			btn1.setValue(true);
+		}
+		else if(currentUser.getGender().equals("Kvinna")) {
+			btn2.setValue(true);
+		}
+		else{
+			btn3.setValue(true);
+		}
+		int index2 = 0;
+		for(int i=0; i<=yearList.getItemCount()-1; i++){
+			if(Integer.parseInt(yearList.getItemText(i))==(currentUser.getBirthYear())){
+				index2=i;
+			}
+		}
+		yearList.setSelectedIndex(index2);
+		textBoxMiles.setText(Integer.toString(currentUser.getMilesDriven()));
+	}
+
+	protected void clearUserForm() {
+		textBoxFnamn.setText("");
+		textBoxLnamn.setText("");
+		textBoxEmail.setText("");
+		textBoxCity.setText("");
+		textBoxFnamn.setText("");
+		textBoxMiles.setText("");
+		this.clear();
+		HTML SuccesLabel = new HTML("<H1>Ny anv&auml;ndare registrerad</H1>", true);
+		this.add(SuccesLabel);
+		//this.removeFromParent();
+
+
+	}
+	private void addUser(MCUser mcuser) {
+		MCUser returnUser = null;
+		if (testService == null) {
+			testService = GWT.create(TestService.class);
+		}
+
+		// Set up the callback object.
+		AsyncCallback<Long> callback = new AsyncCallback<Long>() {
+			public void onFailure(Throwable caught) {
+			}
+			@Override
+			public void onSuccess(Long result) {
+				clearUserForm();
+			}
+		};
+
+		System.out.println("Region: "+ mcuser.getRegion());
+		testService.storeUser(mcuser, callback);
+
+	}
+
+
+	private void setEmptyForm(){
+		System.out.println("SetEmptyForm");
 		// Add a finish handler which will load the image once the upload finishes
 		//MultiUploader  upload = new MultiUploader ();
 		//upload.addOnFinishUploadHandler(onFinishUploaderHandler);
 		grid.addStyleName("MainUserForm");
-
 		textBoxFnamn.setName("textBoxFnamn");
 		textBoxLnamn.setName("textBoxLnamn");
 		textBoxEmail.setName("textBoxEmail");
 		textBoxCity.setName("textBoxCity");
-
-
-
 		grid.setWidget(0, 0, textHTMLFnamn);
 		grid.setWidget(0, 1, textBoxFnamn);
 		grid.setWidget(0, 2, errorFnamn);
@@ -124,14 +243,10 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 		grid.setWidget(3, 0, textHTMLCity);
 		grid.setWidget(3, 1, textBoxCity);
 		grid.setWidget(3, 2, errorCity);
-		
 		regionList = getListBoxLan();
 		grid.setWidget(4, 0, textHTMLRegion);
 		grid.setWidget(4, 1, regionList);
 		grid.setWidget(4, 2, errorRegion);
-		
-		
-		
 		grid.setWidget(5, 0, textHTMLGender);
 		radioBtnPanel.add(btn1);
 		radioBtnPanel.add(btn2);
@@ -145,40 +260,15 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 		grid.setWidget(7, 0, textHTMLMiles);
 		grid.setWidget(7, 1, textBoxMiles);
 		grid.setWidget(7, 2, errorMiles);
-		
 		//grid.setWidget(8, 0, fileHTML);
 		//grid.setWidget(8, 1, upload);
-
-		FlowPanel pnlHeader = new FlowPanel();
-		Label btnCollapseExpand = new Label();
-		btnCollapseExpand.setText('\u25BA' + "Registrera MC");
-		btnCollapseExpand.setTitle("expand/collapse");
-		pnlHeader.add(btnCollapseExpand);
-		//pnlHeader.add(new Label("Registrera MC"));
-		MCDiscPanel.setWidth("100%");
-
-		MCDiscPanel.setContent(mcForm);
-		btnCollapseExpand.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				MCDiscPanel.setOpen(!MCDiscPanel.isOpen());
-			}
-		});
-
-		grid.setWidget(9, 0, pnlHeader);
-		grid.setWidget(9, 1, MCDiscPanel);
-
-
 		grid.setWidget(10, 0, submit);
-
-
 		submit.addClickHandler(new ClickHandler() {
 
 			public void onClick(ClickEvent event) {
 				submit();	
 			}
 		});
-
 
 		setEncoding(FormPanel.ENCODING_MULTIPART);
 		setMethod(FormPanel.METHOD_POST);
@@ -199,203 +289,61 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 
 			@Override
 			public void onSubmit(SubmitEvent event) {	
-				//Om användaren fyllt i info om motorcykel
-				if(!MCDiscPanel.isOpen() || mcForm.getBrand()==""){
-					//System.out.println("if");
-					submitOK = true;
+				//TODO fixa en update funktion så om currentuder finns i databsen så ska uppgifterna bara
+				//uppdateras inte läggas till igen.
 
-					String fn = textBoxFnamn.getText();
-					checkFName(fn);
-					String ln = textBoxLnamn.getText();
-					checkLName(ln);
-					String em = textBoxEmail.getText();
-					checkLEmail(em);
-					String c = textBoxCity.getText();
-					String r = regionList.getItemText(regionList.getSelectedIndex());
-					String g;
-					if (btn1.getValue()){
-						g="Man";
-					}
-					else if(btn2.getValue()){
-						g="Kvinna";
-					}
-					else{
-						g="okänd";
-					}
-					int by=0;
-
-					try {
-						by = Integer.parseInt(yearList.getItemText(yearList.getSelectedIndex()));
-					} catch (NumberFormatException e) {
-						errorBYear.setHTML("Ogiltigt &aring;rtal");
-						//errorBYear.setText("Ogiltigt &aring;rtal");
-						submitOK=false;
-					}
-					int m=0;
-					if(!textBoxMiles.getText().equals("")){
-						try {
-							m = Integer.parseInt(textBoxMiles.getValue());
-						} catch (NumberFormatException e) {
-							errorMiles.setText("Ogiltig input");
-							submitOK=false;
-						}
-					}
-
-					if(submitOK){
-						MCUser mcuser = new MCUser(fn, ln, by, em, c, r, g, m);
-						addUser(mcuser);
-
-					}
+				submitOK = true;
+				String fn = textBoxFnamn.getText();
+				checkFName(fn);
+				String ln = textBoxLnamn.getText();
+				checkLName(ln);
+				String em = textBoxEmail.getText();
+				checkLEmail(em);
+				String c = textBoxCity.getText();
+				checkCity(c);
+				String r = regionList.getItemText(regionList.getSelectedIndex());
+				String g;
+				if (btn1.getValue()){
+					g="Man";
+				}
+				else if(btn2.getValue()){
+					g="Kvinna";
 				}
 				else{
-					//System.out.println("else");
-					submitOK = true;
-
-					String fn = textBoxFnamn.getText();
-					checkFName(fn);
-					String ln = textBoxLnamn.getText();
-					checkLName(ln);
-					String em = textBoxEmail.getText();
-					checkLEmail(em);
-					String c = textBoxCity.getText();
-					checkCity(c);
-					String r = regionList.getItemText(regionList.getSelectedIndex());
-					String g;
-					if (btn1.getValue()){
-						g="Man";
-					}
-					else if(btn2.getValue()){
-						g="Kvinna";
-					}
-					else{
-						g="okänd";
-					}
-					int by=0;
+					g="okänd";
+				}
+				int by=0;
+				try {
+					by = Integer.parseInt(yearList.getItemText(yearList.getSelectedIndex()));
+				} catch (NumberFormatException e) {
+					errorBYear.setText("Ogiltigt &aring;rtal");
+					submitOK=false;
+				}
+				int m=0;
+				if(textBoxMiles.getValue()!= ""){
 					try {
-						by = Integer.parseInt(yearList.getItemText(yearList.getSelectedIndex()));
+						m = Integer.parseInt(textBoxMiles.getValue());
 					} catch (NumberFormatException e) {
-						errorBYear.setText("Ogiltigt &aring;rtal");
+						errorMiles.setText("Ogiltig input");
 						submitOK=false;
 					}
-					int m=0;
-					if(textBoxMiles.getValue()!= ""){
-						try {
-							m = Integer.parseInt(textBoxMiles.getValue());
-						} catch (NumberFormatException e) {
-							errorMiles.setText("Ogiltig input");
-							submitOK=false;
-						}
+
+				}
+
+				if(submitOK){
+					MCUser mcuser = new MCUser(fn, ln, by, em, c, r, g, m, loginInfo.getUserID());
+					if(loggedInUser!=null){
+						addUser(mcuser);
 					}
-
-					mcBrand = mcForm.getBrand();
-					checkBrand(mcBrand);
-					mcModel = mcForm.getModel();
-					checkModel(mcModel);
-					mcYear=0;
-					if(mcForm.getYear()!= ""){
-						try {
-							mcYear = Integer.parseInt(mcForm.getYear());
-						} catch (NumberFormatException e) {
-							mcForm.setErrorYear("Ogiltigt &aring;rtal");
-							submitOK=false;
-						}
+					else{
+						updateUser(mcuser);
 					}
-
-					mcUrl = mcForm.getUrl();
-					checkUrl(mcUrl);
-
-
-					if(submitOK){
-						MCUser mcuser = new MCUser(fn, ln, by, em, c, r, g, m);
-						MC mc = new MC(mcBrand, mcModel, mcYear, mcUrl);
-						mcuser.getMcList().add(mc);
-						addUserMC(mcuser, mc);
-
-
-					}
-				}
-
-
-
-			}
-
-
-
-			private void checkUrl(String url) {
-				//TODO
-			}
-			private void checkCity(String city) {
-				boolean valid = city.matches("[a-öA-Ö]*");	
-				if(!valid){
-					mcForm.setErrorBrand("Ogiltigt");
-					submitOK=false;
-				}
-			}
-
-
-
-			private void checkBrand(String text) {
-				boolean valid = text.matches("[a-öA-Ö]*");	
-				if(!valid){
-					mcForm.setErrorBrand("Ogiltigt");
-					submitOK=false;
-				}
-			}
-			private void checkModel(String mcModel) {
-				boolean valid = mcModel.matches("[a-öA-Ö0-9]*");	
-				if(!valid){
-					mcForm.setErrorModel("Ogiltigt");
-					submitOK=false;
-				}
-			}
-
-			protected void checkLEmail(String em) {
-				String[] tokens = em.split("@");
-				if(tokens.length != 2 ||
-						tokens[0].isEmpty() || 
-						tokens[1].isEmpty() ){
-					errorEmail.setText("Ogiltig email");
-					submitOK=false;
-				}
-
-			}
-			protected void checkFName(String text) {
-				boolean valid = text.matches("[a-öA-Ö]*");	
-				if(!valid || text.equals("") || text.length()<2){
-					errorFnamn.setText("Ogiltigt namn");
-					submitOK=false;
-				}
-			}
-			protected void checkLName(String text) {
-				boolean valid = text.matches("[a-öA-Ö]*");	
-				if(!valid || text.equals("") || text.length()<2){
-					errorLnamn.setText("Ogiltigt namn");
-					submitOK=false;
 				}
 			}
 
 		});
 	}
-
-	/*private IUploader.OnFinishUploaderHandler onFinishUploaderHandler = new IUploader.OnFinishUploaderHandler() {
-		public void onFinish(IUploader uploader) {
-			if (uploader.getStatus() == Status.SUCCESS) {
-				System.out.println("Serverresponse: " +uploader.getServerResponse());
-
-				String info = uploader.getServerResponse();
-				int endIndex = info.indexOf("<");
-				bildPath = info.substring(39, endIndex);
-				System.out.println("bildPath:" + bildPath);
-
-			}
-		}
-	};*/
-
-	
-
-
-
-	protected void addUserMC(MCUser mcuser, MC mc) {
+	protected void updateUser(MCUser mcuser) {
 		if (testService == null) {
 			testService = GWT.create(TestService.class);
 		}
@@ -403,196 +351,123 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 		// Set up the callback object.
 		AsyncCallback<Long> callback = new AsyncCallback<Long>() {
 			public void onFailure(Throwable caught) {
-
 			}
-
 			@Override
 			public void onSuccess(Long result) {
-				System.out.println("Key: "+result);
 				clearUserForm();
-				mcForm.clearFields();
-
 			}
 		};
 
-
-		testService.storeUserMC(mcuser, mc, callback);
-
-	}
-
-
-
-	protected void clearUserForm() {
-		textBoxFnamn.setText("");
-		textBoxLnamn.setText("");
-		textBoxEmail.setText("");
-		textBoxCity.setText("");
-		textBoxFnamn.setText("");
-		textBoxMiles.setText("");
-		this.clear();
-		HTML SuccesLabel = new HTML("<H1>Ny anv&auml;ndar registrerad</H1>", true);
-		this.add(SuccesLabel);
-		//this.removeFromParent();
-
+		testService.updateUser(mcuser, callback);
 
 	}
 
-
-
-	private void addUser(MCUser mcuser) {
-		MCUser returnUser = null;
-		if (testService == null) {
-			testService = GWT.create(TestService.class);
-		}
-
-		// Set up the callback object.
-		AsyncCallback<Long> callback = new AsyncCallback<Long>() {
-			public void onFailure(Throwable caught) {
-
-			}
-
-			@Override
-			public void onSuccess(Long result) {
-				//TODO
-				clearUserForm();
-
-			}
-		};
-
-		System.out.println("Region: "+ mcuser.getRegion());
-		testService.storeUser(mcuser, callback);
-
-	}
-
-	private void addMc(MC mc) {
-		if (testService == null) {
-			testService = GWT.create(TestService.class);
-		}
-
-		// Set up the callback object.
-		AsyncCallback<MC> callback = new AsyncCallback<MC>() {
-			public void onFailure(Throwable caught) {
-
-			}
-
-			@Override
-			public void onSuccess(MC result) {
-				System.out.println("MC lagrad");
-
-			}
-		};
-
-		
-		// Make the call to server
-		testService.storeMC(mc, callback);
-
-	}
 	private ListBox getListBoxLan() {
 		ListBox widget = new ListBox();
-	    widget.addStyleName("demo-ListBox");
-	    widget.addItem("Blekinge");
-	    widget.addItem("Dalarna");
-	    widget.addItem("Gotland");
-	    widget.addItem("Gavleborg");
-	    widget.addItem("Halland");
-	    widget.addItem("Jamtland");
-	    widget.addItem("Jonkoping");
-	    widget.addItem("Kalmar");
-	    widget.addItem("Kronoberg");
-	    widget.addItem("Norrbotten");
-	    widget.addItem("Skane");
-	    widget.addItem("Stockholm");
-	    widget.addItem("Sodermanland");
-	    widget.addItem("Uppsala");
-	    widget.addItem("Varmland");
-	    widget.addItem("Vasterbotten");
-	    widget.addItem("Vasternorrland");
-	    widget.addItem("Vastmanland");
-	    widget.addItem("Vasta Gotaland");
-	    widget.addItem("Orebro");
-	    widget.addItem("Ostergotland");
-	    widget.setVisibleItemCount(1);
-	    return widget;
+		widget.addStyleName("demo-ListBox");
+		widget.addItem("Blekinge");
+		widget.addItem("Dalarna");
+		widget.addItem("Gotland");
+		widget.addItem("Gavleborg");
+		widget.addItem("Halland");
+		widget.addItem("Jamtland");
+		widget.addItem("Jonkoping");
+		widget.addItem("Kalmar");
+		widget.addItem("Kronoberg");
+		widget.addItem("Norrbotten");
+		widget.addItem("Skane");
+		widget.addItem("Stockholm");
+		widget.addItem("Sodermanland");
+		widget.addItem("Uppsala");
+		widget.addItem("Varmland");
+		widget.addItem("Vasterbotten");
+		widget.addItem("Vasternorrland");
+		widget.addItem("Vastmanland");
+		widget.addItem("Vastra Gotaland");
+		widget.addItem("Orebro");
+		widget.addItem("Ostergotland");
+		widget.setVisibleItemCount(1);
+		return widget;
 	}
-	
+
 	private ListBox getListBoxYears() {
 		ListBox widget = new ListBox();
-	    widget.addStyleName("demo-ListBox");
-	    widget.addItem("2002");
-	    widget.addItem("2001");
-	    widget.addItem("2000");
-	    widget.addItem("1999");
-	    widget.addItem("1998");
-	    widget.addItem("1997");
-	    widget.addItem("1996");
-	    widget.addItem("1995");
-	    widget.addItem("1994");
-	    widget.addItem("1993");
-	    widget.addItem("1992");
-	    widget.addItem("1991");
-	    widget.addItem("1990");
-	    widget.addItem("1989");
-	    widget.addItem("1988");
-	    widget.addItem("1987");
-	    widget.addItem("1986");
-	    widget.addItem("1985");
-	    widget.addItem("1984");
-	    widget.addItem("1983");
-	    widget.addItem("1982");
-	    widget.addItem("1981");
-	    widget.addItem("1980");
-	    widget.addItem("1979");
-	    widget.addItem("1978");
-	    widget.addItem("1977");
-	    widget.addItem("1976");
-	    widget.addItem("1975");
-	    widget.addItem("1974");
-	    widget.addItem("1973");
-	    widget.addItem("1972");
-	    widget.addItem("1971");
-	    widget.addItem("1970");
-	    widget.addItem("1969");
-	    widget.addItem("1968");
-	    widget.addItem("1967");
-	    widget.addItem("1966");
-	    widget.addItem("1965");
-	    widget.addItem("1964");
-	    widget.addItem("1963");
-	    widget.addItem("1962");
-	    widget.addItem("1961");
-	    widget.addItem("1960");
-	    widget.addItem("1959");
-	    widget.addItem("1958");
-	    widget.addItem("1957");
-	    widget.addItem("1956");
-	    widget.addItem("1955");
-	    widget.addItem("1954");
-	    widget.addItem("1953");
-	    widget.addItem("1952");
-	    widget.addItem("1951");
-	    widget.addItem("1950");
-	    widget.addItem("1949");
-	    widget.addItem("1948");
-	    widget.addItem("1947");
-	    widget.addItem("1946");
-	    widget.addItem("1945");
-	    widget.addItem("1944");
-	    widget.addItem("1943");
-	    widget.addItem("1942");
-	    widget.addItem("1941");
-	    widget.addItem("1940");
-	    widget.addItem("1939");
-	    widget.addItem("1938");
-	    widget.addItem("1937");
-	    widget.addItem("1936");
-	    widget.addItem("1935");
-	    widget.addItem("1934");
-	    widget.addItem("1933");
-	    widget.addItem("1932");
-	    widget.addItem("1931");
-	    widget.addItem("1930");
-	    widget.setVisibleItemCount(1);
-	    return widget;
+		widget.addStyleName("demo-ListBox");
+		widget.addItem("2002");
+		widget.addItem("2001");
+		widget.addItem("2000");
+		widget.addItem("1999");
+		widget.addItem("1998");
+		widget.addItem("1997");
+		widget.addItem("1996");
+		widget.addItem("1995");
+		widget.addItem("1994");
+		widget.addItem("1993");
+		widget.addItem("1992");
+		widget.addItem("1991");
+		widget.addItem("1990");
+		widget.addItem("1989");
+		widget.addItem("1988");
+		widget.addItem("1987");
+		widget.addItem("1986");
+		widget.addItem("1985");
+		widget.addItem("1984");
+		widget.addItem("1983");
+		widget.addItem("1982");
+		widget.addItem("1981");
+		widget.addItem("1980");
+		widget.addItem("1979");
+		widget.addItem("1978");
+		widget.addItem("1977");
+		widget.addItem("1976");
+		widget.addItem("1975");
+		widget.addItem("1974");
+		widget.addItem("1973");
+		widget.addItem("1972");
+		widget.addItem("1971");
+		widget.addItem("1970");
+		widget.addItem("1969");
+		widget.addItem("1968");
+		widget.addItem("1967");
+		widget.addItem("1966");
+		widget.addItem("1965");
+		widget.addItem("1964");
+		widget.addItem("1963");
+		widget.addItem("1962");
+		widget.addItem("1961");
+		widget.addItem("1960");
+		widget.addItem("1959");
+		widget.addItem("1958");
+		widget.addItem("1957");
+		widget.addItem("1956");
+		widget.addItem("1955");
+		widget.addItem("1954");
+		widget.addItem("1953");
+		widget.addItem("1952");
+		widget.addItem("1951");
+		widget.addItem("1950");
+		widget.addItem("1949");
+		widget.addItem("1948");
+		widget.addItem("1947");
+		widget.addItem("1946");
+		widget.addItem("1945");
+		widget.addItem("1944");
+		widget.addItem("1943");
+		widget.addItem("1942");
+		widget.addItem("1941");
+		widget.addItem("1940");
+		widget.addItem("1939");
+		widget.addItem("1938");
+		widget.addItem("1937");
+		widget.addItem("1936");
+		widget.addItem("1935");
+		widget.addItem("1934");
+		widget.addItem("1933");
+		widget.addItem("1932");
+		widget.addItem("1931");
+		widget.addItem("1930");
+		widget.setVisibleItemCount(1);
+		return widget;
 	}
 
 	@Override
@@ -602,10 +477,46 @@ public class Userform extends FormPanel implements ValueChangeHandler {
             parent.centerPanel.add(parent.centerwidget);
         }*/
 		if (event.getValue().equals("registration")){
-            parent.centerPanel.clear();
-            parent.centerPanel.add(this);
-        }
-		
+			parent.centerPanel.clear();
+			parent.centerPanel.add(this);
+		}
+
 	}
+	private void checkUrl(String url) {
+		//TODO
+	}
+	private void checkCity(String city) {
+		boolean valid = city.matches("[a-öA-Ö]*");	
+		if(!valid){
+			errorCity.setText("Ogiltigt stadsnamn");
+			submitOK=false;
+		}
+	}
+
+	protected void checkLEmail(String em) {
+		String[] tokens = em.split("@");
+		if(tokens.length != 2 ||
+				tokens[0].isEmpty() || 
+				tokens[1].isEmpty() ){
+			errorEmail.setText("Ogiltig email");
+			submitOK=false;
+		}
+
+	}
+	protected void checkFName(String text) {
+		boolean valid = text.matches("[a-öA-Ö]*");	
+		if(!valid || text.equals("") || text.length()<2){
+			errorFnamn.setText("Ogiltigt namn");
+			submitOK=false;
+		}
+	}
+	protected void checkLName(String text) {
+		boolean valid = text.matches("[a-öA-Ö]*");	
+		if(!valid || text.equals("") || text.length()<2){
+			errorLnamn.setText("Ogiltigt namn");
+			submitOK=false;
+		}
+	}
+
 
 }

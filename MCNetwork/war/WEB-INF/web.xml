@@ -25,6 +25,8 @@
     <servlet-name>loginService</servlet-name>
     <url-pattern>/mcnetwork/login</url-pattern>
   </servlet-mapping>
+  
+  <precompilation-enabled>false</precompilation-enabled>
 
   
   <!-- Default page to serve -->

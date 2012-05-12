@@ -14,12 +14,15 @@ public class MyMenu extends MenuBar {
 	public MyMenu() {
 		// TODO Auto-generated constructor stub
 	}
-	public MyMenu(MCNetwork parent) {
+	public MyMenu(MCNetwork parent, boolean loggedIn) {
 		myParent=parent;
 		MenuItem hemMI = new MenuItem("Startsida", startCmd);
 		this.addItem(hemMI);
-		MenuItem regMI = new MenuItem("Registrering", registerUserCmd);
-		this.addItem(regMI);
+		if(loggedIn){
+			System.out.println("Menyn har registrerat att en användare är inloggad");
+			MenuItem regMI = new MenuItem("Uppdatera uppgifter", registerUserCmd);
+			this.addItem(regMI);
+		}
 		MenuItem filterMI = new MenuItem("Hitta andra", filterCmd);
 		this.addItem(filterMI);
 		
@@ -30,6 +33,7 @@ public class MyMenu extends MenuBar {
 	{
 		public void execute()
 		{
+			System.out.println("Klick i menyn");
 			Userform centerwidget = new Userform(myParent);
 			myParent.centerPanel.clear();
 			myParent.centerPanel.add(centerwidget);

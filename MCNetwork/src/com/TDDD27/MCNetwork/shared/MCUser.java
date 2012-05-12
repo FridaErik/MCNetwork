@@ -71,7 +71,7 @@ public class MCUser implements Serializable
     
     public MCUser(String firstName, String lastName, int birthYear, 
     		String eMail, String city, String region, String gender, ArrayList<MC> mcList,
-    		int milesDriven){
+    		int milesDriven, String userid){
     	
     	this.firstName=firstName;
     	this.lastName=lastName;
@@ -82,12 +82,13 @@ public class MCUser implements Serializable
     	this.gender=gender;
     	this.mcList=mcList;
     	this.milesDriven=milesDriven;
+    	this.userID=userid;
     	
     }
     
     //Tillägg 2012-04-17
     public MCUser(String firstName, String lastName, int birthYear, 
-    		String eMail, String city, String region, String gender, int milesDriven){
+    		String eMail, String city, String region, String gender, int milesDriven, String userid){
     	
     	this.firstName=firstName;
     	this.lastName=lastName;
@@ -97,6 +98,7 @@ public class MCUser implements Serializable
     	this.region=region;
     	this.gender=gender;
     	this.milesDriven=milesDriven;
+    	this.userID=userid;
     	
     }
     

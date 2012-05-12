@@ -24,6 +24,10 @@ public interface TestService extends RemoteService {
 	ArrayList<MCUser> searchUsers(int yearup, int yeardown, int milesup,
 			int milesdown, String lan, String city, String fname, String lname);
 
+	ArrayList<MCUser> getUserByID(String userID);
+
+	long updateUser(MCUser mcuser);
+
 
 
 }

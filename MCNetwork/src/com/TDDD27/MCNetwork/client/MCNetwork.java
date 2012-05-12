@@ -52,7 +52,7 @@ public class MCNetwork implements EntryPoint, ValueChangeHandler {
 
 	private LoginInfo loginInfo = null;
 	private VerticalPanel loginPanel = new VerticalPanel();
-	private Label loginLabel = new Label("Please sign in to your Google Account to access the StockWatcher application.");
+	private HTML loginLabel = new HTML("Please sign in to your Google Account to access the StockWatcher application.", true);
 	private Anchor signInLink = new Anchor("Sign In");
 	private Anchor signOutLink = new Anchor("Sign Out");
 
@@ -80,17 +80,13 @@ public class MCNetwork implements EntryPoint, ValueChangeHandler {
 	}
 
 	private void loadLogin() {
-		// Assemble login panel.
+		/*// Assemble login panel.
 		signInLink.setHref(loginInfo.getLoginUrl());
 		loginPanel.add(loginLabel);
 		loginPanel.add(signInLink);
 		//RootPanel.get("stockList").add(loginPanel);
-		RootPanel.get().add(loginPanel);
-	}
+		RootPanel.get().add(loginPanel);*/
 
-	private void loadMCNetwork() {
-		// Set up sign out hyperlink.
-	    signOutLink.setHref(loginInfo.getLogoutUrl());
 		VerticalPanel northPanel = new VerticalPanel();
 		HorizontalPanel topNorth = new HorizontalPanel();
 		HTML northwidget1 = new HTML("<MainTitle> MC Network</MainTitle>", true);
@@ -98,7 +94,10 @@ public class MCNetwork implements EntryPoint, ValueChangeHandler {
 		searchpanel.addStyleName("searchPanel");
 		topNorth.add(northwidget1);
 		topNorth.add(searchpanel);
-		northPanel.add(signOutLink);
+		if(loginInfo.isLoggedIn()){
+			signOutLink.setHref(loginInfo.getLogoutUrl());
+			northPanel.add(signOutLink);	
+		}
 		northPanel.add(topNorth);
 
 		centerPanel=new VerticalPanel();
@@ -106,15 +105,90 @@ public class MCNetwork implements EntryPoint, ValueChangeHandler {
 		centerPanel.setWidth("900px");
 		centerPanel.setHeight("400px");
 		//.setPixelSize(214, 200);
-		HTML starttext = new HTML("<H1>V&auml;lkommen till MC Network<H1/>", true);
+		//HTML starttext = new HTML("<H1>V&auml;lkommen till MC Network <H1/>"+loginInfo.getNickname()+"; "+loginInfo.getEmailAddress(), true);
+		HTML starttext = new HTML("<H1>V&auml;lkommen till MC Network <H1/>", true);
+		HTML infotext = new HTML("<p>Detta &auml;r ett socialt n&auml;tverk f&ouml;r personer i Sverige som &auml;ger eller &auml;r intresserad av motorcyklar." +
+				" Syftet med n&auml;tverket &auml;r att du skall f&aring; kontakt med andra som delar ditt intresse s&aring; ni kan utbyta erfarenheter och tips.</p>", true);
 		centerwidget.add(starttext);
+		centerwidget.add(infotext);
+		if(!loginInfo.isLoggedIn()){
+			signInLink.setHref(loginInfo.getLoginUrl());
+			loginPanel.add(loginLabel);
+			loginPanel.add(signInLink);
+			centerwidget.add(loginPanel);
+		}
 		//UserView test = new UserView((long) 44);
 		//centerwidget.add(test);
 		centerPanel.clear();
 		centerPanel.add(centerwidget);
 		structurePanel=new DockPanel();
 		structurePanel.addStyleName("structurePanel");
-		menuBar=new MyMenu(this);
+		menuBar=new MyMenu(this, loginInfo.isLoggedIn());
+		menuBar.setWidth("898px");
+		northPanel.add(menuBar);
+		structurePanel.add(northPanel, DockPanel.NORTH);
+		structurePanel.add(centerPanel, DockPanel.CENTER);
+		VerticalPanel southwidget = new VerticalPanel();
+		southwidget.setWidth("900px");
+		southwidget.addStyleName("southwidget");
+		HTML bottomtext = new HTML("<subtext>Developed by Frik, frik@gmail.com</subtext>", true);
+		southwidget.add(bottomtext);
+		structurePanel.add(southwidget, DockPanel.SOUTH);
+		RootPanel.get().add(structurePanel);
+		History.addValueChangeHandler(this);
+		String initToken = History.getToken();
+		if(initToken.length()==0){
+			History.newItem("start");
+		}
+		History.fireCurrentHistoryState();
+
+	}
+
+	private void loadMCNetwork() {
+		/*// Assemble login panel.
+		signInLink.setHref(loginInfo.getLoginUrl());
+		loginPanel.add(loginLabel);
+		loginPanel.add(signInLink);
+		//RootPanel.get("stockList").add(loginPanel);
+		RootPanel.get().add(loginPanel);*/
+
+		VerticalPanel northPanel = new VerticalPanel();
+		HorizontalPanel topNorth = new HorizontalPanel();
+		HTML northwidget1 = new HTML("<MainTitle> MC Network</MainTitle>", true);
+		SearchPanel searchpanel = new SearchPanel();
+		searchpanel.addStyleName("searchPanel");
+		topNorth.add(northwidget1);
+		topNorth.add(searchpanel);
+		if(loginInfo.isLoggedIn()){
+			signOutLink.setHref(loginInfo.getLogoutUrl());
+			northPanel.add(signOutLink);	
+		}
+		northPanel.add(topNorth);
+
+		centerPanel=new VerticalPanel();
+		centerPanel.addStyleName("centerPanel");
+		centerPanel.setWidth("900px");
+		centerPanel.setHeight("400px");
+		//.setPixelSize(214, 200);
+		//HTML starttext = new HTML("<H1>V&auml;lkommen till MC Network <H1/>"+loginInfo.getNickname()+"; "+loginInfo.getEmailAddress(), true);
+		HTML starttext = new HTML("<H1>V&auml;lkommen till MC Network <H1/>", true);
+		HTML infotext = new HTML("<p>Detta &auml;r ett socialt n&auml;tverk f&ouml;r personer i Sverige som &auml;ger eller &auml;r intresserad av motorcyklar." +
+				" Syftet med n&auml;tverket &auml;r att du skall f&aring; kontakt med andra som delar ditt intresse s&aring; ni kan utbyta erfarenheter och tips.</p>", true);
+		centerwidget.add(starttext);
+		centerwidget.add(infotext);
+		if(!loginInfo.isLoggedIn()){
+			signInLink.setHref(loginInfo.getLoginUrl());
+			loginPanel.add(loginLabel);
+			loginPanel.add(signInLink);
+			centerwidget.add(loginPanel);
+		}
+		//UserView test = new UserView((long) 44);
+		//centerwidget.add(test);
+		centerPanel.clear();
+		centerPanel.add(centerwidget);
+		structurePanel=new DockPanel();
+		structurePanel.addStyleName("structurePanel");
+		menuBar=new MyMenu(this, loginInfo.isLoggedIn());
 		menuBar.setWidth("898px");
 		northPanel.add(menuBar);
 		structurePanel.add(northPanel, DockPanel.NORTH);

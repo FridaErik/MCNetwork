@@ -21,4 +21,8 @@ public interface TestServiceAsync {
 			String lan, String city, String fname, String lname,
 			AsyncCallback<ArrayList<MCUser>> callback);
 
+	void getUserByID(String userID, AsyncCallback<ArrayList<MCUser>> callback);
+
+	void updateUser(MCUser mcuser, AsyncCallback<Long> callback);
+
 }

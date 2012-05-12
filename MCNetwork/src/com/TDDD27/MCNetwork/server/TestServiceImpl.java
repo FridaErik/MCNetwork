@@ -22,32 +22,21 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 	@SuppressWarnings("unchecked")
 	@Override
 	public Long storeUser(MCUser mcuser) {
+		System.out.println("En användare lagras");
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		MCUser storedUser = pm.makePersistent(mcuser);
 		MCUser tempUser= new MCUser();
 		tempUser=storedUser;
-
 		return tempUser.getId();//Test
 	}
-
+	//TODO
 	@Override
-
 	public MCUser getUser(Long id) {
-
-
 		PersistenceManager pm = PMF.get().getPersistenceManager();
-
-		//User theUser = new User("Lars", "Larsson", 1977, "lars.larrson@gmail.com", "Larsstad", null, null, 0);
-
 		MCUser theUser = pm.getObjectById(MCUser.class, id); 
-
 		System.out.println(theUser.getFirstName());
-
 		pm.close();
-
-
 		return theUser;
-
 	}
 
 	@SuppressWarnings("unchecked")
@@ -158,7 +147,7 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 				q2.closeAll();
 			}
 			return result;
-			
+
 		}
 		else if(lan.equals("Alla") && city.equals("") && !fname.equals("") && !lname.equals("")){
 			//Sök med födelseår, miles, lname och fname
@@ -219,7 +208,7 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 		else if(lan.equals("Alla") && !city.equals("") && fname.equals("") && !lname.equals("")){
 			//Sök med födelseår, miles, lname, city
 			result=new ArrayList<MCUser>();
-			 
+
 			Query q1 = pm.newQuery(MCUser.class);
 			q1.setFilter("lastName == '"+ lname + "' && city == '" +city+"' && birthYear >= "+ yeardown + " && birthYear <= "+ yearup);
 			Query q2 = pm.newQuery(MCUser.class);
@@ -248,7 +237,7 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 		else if(lan.equals("Alla") && !city.equals("") && !fname.equals("") && lname.equals("")){
 			//Sök med födelseår, miles, fname, city
 			result=new ArrayList<MCUser>();
-			 
+
 			Query q1 = pm.newQuery(MCUser.class);
 			q1.setFilter("city == '"+ city + "' && firstName == '" +fname+"' && birthYear >= "+ yeardown + " && birthYear <= "+ yearup);
 			Query q2 = pm.newQuery(MCUser.class);
@@ -277,7 +266,7 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 		else if(lan.equals("Alla") && !city.equals("") && !fname.equals("") && !lname.equals("")){
 			//Sök med födelseår, miles, lname, fname, city
 			result=new ArrayList<MCUser>();
-			 
+
 			Query q1 = pm.newQuery(MCUser.class);
 			q1.setFilter("lastName == '"+ lname + "' && firstName == '" +fname+"' && city == '" +city+"' && birthYear >= "+ yeardown + " && birthYear <= "+ yearup);
 			Query q2 = pm.newQuery(MCUser.class);
@@ -306,7 +295,7 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 		else if(!lan.equals("Alla") && city.equals("") && fname.equals("") && lname.equals("")){
 			//Sök med födelseår, miles, lan
 			result=new ArrayList<MCUser>();
-			 
+
 			Query q1 = pm.newQuery(MCUser.class);
 			q1.setFilter("region == '"+ lan + "'  && birthYear >= "+ yeardown + " && birthYear <= "+ yearup);
 			Query q2 = pm.newQuery(MCUser.class);
@@ -335,7 +324,7 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 		else if(!lan.equals("Alla") && city.equals("") && fname.equals("") && !lname.equals("")){
 			//Sök med födelseår, miles, lan, lname
 			result=new ArrayList<MCUser>();
-			 
+
 			Query q1 = pm.newQuery(MCUser.class);
 			q1.setFilter("lastName == '"+ lname + "' && region == '" +lan+"' && birthYear >= "+ yeardown + " && birthYear <= "+ yearup);
 			Query q2 = pm.newQuery(MCUser.class);
@@ -364,7 +353,7 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 		else if(!lan.equals("Alla") && city.equals("") && !fname.equals("") && lname.equals("")){
 			//Sök med födelseår, miles,lan, fname
 			result=new ArrayList<MCUser>();
-			 
+
 			Query q1 = pm.newQuery(MCUser.class);
 			q1.setFilter("region == '"+ lan + "' && firstName == '" +fname+"' && birthYear >= "+ yeardown + " && birthYear <= "+ yearup);
 			Query q2 = pm.newQuery(MCUser.class);
@@ -445,7 +434,7 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 				q2.closeAll();
 			}
 			return result;
-			
+
 		}
 		else if(!lan.equals("Alla") && !city.equals("") && fname.equals("") && !lname.equals("")){
 			//Sök med födelseår, miles, lan, lname, city
@@ -539,8 +528,37 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 
 		}
 
-	
+
 		return null;
+	}
+
+	@Override
+	public ArrayList<MCUser> getUserByID(String userID) {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		ArrayList<MCUser> result = new ArrayList<MCUser>();
+		Query q = pm.newQuery(MCUser.class);
+		q.setFilter("userID == '"+ userID+"'");
+		System.out.println(q.toString());
+		try {
+			@SuppressWarnings("unchecked")
+			List<MCUser> results = (List<MCUser>) q.execute();
+			if(results.size()==0){
+				System.out.println("result==null, userID == "+ userID);
+				return null;
+			}
+			for(MCUser a : results){
+				result.add(a);
+			}
+
+		} finally {
+			q.closeAll();
+		}
+		return result;
+	}
+	@Override
+	public long updateUser(MCUser mcuser) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }
