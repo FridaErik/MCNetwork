@@ -558,7 +558,7 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 	@Override
 	public long updateUser(MCUser mcuser) {
 		System.out.println("Försöker göra en update, id är :"+mcuser.getId());
-		/*PersistenceManager pm = PMF.get().getPersistenceManager();
+		PersistenceManager pm = PMF.get().getPersistenceManager();
 	    try {
 	        MCUser e = pm.getObjectById(MCUser.class, mcuser.getId());
 	        e.setBirthYear(mcuser.getBirthYear());
@@ -573,7 +573,7 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 	        
 	    } finally {
 	        pm.close();
-	    }*/
+	    }
 		return 0;
 	}
 

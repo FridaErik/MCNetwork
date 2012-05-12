@@ -187,6 +187,10 @@ public class MCUser implements Serializable
 		this.userID = userID;
 	}
 
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 
 
 }

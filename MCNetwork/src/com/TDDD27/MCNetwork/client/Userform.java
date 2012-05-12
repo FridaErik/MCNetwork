@@ -193,13 +193,14 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 		textBoxFnamn.setText("");
 		textBoxMiles.setText("");
 		this.clear();
-		HTML SuccesLabel = new HTML("<H1>Ny anv&auml;ndare registrerad</H1>", true);
-		this.add(SuccesLabel);
+		
 		//this.removeFromParent();
-
-
 	}
-	private void addUser(MCUser mcuser) {
+	protected void setSuccessText(String text){
+		HTML SuccesLabel = new HTML("<H1>"+text+"</H1>", true);
+		this.add(SuccesLabel);
+	}
+	private void addUser(final MCUser mcuser) {
 		MCUser returnUser = null;
 		if (testService == null) {
 			testService = GWT.create(TestService.class);
@@ -212,6 +213,7 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 			@Override
 			public void onSuccess(Long result) {
 				clearUserForm();
+				setSuccessText("Ny anv&auml;ndare tillagd, välkommen "+ mcuser.getFirstName());
 			}
 		};
 
@@ -336,14 +338,15 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 						addUser(mcuser);
 					}
 					else{
-						//updateUser(mcuser);
+						mcuser.setId(loggedInUser.getId());
+						updateUser(mcuser);
 					}
 				}
 			}
 
 		});
 	}
-	protected void updateUser(MCUser mcuser) {
+	protected void updateUser(final MCUser mcuser) {
 		if (testService == null) {
 			testService = GWT.create(TestService.class);
 		}
@@ -355,10 +358,10 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 			@Override
 			public void onSuccess(Long result) {
 				clearUserForm();
+				setSuccessText(mcuser.getFirstName()+", din uppgifter är uppdaterade!");
 			}
 		};
-		System.out.println("Försöker göra en update, id är :"+mcuser.getId());
-		mcuser.setUserID(loggedInUser.getUserID());
+	
 		testService.updateUser(mcuser, callback);
 
 	}
