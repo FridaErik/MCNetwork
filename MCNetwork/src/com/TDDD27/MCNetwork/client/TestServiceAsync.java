@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.TDDD27.MCNetwork.shared.MC;
 import com.TDDD27.MCNetwork.shared.MCUser;
+import com.TDDD27.MCNetwork.shared.Message;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface TestServiceAsync {
@@ -24,5 +25,9 @@ public interface TestServiceAsync {
 	void getUserByID(String userID, AsyncCallback<ArrayList<MCUser>> callback);
 
 	void updateUser(MCUser mcuser, AsyncCallback<Long> callback);
+
+	void storeMsg(Message msg, AsyncCallback<Boolean> callback);
+
+	void getRecievedMessage(Long id, AsyncCallback<ArrayList<Message>> callback);
 
 }

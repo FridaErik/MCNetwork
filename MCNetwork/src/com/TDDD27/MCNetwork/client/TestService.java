@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.TDDD27.MCNetwork.shared.MC;
 import com.TDDD27.MCNetwork.shared.MCUser;
+import com.TDDD27.MCNetwork.shared.Message;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
@@ -27,6 +28,10 @@ public interface TestService extends RemoteService {
 	ArrayList<MCUser> getUserByID(String userID);
 
 	long updateUser(MCUser mcuser);
+
+	boolean storeMsg(Message msg);
+
+	ArrayList<Message> getRecievedMessage(Long id);
 
 
 

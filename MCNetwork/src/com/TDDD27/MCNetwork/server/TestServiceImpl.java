@@ -11,6 +11,7 @@ import javax.jdo.Query;
 import com.TDDD27.MCNetwork.client.TestService;
 import com.TDDD27.MCNetwork.shared.MC;
 import com.TDDD27.MCNetwork.shared.MCUser;
+import com.TDDD27.MCNetwork.shared.Message;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public class TestServiceImpl  extends RemoteServiceServlet implements TestService {
@@ -575,6 +576,36 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 	        pm.close();
 	    }
 		return 0;
+	}
+	@Override
+	public boolean storeMsg(Message msg) {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		pm.makePersistent(msg);
+		System.out.println("MSG stored");
+		return true;
+	}
+	@Override
+	public ArrayList<Message> getRecievedMessage(Long id) {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		ArrayList<Message> result = new ArrayList<Message>();
+		Query q = pm.newQuery(Message.class);
+		q.setFilter("resieverid == "+ id);
+		System.out.println(q.toString());
+		try {
+			@SuppressWarnings("unchecked")
+			List<Message> results = (List<Message>) q.execute();
+			if(results.size()==0){
+				System.out.println("result==null, recieverid == "+ id);
+				return null;
+			}
+			for(Message a : results){
+				result.add(a);
+			}
+
+		} finally {
+			q.closeAll();
+		}
+		return result;
 	}
 
 }

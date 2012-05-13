@@ -2,49 +2,106 @@ package com.TDDD27.MCNetwork.shared;
 
 
 
+import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import java.util.Date;
 
+import javax.jdo.annotations.Extension;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.PrimaryKey;
 
 
-public class Message {
+@PersistenceCapable(identityType = IdentityType.APPLICATION)
+public class Message implements Serializable{
+	
+	@PrimaryKey
+	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+	@Extension(vendorName="datanucleus", key="gae.encoded-pk", value="true")
+	private String id;
 
-private MCUser sender;
+	@Persistent
+	private Long senderid;
 
-private MCUser resiever;
+	@Persistent
+	private Long resieverid;
 
-private String message;
+	@Persistent
+	private String message;
 
-private Boolean offentlig;
+	@Persistent
+	private Boolean offentlig;
 
-private Date datum;
+	@Persistent
+	private Date datum;
 
 
 
-public Message() {
+	public Message() {
 
-Calendar rightNow = Calendar.getInstance();
+		//Calendar rightNow = Calendar.getInstance();
+		//datum = rightNow.getTime();
+		
+		//DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		//datum = new Date();
 
-datum = rightNow.getTime();
+	}
 
-}
+	public Message(Long senderid, Long resieverid, String message, Boolean offentlig) {
 
-public Message(MCUser sender, MCUser resiever, String message, Boolean offentlig) {
+		this.senderid = senderid;
 
-sender = this.sender;
+		this.resieverid = resieverid;
 
-resiever = this.resiever;
+		this.message = message;
 
-message = this.message;
+		this.offentlig = offentlig;
 
-offentlig = this.offentlig;
+		//Calendar rightNow = Calendar.getInstance();
+		//datum = rightNow.getTime();
+		datum = new Date();
+	}
 
-Calendar rightNow = Calendar.getInstance();
+	public Long getsenderid() {
+		return senderid;
+	}
 
-datum = rightNow.getTime();
+	public void setsenderid(Long senderid) {
+		this.senderid = senderid;
+	}
 
-}
+	public Long getresieverid() {
+		return resieverid;
+	}
+
+	public void setresieverid(Long resieverid) {
+		this.resieverid = resieverid;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public Boolean getOffentlig() {
+		return offentlig;
+	}
+
+	public void setOffentlig(Boolean offentlig) {
+		this.offentlig = offentlig;
+	}
+
+	public Date getDatum() {
+		return datum;
+	}
 
 
 

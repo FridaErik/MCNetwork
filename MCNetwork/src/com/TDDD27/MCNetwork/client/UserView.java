@@ -6,9 +6,13 @@ import java.util.ArrayList;
 
 
 
+import com.TDDD27.MCNetwork.shared.LoginInfo;
 import com.TDDD27.MCNetwork.shared.MCUser;
+import com.TDDD27.MCNetwork.shared.Message;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 
@@ -22,6 +26,7 @@ import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.ScrollPanel;
 
 import com.google.gwt.user.client.ui.HTML;
 
@@ -37,10 +42,14 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 	private HorizontalPanel topPanel = new HorizontalPanel();
 	private HorizontalPanel bottomPanel = new HorizontalPanel();
 	private VerticalPanel rightPanel = new VerticalPanel();
-	private VerticalPanel messagePanel = new VerticalPanel();
+	//private VerticalPanel messagePanel = new VerticalPanel();
 	private HorizontalPanel leftPanel = new HorizontalPanel();
 	private FlexTable infoTable = new FlexTable();
 	private HTML title = new HTML("", true);
+	private MCUser viewUser;
+	private LoginInfo loginInfo = null;
+	private VerticalPanel msgPanel = new VerticalPanel();
+	private ScrollPanel scrollPnl = new ScrollPanel();
 
 	public UserView(Long id, MCNetwork myparent) {
 		parent=myparent;
@@ -65,18 +74,19 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 		leftPanel.addStyleName("leftPanel");
 		rightPanel.addStyleName("rightPanel");
 		//HISTORY
-				History.addValueChangeHandler(this);
-				String initToken = History.getToken();
-				if(initToken.length()==0){
-					History.newItem("mcuser");
-					System.out.println("HistoryToken = 0");
-				}
-				History.newItem("mcuser");
-				History.fireCurrentHistoryState();		
-				//HISTORY
+		History.addValueChangeHandler(this);
+		String initToken = History.getToken();
+		if(initToken.length()==0){
+			History.newItem("mcuser");
+			System.out.println("HistoryToken = 0");
+		}
+		History.newItem("mcuser");
+		History.fireCurrentHistoryState();		
+		//HISTORY
 	}
 	@SuppressWarnings("unchecked")
-	public UserView(MCUser mcuser, MCNetwork myparent) {
+	public UserView(MCUser mcuser, final MCNetwork myparent) {
+		viewUser=mcuser;
 		parent=myparent;
 		this.add(title);
 		Image img = new Image("images/question-mark-icon_21147438.jpg");
@@ -84,11 +94,24 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 		leftPanel.add(img);
 		setUserInfo(mcuser);
 		topPanel.add(leftPanel);
+		setMsgPanel();
+		msgPanel.setStyleName("UserViewMsgPanel");
+		scrollPnl.add(msgPanel);
+		rightPanel.add(scrollPnl);
 		topPanel.add(rightPanel);
 		this.add(bottomPanel);
 		this.add(topPanel);
 		Button addBtn = new Button("Bli kompis");
 		Button sendPriMsgBtn = new Button("Skicka meddelande");
+		sendPriMsgBtn.addClickHandler(new ClickHandler(){
+			public void onClick(ClickEvent event){
+				System.out.println("Click click!!");
+				//parent.centerPanel.clear();
+				createMsgForm();
+			}
+
+
+		});
 		Button sendPubMsgBtn = new Button("Skriv p&aring; v&auml;ggen");
 		bottomPanel.add(addBtn);
 		bottomPanel.add(sendPriMsgBtn);
@@ -99,15 +122,80 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 		leftPanel.addStyleName("leftPanel");
 		rightPanel.addStyleName("rightPanel");
 		//HISTORY
-				History.addValueChangeHandler(this);
-				String initToken = History.getToken();
-				if(initToken.length()==0){
-					History.newItem("mcuser");
-					System.out.println("HistoryToken = 0");
+		History.addValueChangeHandler(this);
+		String initToken = History.getToken();
+		if(initToken.length()==0){
+			History.newItem("mcuser");
+			System.out.println("HistoryToken = 0");
+		}
+		History.newItem("mcuser");
+		History.fireCurrentHistoryState();		
+		//HISTORY
+	}
+	private void setMsgPanel() {
+		if (testService == null) {
+			testService = GWT.create(TestService.class);
+		}
+		// Set up the callback object.
+		AsyncCallback<ArrayList<Message>> callback = new AsyncCallback<ArrayList<Message>>() {
+			public void onFailure(Throwable caught) {
+				System.out.println("failure när person ska skapa meddelande...(Userview)");
+			}
+			public void onSuccess(ArrayList<Message> result) {
+				if(result!=null){
+					System.out.println("Hämtad lista med messages");
+					printOutMsg(result);
 				}
-				History.newItem("mcuser");
-				History.fireCurrentHistoryState();		
-				//HISTORY
+				else{
+					System.out.println("Hittade inga messages");
+				}
+			}
+
+
+			private void printOutMsg(ArrayList<Message> result) {
+				for( Message a : result){
+					MessageView msgview = new MessageView(a);
+					msgPanel.add(msgview);
+				}
+
+			}
+		};
+		testService.getRecievedMessage(viewUser.getId(), callback);
+
+	}
+	protected void createMsgForm() {
+		System.out.println("steg 1");
+		LoginServiceAsync loginService = GWT.create(LoginService.class);
+		loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
+			public void onFailure(Throwable error) {
+
+			}
+			public void onSuccess(LoginInfo result) {
+				System.out.println("Hittade en inloggad");
+				loginInfo = result;
+				getDBUser(loginInfo.getUserID());
+			}
+		});
+
+	}
+	private void getDBUser(String userID) {
+		System.out.println("steg 2");
+		if (testService == null) {
+			testService = GWT.create(TestService.class);
+		}
+		// Set up the callback object.
+		AsyncCallback<ArrayList<MCUser>> callback = new AsyncCallback<ArrayList<MCUser>>() {
+			public void onFailure(Throwable caught) {
+				System.out.println("failure när person ska skapa meddelande...(Userview)");
+			}
+			@Override
+			public void onSuccess(ArrayList<MCUser> result) {
+				MessageForm msgform = new MessageForm( result.get(0), viewUser, parent);
+				parent.centerPanel.clear();
+				parent.centerPanel.add(msgform);
+			}
+		};
+		testService.getUserByID(userID, callback);
 	}
 
 	protected void setUserInfo(MCUser mcuser) {
@@ -161,10 +249,10 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 	@Override
 	public void onValueChange(ValueChangeEvent event) {
 		if (event.getValue().equals("mcuser")){
-            parent.centerPanel.clear();
-            parent.centerPanel.add(this);
-        }
-		
-		
+			parent.centerPanel.clear();
+			parent.centerPanel.add(this);
+		}
+
+
 	}
 }
