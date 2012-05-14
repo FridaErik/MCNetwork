@@ -31,7 +31,7 @@ public interface TestService extends RemoteService {
 
 	boolean storeMsg(Message msg);
 
-	ArrayList<Message> getRecievedMessage(Long id);
+	ArrayList<Message> getRecievedMessage(Long id, Boolean priv);
 
 
 

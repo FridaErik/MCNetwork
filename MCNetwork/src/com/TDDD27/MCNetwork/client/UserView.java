@@ -59,12 +59,30 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 		img.setHeight("100px");
 		leftPanel.add(img);
 		topPanel.add(leftPanel);
+		topPanel.add(leftPanel);
+		setMsgPanel();
+		msgPanel.setStyleName("UserViewMsgPanel");
+		scrollPnl.add(msgPanel);
+		rightPanel.add(scrollPnl);
 		topPanel.add(rightPanel);
 		this.add(bottomPanel);
 		this.add(topPanel);
 		Button addBtn = new Button("Bli kompis");
 		Button sendPriMsgBtn = new Button("Skicka meddelande");
+		sendPriMsgBtn.addClickHandler(new ClickHandler(){
+			public void onClick(ClickEvent event){
+				Boolean priv=true;
+				createMsgForm(priv);
+			}
+		});
 		Button sendPubMsgBtn = new Button("Skriv p&aring; v&auml;ggen");
+		sendPubMsgBtn.addClickHandler(new ClickHandler(){
+			public void onClick(ClickEvent event){
+				Boolean priv=false;
+				createMsgForm(priv);
+			}
+		});
+		
 		bottomPanel.add(addBtn);
 		bottomPanel.add(sendPriMsgBtn);
 		bottomPanel.add(sendPubMsgBtn);
@@ -92,7 +110,7 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 		Image img = new Image("images/question-mark-icon_21147438.jpg");
 		img.setHeight("100px");
 		leftPanel.add(img);
-		setUserInfo(mcuser);
+		setUserInfo(viewUser);
 		topPanel.add(leftPanel);
 		setMsgPanel();
 		msgPanel.setStyleName("UserViewMsgPanel");
@@ -105,14 +123,18 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 		Button sendPriMsgBtn = new Button("Skicka meddelande");
 		sendPriMsgBtn.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent event){
-				System.out.println("Click click!!");
-				//parent.centerPanel.clear();
-				createMsgForm();
+				Boolean priv=true;
+				createMsgForm(priv);
 			}
-
-
 		});
 		Button sendPubMsgBtn = new Button("Skriv p&aring; v&auml;ggen");
+		sendPubMsgBtn.addClickHandler(new ClickHandler(){
+			public void onClick(ClickEvent event){
+				Boolean priv=false;
+				createMsgForm(priv);
+			}
+		});
+		
 		bottomPanel.add(addBtn);
 		bottomPanel.add(sendPriMsgBtn);
 		bottomPanel.add(sendPubMsgBtn);
@@ -154,16 +176,17 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 
 			private void printOutMsg(ArrayList<Message> result) {
 				for( Message a : result){
-					MessageView msgview = new MessageView(a);
+					MessageView msgview = new MessageView(a, parent);
 					msgPanel.add(msgview);
 				}
 
 			}
 		};
-		testService.getRecievedMessage(viewUser.getId(), callback);
+		Boolean priv=false;
+		testService.getRecievedMessage(viewUser.getId(), priv, callback);
 
 	}
-	protected void createMsgForm() {
+	protected void createMsgForm(final Boolean priv) {
 		System.out.println("steg 1");
 		LoginServiceAsync loginService = GWT.create(LoginService.class);
 		loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
@@ -173,13 +196,12 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 			public void onSuccess(LoginInfo result) {
 				System.out.println("Hittade en inloggad");
 				loginInfo = result;
-				getDBUser(loginInfo.getUserID());
+				getDBUser(loginInfo.getUserID(), priv);
 			}
 		});
 
 	}
-	private void getDBUser(String userID) {
-		System.out.println("steg 2");
+	private void getDBUser(String userID, final Boolean priv) {
 		if (testService == null) {
 			testService = GWT.create(TestService.class);
 		}
@@ -190,7 +212,7 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 			}
 			@Override
 			public void onSuccess(ArrayList<MCUser> result) {
-				MessageForm msgform = new MessageForm( result.get(0), viewUser, parent);
+				MessageForm msgform = new MessageForm( result.get(0), viewUser, parent, priv);
 				parent.centerPanel.clear();
 				parent.centerPanel.add(msgform);
 			}

@@ -18,6 +18,12 @@ error {
 	margin: 2px 0px 2px;
 	text-align: left;
 }
+.Clickable:hover{
+	cursor: pointer;
+	text-decoration:underline;
+	color: #777777;
+	
+}
 /*--------------------Sökpanel--------------------*/
 .searchPanel {
 	margin-left: 290px;
@@ -108,7 +114,8 @@ bold {
 	font-family: sans-serif;
 }
 .UserViewMsgPanel{
-	margin: 0px 0px 20px 100px;
+	margin: 0px 0px 20px 300px;
+	border: 2px solid grey;
 }
 .msgtext{
 	background-color: white;

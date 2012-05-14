@@ -28,6 +28,6 @@ public interface TestServiceAsync {
 
 	void storeMsg(Message msg, AsyncCallback<Boolean> callback);
 
-	void getRecievedMessage(Long id, AsyncCallback<ArrayList<Message>> callback);
+	void getRecievedMessage(Long id, Boolean priv, AsyncCallback<ArrayList<Message>> callback);
 
 }

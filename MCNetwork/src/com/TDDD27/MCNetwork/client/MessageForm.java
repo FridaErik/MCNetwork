@@ -10,6 +10,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -32,7 +33,8 @@ public class MessageForm extends FormPanel implements ValueChangeHandler {
 
 
 
-	public MessageForm(final MCUser sender, final MCUser resiever, MCNetwork theparent){
+	public MessageForm(final MCUser sender, final MCUser resiever, MCNetwork theparent, final Boolean priv){
+		parent=theparent;
 		HTML sender_reciever = new HTML("<MsgH1>Fr&aring;n "+sender.getFirstName()+ " "+ sender.getLastName()+" till "+resiever.getFirstName()+ " "+ resiever.getLastName()+"</MsgH1>");
 		textAreaMeddelande.setSize("600px", "250px");
 		grid.setWidget(0, 0, sender_reciever);
@@ -46,7 +48,7 @@ public class MessageForm extends FormPanel implements ValueChangeHandler {
 			public void onClick(ClickEvent event){
 				String msgString = textAreaMeddelande.getText();
 				System.out.println(msgString);
-				
+
 				if (testService == null) {
 					testService = GWT.create(TestService.class);
 				}
@@ -57,15 +59,25 @@ public class MessageForm extends FormPanel implements ValueChangeHandler {
 					}
 					@Override
 					public void onSuccess(Boolean result) {
-						
+
 					}
 				};
-				Message msg= new Message(sender.getId(), resiever.getId(), msgString, false);
+				Message msg= new Message(sender.getId(), resiever.getId(), msgString, priv);
 				testService.storeMsg(msg, callback);
-				
-				
+
+
 			}
 		});
+		//HISTORY
+		History.addValueChangeHandler(this);
+		String initToken = History.getToken();
+		if(initToken.length()==0){
+			History.newItem("messageform");
+			System.out.println("HistoryToken = 0");
+		}
+		History.newItem("messageform");
+		History.fireCurrentHistoryState();		
+		//HISTORY
 	}
 
 

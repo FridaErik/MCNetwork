@@ -585,11 +585,11 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 		return true;
 	}
 	@Override
-	public ArrayList<Message> getRecievedMessage(Long id) {
+	public ArrayList<Message> getRecievedMessage(Long id, Boolean priv) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		ArrayList<Message> result = new ArrayList<Message>();
 		Query q = pm.newQuery(Message.class);
-		q.setFilter("resieverid == "+ id);
+		q.setFilter("resieverid == "+ id + " && priv == "+priv);
 		System.out.println(q.toString());
 		try {
 			@SuppressWarnings("unchecked")

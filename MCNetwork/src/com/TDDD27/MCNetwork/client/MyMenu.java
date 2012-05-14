@@ -22,6 +22,8 @@ public class MyMenu extends MenuBar {
 			System.out.println("Menyn har registrerat att en användare är inloggad");
 			MenuItem regMI = new MenuItem("Uppdatera uppgifter", registerUserCmd);
 			this.addItem(regMI);
+			MenuItem msgMI = new MenuItem("Mina meddelanden", meddelandeCmd);
+			this.addItem(msgMI);
 		}
 		MenuItem filterMI = new MenuItem("Hitta andra", filterCmd);
 		this.addItem(filterMI);
@@ -35,6 +37,15 @@ public class MyMenu extends MenuBar {
 		{
 			System.out.println("Klick i menyn");
 			Userform centerwidget = new Userform(myParent);
+			myParent.centerPanel.clear();
+			myParent.centerPanel.add(centerwidget);
+		}
+	};
+	static Command meddelandeCmd = new Command()
+	{
+		public void execute()
+		{
+			PrivateMessageView centerwidget = new PrivateMessageView(myParent);
 			myParent.centerPanel.clear();
 			myParent.centerPanel.add(centerwidget);
 		}

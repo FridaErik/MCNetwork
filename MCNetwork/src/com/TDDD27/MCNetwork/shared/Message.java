@@ -35,7 +35,7 @@ public class Message implements Serializable{
 	private String message;
 
 	@Persistent
-	private Boolean offentlig;
+	private Boolean priv;
 
 	@Persistent
 	private Date datum;
@@ -52,7 +52,7 @@ public class Message implements Serializable{
 
 	}
 
-	public Message(Long senderid, Long resieverid, String message, Boolean offentlig) {
+	public Message(Long senderid, Long resieverid, String message, Boolean priv) {
 
 		this.senderid = senderid;
 
@@ -60,7 +60,7 @@ public class Message implements Serializable{
 
 		this.message = message;
 
-		this.offentlig = offentlig;
+		this.priv = priv;
 
 		//Calendar rightNow = Calendar.getInstance();
 		//datum = rightNow.getTime();
@@ -91,12 +91,12 @@ public class Message implements Serializable{
 		this.message = message;
 	}
 
-	public Boolean getOffentlig() {
-		return offentlig;
+	public Boolean getPriv() {
+		return priv;
 	}
 
-	public void setOffentlig(Boolean offentlig) {
-		this.offentlig = offentlig;
+	public void setPriv(Boolean priv) {
+		this.priv = priv;
 	}
 
 	public Date getDatum() {
