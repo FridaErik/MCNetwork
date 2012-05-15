@@ -22,33 +22,48 @@ import com.google.gwt.user.client.ui.HTMLTable.Cell;
  * @author Frida
  *
  */
-public class MessageView extends VerticalPanel {
+public class MessagePreview extends VerticalPanel {
 	private static TestServiceAsync testService = GWT.create(TestService.class);
 	private HTML sender= new HTML("", true);
 	private HTML resiver= new HTML("", true);
 	private HorizontalPanel senderResiever = new HorizontalPanel();
 	private HTML msgArea = new HTML("", true);
+	private Message message;
 	private MCNetwork parent;
-	
 	/**
+	 * @param privmsgview 
 	 * 
 	 */
-	public MessageView(Message msg, MCNetwork parent) {
-		this.parent=parent;
-		senderResiever.add(sender);
+	public MessagePreview(Message msg, final PrivateMessageView privmsgview, MCNetwork myparent) {
+		this.addStyleName("MessagePreview");
+		this.message=msg;
+		this.parent=myparent;
 		setSender(msg.getsenderid());
 		setReciever(msg.getresieverid());
+		senderResiever.add(sender);
 		senderResiever.add(resiver);
 		this.add(senderResiever);
-		msgArea.setHTML(msg.getMessage());
-		msgArea.setStyleName("msgtext");
-		if(msg.getPriv()){
-			msgArea.setWidth("470px");
+		int Cindex= msg.getDatum().toString().indexOf('C');
+		HTML dateHTML = new HTML("<date>"+msg.getDatum().toString().substring(0, Cindex-1)+"</date>", true);
+		this.add(dateHTML);
+		//msgArea.setReadOnly(true);
+		int endindex=0;
+		if(msg.getMessage().length()<=30){
+			endindex=msg.getMessage().length();
+		}else{
+			endindex=30;
 		}
-		else{
-			msgArea.setWidth("245px");
-		}
-		
+		//System.out.println(endindex);
+		msgArea.setHTML(msg.getMessage().substring(0, endindex)+"...");
+		ClickHandler resieverClickHandler = new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				MessageView centerwidget = new MessageView(message, parent);
+				privmsgview.setUpRightPanel(centerwidget, message.getresieverid(), message.getsenderid());
+			}
+		};
+		msgArea.addClickHandler(resieverClickHandler);
+		msgArea.setStyleName("MessagePreview_msgtext");
+		msgArea.setWidth("230px");
 		this.add(msgArea);
 		
 		
@@ -65,8 +80,8 @@ public class MessageView extends VerticalPanel {
 			}
 			@Override
 			public void onSuccess(final MCUser result) {
-				resiver.setHTML("  Till: "+ result.getFirstName()+" "+result.getLastName());
-				resiver.setStyleName("Clickable");
+				resiver.setHTML("<bold>  Till: "+ result.getFirstName()+" "+result.getLastName()+"</bold>");
+				resiver.setStyleName("MsgPreview_Clickable");
 				ClickHandler resieverClickHandler = new ClickHandler() {
 					public void onClick(ClickEvent event) {
 						SendToUserPage(result);
@@ -90,8 +105,8 @@ public class MessageView extends VerticalPanel {
 			}
 			@Override
 			public void onSuccess(final MCUser result) {
-				sender.setHTML("Fr&aring;n: "+ result.getFirstName()+" "+result.getLastName()+" - ");
-				sender.setStyleName("Clickable");
+				sender.setHTML("<bold>Fr&aring;n: "+ result.getFirstName()+" "+result.getLastName()+" - </bold>");
+				sender.setStyleName("MsgPreview_Clickable");
 				ClickHandler senderClickHandler = new ClickHandler() {
 					public void onClick(ClickEvent event) {
 						SendToUserPage(result);

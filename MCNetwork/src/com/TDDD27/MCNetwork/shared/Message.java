@@ -40,31 +40,16 @@ public class Message implements Serializable{
 	@Persistent
 	private Date datum;
 
-
-
 	public Message() {
-
-		//Calendar rightNow = Calendar.getInstance();
-		//datum = rightNow.getTime();
-		
-		//DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		//datum = new Date();
-
+		datum = new Date();
 	}
 
 	public Message(Long senderid, Long resieverid, String message, Boolean priv) {
-
 		this.senderid = senderid;
-
 		this.resieverid = resieverid;
-
 		this.message = message;
-
 		this.priv = priv;
-
-		//Calendar rightNow = Calendar.getInstance();
-		//datum = rightNow.getTime();
-		datum = new Date();
+		this.datum = new Date();
 	}
 
 	public Long getsenderid() {

@@ -112,8 +112,14 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 		leftPanel.add(img);
 		setUserInfo(viewUser);
 		topPanel.add(leftPanel);
+		HTML msgTitle = new HTML("<h2>Meddelande: </h2>", true);
+		msgPanel.add(msgTitle);
+		msgPanel.setWidth("250px");
+		//scrollPnl.setSize("260px", "400px");
 		setMsgPanel();
 		msgPanel.setStyleName("UserViewMsgPanel");
+		
+		
 		scrollPnl.add(msgPanel);
 		rightPanel.add(scrollPnl);
 		topPanel.add(rightPanel);

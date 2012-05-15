@@ -35,7 +35,7 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 	public MCUser getUser(Long id) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		MCUser theUser = pm.getObjectById(MCUser.class, id); 
-		System.out.println(theUser.getFirstName());
+		//System.out.println(theUser.getFirstName());
 		pm.close();
 		return theUser;
 	}
@@ -590,6 +590,7 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 		ArrayList<Message> result = new ArrayList<Message>();
 		Query q = pm.newQuery(Message.class);
 		q.setFilter("resieverid == "+ id + " && priv == "+priv);
+		q.setOrdering("datum desc");
 		System.out.println(q.toString());
 		try {
 			@SuppressWarnings("unchecked")
