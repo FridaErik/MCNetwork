@@ -61,6 +61,7 @@ public class MyMenu extends MenuBar {
 			myParent.centerPanel.add(centerwidget);
 		}
 	};
+	//hej
 	static Command filterCmd = new Command()
 	{
 		public void execute()
