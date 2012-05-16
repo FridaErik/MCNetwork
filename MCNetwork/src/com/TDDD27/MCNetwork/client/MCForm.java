@@ -1,5 +1,9 @@
 package com.TDDD27.MCNetwork.client;
 
+import com.TDDD27.MCNetwork.shared.MC;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Grid;
@@ -8,7 +12,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 
 public class MCForm extends FormPanel{
-	
+
 	private Grid grid = new Grid(4, 3);
 	private FileUpload upload = new FileUpload();
 	private TextBox textBoxBrand = new TextBox();
@@ -23,16 +27,21 @@ public class MCForm extends FormPanel{
 	private TextBox textBoxUrl = new TextBox();
 	private HTML textLabelUrl = new HTML("L&auml;nk f&ouml;r info om modellen", true);
 	private Label errorUrl = new Label("");
-	
-	public MCForm() {
+	private Button submit = new Button("Submit");
+
+	public MCForm(MC MC) {
 		super();
-		
 
 		textBoxBrand.setName("textBoxBrand");
 		textBoxModel.setName("textBoxModel");
 		textBoxYear.setName("textBoxYear");
 		textBoxUrl.setName("textBoxUrl");
 		
+		textBoxBrand.setText(MC.getBrand());
+		textBoxModel.setText(MC.getModel());
+		textBoxYear.setText(Integer.toString(MC.getYear()));
+		textBoxUrl.setText(MC.getUrl());
+
 		grid.setWidget(0, 0, textLabelBrand);
 		grid.setWidget(0, 1, textBoxBrand);
 		grid.setWidget(0, 2, errorBrand);
@@ -45,12 +54,21 @@ public class MCForm extends FormPanel{
 		grid.setWidget(3, 0, textLabelUrl);
 		grid.setWidget(3, 1, textBoxUrl);
 		grid.setWidget(3, 2, errorUrl);
-		
+
 		setEncoding(FormPanel.ENCODING_MULTIPART);
 		setMethod(FormPanel.METHOD_POST);
 		setWidget(grid);
 		setStyleName("formPanel");
+		submit.addClickHandler(new ClickHandler() {
+
+			public void onClick(ClickEvent event) {
+				submit();	
+			}
+		});
 		
+		this.add(submit);
+
+
 	}
 
 	public String getBrand() {
@@ -122,11 +140,11 @@ public class MCForm extends FormPanel{
 		textBoxModel.setText("");
 		textBoxYear.setText("");
 		textBoxUrl.setText("");
-		
-	
+
+
 	}
 
 
-	
+
 
 }
