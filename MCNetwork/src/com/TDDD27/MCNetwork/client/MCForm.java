@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.TextBox;
 public class MCForm extends FormPanel{
 
 	private Grid grid = new Grid(4, 3);
-	private FileUpload upload = new FileUpload();
+	//private FileUpload upload = new FileUpload();
 	private TextBox textBoxBrand = new TextBox();
 	private HTML textLabelBrand = new HTML("M&auml;rke", true);
 	private Label errorBrand = new Label("");
@@ -29,7 +29,7 @@ public class MCForm extends FormPanel{
 	private Label errorUrl = new Label("");
 	private Button submit = new Button("Submit");
 
-	public MCForm(MC MC) {
+	public MCForm(MC MC, MCNetwork parent) {
 		super();
 
 		textBoxBrand.setName("textBoxBrand");
@@ -66,6 +66,7 @@ public class MCForm extends FormPanel{
 			}
 		});
 		
+		this.add(grid);
 		this.add(submit);
 
 

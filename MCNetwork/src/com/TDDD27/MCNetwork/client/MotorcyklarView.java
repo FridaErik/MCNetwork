@@ -25,13 +25,12 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 
 	private MCNetwork parent;
 	private MCUser loggedInUser=null;
-	private Button edit = new Button("Submit");
+	private MC MC = null;
+	private Button edit = new Button("Edit");
+	private Button nymc = new Button("Ny MC");
 	private LoginInfo loginInfo = null;
 	private FlexTable MCTable = new FlexTable();
-	private TextBox textBoxMake = new TextBox();
-	private TextBox textBoxModel = new TextBox();
-	private TextBox textBoxYear = new TextBox();
-	private TextBox textBoxURL = new TextBox();
+
 
 	public MotorcyklarView(MCNetwork myParent) {
 		super();
@@ -92,61 +91,48 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 		History.newItem("mcview");
 		History.fireCurrentHistoryState();		
 		//HISTORY
+		
 		testService.getUserByID(userID, callback);
 		return null;
 	}
 
 	protected void printMC(MCUser theUser) {
 		ArrayList<MC> MCList = loggedInUser.getMcList();
-		
+
 		if(!MCList.isEmpty()){
 			for(int i=1; i<=MCList.size(); i++){
-				
-				final MC MC = MCList.get(i);
-				
-				MCTable.setWidget(i, 1, new HTML("<bold>Marke </bold>"+ MC.getBrand(), true));
-//				textBoxMake.setText(MC.getBrand());
-//				MCTable.setWidget(i, 2, textBoxMake);
-				edit.addClickHandler(new ClickHandler() {
 
+				MC = MCList.get(i); 
+
+				MCTable.setWidget(i, 1, new HTML("<bold>Motorcykel </bold>"+ MC.getBrand(), true));
+				edit.addClickHandler(new ClickHandler() {
 					public void onClick(ClickEvent event) {
 						edit(MC);	
 					}
 				});
-				
 				MCTable.setWidget(i, 2, edit);
-				
-//				MCTable.setWidget(i+1, 1, new HTML("<bold>Modell: </bold>", true));
-//				textBoxModel.setText(MC.getModel());
-//				MCTable.setWidget(i+1, 2, textBoxModel);
-//				
-//				MCTable.setWidget(i+2, 1, new HTML("<bold>Tillverkningsår: </bold>", true));
-//				textBoxYear.setText(Integer.toString(MC.getYear()));
-//				MCTable.setWidget(i+2, 2, textBoxYear);
-//				
-//				MCTable.setWidget(i+3, 1, new HTML("<bold>Länk: </bold>", true));
-//				textBoxURL.setText(MC.getUrl());
-//				MCTable.setWidget(i+3, 2, textBoxURL);
-				
 			}
 		}
+		
+		nymc.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				edit(MC);	
+			}
+		});
 		this.add(MCTable);
-		
-	}
-	
-protected void edit(MC MC) {
-		
-	new MCForm(MC);
-		
+		this.add(nymc);
+
 	}
 
-//	protected void edit(int MCnummer) {
-//		MC MC = loggedInUser.getMcList().get(MCnummer);	
-//		
-//		MC.setBrand(MCTable.getWidget(MCnummer, 2));
-//	}
+	protected void edit(MC MC) {
 
-	
+		MCForm centerwidget = new MCForm(MC, parent); //Behöver kanske egentligen inte skicka med parent här men jag gjorde det för att "den kan vara bra att ha"
+		parent.centerPanel.clear();
+		parent.centerPanel.add(centerwidget);
+
+
+	}
+
 
 	@Override
 	public void onValueChange(ValueChangeEvent event) {
