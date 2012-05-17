@@ -560,21 +560,21 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 	public long updateUser(MCUser mcuser) {
 		System.out.println("Försöker göra en update, id är :"+mcuser.getId());
 		PersistenceManager pm = PMF.get().getPersistenceManager();
-	    try {
-	        MCUser e = pm.getObjectById(MCUser.class, mcuser.getId());
-	        e.setBirthYear(mcuser.getBirthYear());
-	        e.setCity(mcuser.getCity());
-	        e.seteMail(mcuser.geteMail());
-	        e.setFirstName(mcuser.getFirstName());
-	        e.setLastName(mcuser.getLastName());
-	        e.setMilesDriven(mcuser.getMilesDriven());
-	        e.setRegion(mcuser.getRegion());
-	        e.setGender(mcuser.getGender());
-	        e.setUserID(mcuser.getUserID());
-	        
-	    } finally {
-	        pm.close();
-	    }
+		try {
+			MCUser e = pm.getObjectById(MCUser.class, mcuser.getId());
+			e.setBirthYear(mcuser.getBirthYear());
+			e.setCity(mcuser.getCity());
+			e.seteMail(mcuser.geteMail());
+			e.setFirstName(mcuser.getFirstName());
+			e.setLastName(mcuser.getLastName());
+			e.setMilesDriven(mcuser.getMilesDriven());
+			e.setRegion(mcuser.getRegion());
+			e.setGender(mcuser.getGender());
+			e.setUserID(mcuser.getUserID());
+
+		} finally {
+			pm.close();
+		}
 		return 0;
 	}
 	@Override
@@ -607,6 +607,20 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 			q.closeAll();
 		}
 		return result;
+	}
+	@Override
+	public boolean deleteMsg(String id) {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Message msg = pm.getObjectById(Message.class, id); 
+		try {
+			pm.deletePersistent(msg);
+		} catch (Exception e) {
+			e.printStackTrace();
+			pm.close();
+			return false;
+		}
+		pm.close();
+		return true;
 	}
 
 }

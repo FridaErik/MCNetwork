@@ -33,13 +33,25 @@ public class MessageView extends VerticalPanel {
 	/**
 	 * 
 	 */
-	public MessageView(Message msg, MCNetwork parent) {
+	public MessageView(final Message msg, final MCNetwork parent) {
 		this.parent=parent;
 		senderResiever.add(sender);
 		setSender(msg.getsenderid());
 		setReciever(msg.getresieverid());
 		senderResiever.add(resiver);
 		this.add(senderResiever);
+		if(msg.getPriv()){
+			HTML deleteHTML = new HTML("  Radera", true);
+		deleteHTML.addStyleName("MsgPreview_Clickable");
+		ClickHandler deleteClickHandler = new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				parent.centerPanel.clear();
+				deleteMsg(msg);
+			}
+		};
+		deleteHTML.addClickHandler(deleteClickHandler);
+		senderResiever.add(deleteHTML);
+		}
 		msgArea.setHTML(msg.getMessage());
 		msgArea.setStyleName("msgtext");
 		if(msg.getPriv()){
@@ -109,6 +121,29 @@ public class MessageView extends VerticalPanel {
 		UserView centerwidget = new UserView(mcuser, parent);
 		parent.centerPanel.clear();
 		parent.centerPanel.add(centerwidget);
+
+	}
+	protected void deleteMsg(Message msg) {
+		if (testService == null) {
+			testService = GWT.create(TestService.class);
+		}
+		// Set up the callback object.
+		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+			public void onFailure(Throwable caught) {
+
+			}
+			@Override
+			public void onSuccess(Boolean result) {
+				if(result){
+					PrivateMessageView centerwidget = new PrivateMessageView(parent);
+					parent.centerPanel.clear();
+					parent.centerPanel.add(centerwidget);
+				}
+
+			}
+
+		};
+		testService.deleteMsg(msg.getId(), callback);
 
 	}
 

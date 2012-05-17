@@ -30,4 +30,6 @@ public interface TestServiceAsync {
 
 	void getRecievedMessage(Long id, Boolean priv, AsyncCallback<ArrayList<Message>> callback);
 
+	void deleteMsg(String id, AsyncCallback<Boolean> callback);
+
 }

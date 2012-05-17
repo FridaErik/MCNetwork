@@ -34,7 +34,7 @@ public class MessagePreview extends VerticalPanel {
 	 * @param privmsgview 
 	 * 
 	 */
-	public MessagePreview(Message msg, final PrivateMessageView privmsgview, MCNetwork myparent) {
+	public MessagePreview(final Message msg, final PrivateMessageView privmsgview, MCNetwork myparent) {
 		this.addStyleName("MessagePreview");
 		this.message=msg;
 		this.parent=myparent;
@@ -44,8 +44,20 @@ public class MessagePreview extends VerticalPanel {
 		senderResiever.add(resiver);
 		this.add(senderResiever);
 		int Cindex= msg.getDatum().toString().indexOf('C');
+		HorizontalPanel container1 = new HorizontalPanel();
 		HTML dateHTML = new HTML("<date>"+msg.getDatum().toString().substring(0, Cindex-1)+"</date>", true);
-		this.add(dateHTML);
+		HTML deleteHTML = new HTML("  Radera", true);
+		deleteHTML.addStyleName("MsgPreview_Clickable");
+		ClickHandler deleteClickHandler = new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				parent.centerPanel.clear();
+				deleteMsg(msg);
+			}
+		};
+		deleteHTML.addClickHandler(deleteClickHandler);
+		container1.add(dateHTML);
+		container1.add(deleteHTML);
+		this.add(container1);
 		//msgArea.setReadOnly(true);
 		int endindex=0;
 		if(msg.getMessage().length()<=30){
@@ -65,11 +77,34 @@ public class MessagePreview extends VerticalPanel {
 		msgArea.setStyleName("MessagePreview_msgtext");
 		msgArea.setWidth("230px");
 		this.add(msgArea);
-		
-		
+
+
+	}
+	protected void deleteMsg(Message msg) {
+		if (testService == null) {
+			testService = GWT.create(TestService.class);
+		}
+		// Set up the callback object.
+		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+			public void onFailure(Throwable caught) {
+
+			}
+			@Override
+			public void onSuccess(Boolean result) {
+				if(result){
+					PrivateMessageView centerwidget = new PrivateMessageView(parent);
+					parent.centerPanel.clear();
+					parent.centerPanel.add(centerwidget);
+				}
+
+			}
+
+		};
+		testService.deleteMsg(msg.getId(), callback);
+
 	}
 	private void setReciever(Long resieverid) {
-		
+
 		if (testService == null) {
 			testService = GWT.create(TestService.class);
 		}
@@ -80,7 +115,7 @@ public class MessagePreview extends VerticalPanel {
 			}
 			@Override
 			public void onSuccess(final MCUser result) {
-				resiver.setHTML("<bold>  Till: "+ result.getFirstName()+" "+result.getLastName()+"</bold>");
+				resiver.setHTML("<bold> Till: "+ result.getFirstName()+" "+result.getLastName()+"</bold>");
 				resiver.setStyleName("MsgPreview_Clickable");
 				ClickHandler resieverClickHandler = new ClickHandler() {
 					public void onClick(ClickEvent event) {
@@ -91,9 +126,9 @@ public class MessagePreview extends VerticalPanel {
 			}
 		};
 		testService.getUser(resieverid, callback);
-		
+
 	}
-	//TODO
+
 	private void setSender(Long senderid) {
 		if (testService == null) {
 			testService = GWT.create(TestService.class);
@@ -105,7 +140,7 @@ public class MessagePreview extends VerticalPanel {
 			}
 			@Override
 			public void onSuccess(final MCUser result) {
-				sender.setHTML("<bold>Fr&aring;n: "+ result.getFirstName()+" "+result.getLastName()+" - </bold>");
+				sender.setHTML("<bold>Fr&aring;n: "+ result.getFirstName()+" "+result.getLastName()+" -</bold>");
 				sender.setStyleName("MsgPreview_Clickable");
 				ClickHandler senderClickHandler = new ClickHandler() {
 					public void onClick(ClickEvent event) {
@@ -113,12 +148,12 @@ public class MessagePreview extends VerticalPanel {
 					}
 				};
 				sender.addClickHandler(senderClickHandler);
-				
+
 			}
-			
+
 		};
 		testService.getUser(senderid, callback);
-		
+
 	}
 	protected void SendToUserPage(MCUser mcuser) {
 		UserView centerwidget = new UserView(mcuser, parent);

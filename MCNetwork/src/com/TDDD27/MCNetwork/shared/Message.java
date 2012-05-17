@@ -88,6 +88,30 @@ public class Message implements Serializable{
 		return datum;
 	}
 
+	public Long getSenderid() {
+		return senderid;
+	}
+
+	public void setSenderid(Long senderid) {
+		this.senderid = senderid;
+	}
+
+	public Long getResieverid() {
+		return resieverid;
+	}
+
+	public void setResieverid(Long resieverid) {
+		this.resieverid = resieverid;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setDatum(Date datum) {
+		this.datum = datum;
+	}
+
 
 
 }

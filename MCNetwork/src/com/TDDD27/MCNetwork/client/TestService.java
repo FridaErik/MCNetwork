@@ -33,6 +33,8 @@ public interface TestService extends RemoteService {
 
 	ArrayList<Message> getRecievedMessage(Long id, Boolean priv);
 
+	boolean deleteMsg(String id);
+
 
 
 }
