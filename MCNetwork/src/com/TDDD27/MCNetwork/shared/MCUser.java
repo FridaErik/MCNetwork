@@ -22,86 +22,87 @@ import javax.jdo.annotations.PrimaryKey;
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class MCUser implements Serializable
 {
-    /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 203986008069225496L;
-    
-    @PrimaryKey
-    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-    private Long id;
 
-    //För att lagra id för com.google.appengine.api.users.User (getUserId())
-    @Persistent
-    private String userID;
-    
-    @Persistent
-    private String firstName;
-    
-    @Persistent
-    private String lastName;
-    
-    @Persistent
-    private int birthYear;
-    
-    @Persistent
-    private String eMail;
-    
-    @Persistent
-    private String city;
-    
-    @Persistent
-    private String region;
-    
-    @Persistent
-    private String gender;
-    
-    @Persistent(mappedBy = "owner")
-    private ArrayList<MC> mcList = new ArrayList<MC>();
-    
-    /*@Persistent(mappedBy = "id")
-    private ArrayList<User> friendsList = new ArrayList<User>();*/
-    
-    @Persistent
-    private int milesDriven;
-    
-    public MCUser(){
-    	
-    }
-    
-    public MCUser(String firstName, String lastName, int birthYear, 
-    		String eMail, String city, String region, String gender, ArrayList<MC> mcList,
-    		int milesDriven, String userid){
-    	
-    	this.firstName=firstName;
-    	this.lastName=lastName;
-    	this.birthYear=birthYear;
-    	this.eMail=eMail;
-    	this.city=city;
-    	this.region=region;
-    	this.gender=gender;
-    	this.mcList=mcList;
-    	this.milesDriven=milesDriven;
-    	this.userID=userid;
-    	
-    }
-    
-    //Tillägg 2012-04-17
-    public MCUser(String firstName, String lastName, int birthYear, 
-    		String eMail, String city, String region, String gender, int milesDriven, String userid){
-    	
-    	this.firstName=firstName;
-    	this.lastName=lastName;
-    	this.birthYear=birthYear;
-    	this.eMail=eMail;
-    	this.city=city;
-    	this.region=region;
-    	this.gender=gender;
-    	this.milesDriven=milesDriven;
-    	this.userID=userid;
-    	
-    }
-    
+	@PrimaryKey
+	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+	private Long id;
+
+	//För att lagra id för com.google.appengine.api.users.User (getUserId())
+	@Persistent
+	private String userID;
+
+	@Persistent
+	private String firstName;
+
+	@Persistent
+	private String lastName;
+
+	@Persistent
+	private int birthYear;
+
+	@Persistent
+	private String eMail;
+
+	@Persistent
+	private String city;
+
+	@Persistent
+	private String region;
+
+	@Persistent
+	private String gender;
+
+	@Persistent(mappedBy = "owner")
+	private ArrayList<MC> mcList = new ArrayList<MC>();
+
+	@Persistent(mappedBy = "id")
+	private ArrayList<MCUser> friendsList = new ArrayList<MCUser>();
+
+
+	@Persistent
+	private int milesDriven;
+
+	public MCUser(){
+
+	}
+
+	public MCUser(String firstName, String lastName, int birthYear, 
+			String eMail, String city, String region, String gender, ArrayList<MC> mcList,
+			int milesDriven, String userid){
+
+		this.firstName=firstName;
+		this.lastName=lastName;
+		this.birthYear=birthYear;
+		this.eMail=eMail;
+		this.city=city;
+		this.region=region;
+		this.gender=gender;
+		this.mcList=mcList;
+		this.milesDriven=milesDriven;
+		this.userID=userid;
+
+	}
+
+	//Tillägg 2012-04-17
+	public MCUser(String firstName, String lastName, int birthYear, 
+			String eMail, String city, String region, String gender, int milesDriven, String userid){
+
+		this.firstName=firstName;
+		this.lastName=lastName;
+		this.birthYear=birthYear;
+		this.eMail=eMail;
+		this.city=city;
+		this.region=region;
+		this.gender=gender;
+		this.milesDriven=milesDriven;
+		this.userID=userid;
+
+	}
+
 
 	public Long getId() {
 		return id;
@@ -190,7 +191,14 @@ public class MCUser implements Serializable
 	public void setId(Long id) {
 		this.id = id;
 	}
+	
+	public ArrayList<MCUser> getFriendsList() {
+		return friendsList;
+	}
 
+	public void setFriendsList(ArrayList<MCUser> friendsList) {
+		this.friendsList = friendsList;
+	}
 
 
 }
