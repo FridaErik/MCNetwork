@@ -122,22 +122,19 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 			testService = GWT.create(TestService.class);
 		}
 		// Set up the callback object.
-		AsyncCallback<ArrayList<MCUser>> callback = new AsyncCallback<ArrayList<MCUser>>() {
+		AsyncCallback<MCUser> callback = new AsyncCallback<MCUser>() {
 			public void onFailure(Throwable caught) {
 
 			}
 			@Override
-			public void onSuccess(ArrayList<MCUser> result) {
+			public void onSuccess(MCUser result) {
 				System.out.println("Hämtat DBUSer med ID från Google");
 				if(result==null){
 					System.out.println("Använderan finns inte i databasen");
 					setEmptyForm();
 				}
-				else if(result.size()>1){
-					System.out.println("Dubble ID i Databasen!!!!!!");
-				}
 				else{
-					loggedInUser=result.get(0);
+					loggedInUser=result;
 					setEmptyForm();
 					System.out.println("Hittade en!!!!");
 					fillForm(loggedInUser);
@@ -515,7 +512,7 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 		}
 	}
 	protected void checkLName(String text) {
-		boolean valid = text.matches("[a-öA-Ö]*");	
+		boolean valid = text.matches("[a-öA-Ö0-9-.,()]*");	
 		if(!valid || text.equals("") || text.length()<2){
 			errorLnamn.setText("Ogiltigt namn");
 			submitOK=false;

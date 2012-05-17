@@ -5,7 +5,6 @@ package com.TDDD27.MCNetwork.shared;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
@@ -59,8 +58,13 @@ public class MCUser implements Serializable
 	@Persistent(mappedBy = "owner")
 	private ArrayList<MC> mcList = new ArrayList<MC>();
 
-	@Persistent(mappedBy = "id")
-	private ArrayList<MCUser> friendsList = new ArrayList<MCUser>();
+	//There is currently a bug preventing owned one-to-many relationships where the parent and the 
+	//child are the same class, making it difficult to model tree structures. This will be fixed in 
+	//a future release. You can work around this by storing explicit Key values for either the parent 
+	//or children.
+	
+	@Persistent
+	private ArrayList<Long> friendsList = new ArrayList<Long>();
 
 
 	@Persistent
@@ -192,11 +196,11 @@ public class MCUser implements Serializable
 		this.id = id;
 	}
 	
-	public ArrayList<MCUser> getFriendsList() {
+	public ArrayList<Long> getFriendsList() {
 		return friendsList;
 	}
 
-	public void setFriendsList(ArrayList<MCUser> friendsList) {
+	public void setFriendsList(ArrayList<Long> friendsList) {
 		this.friendsList = friendsList;
 	}
 

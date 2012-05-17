@@ -118,13 +118,14 @@ public class PrivateMessageView extends HorizontalPanel implements ValueChangeHa
 			testService = GWT.create(TestService.class);
 		}
 		// Set up the callback object.
-		AsyncCallback<ArrayList<MCUser>> callback = new AsyncCallback<ArrayList<MCUser>>() {
+		AsyncCallback<MCUser> callback = new AsyncCallback<MCUser>() {
 			public void onFailure(Throwable caught) {
 				System.out.println("failure när person ska visa sina meddelanden...(Userview)");
 			}
 			@Override
-			public void onSuccess(ArrayList<MCUser> result) {
-				loggedInUser=result.get(0);
+			public void onSuccess(MCUser result) {
+				loggedInUser=result;
+				System.out.println("loggedInUser.getId(): "+loggedInUser.getId()+" Listan.size()"+loggedInUser.getMcList().size());
 				setMsgPanel();
 				//Hämta och skriv ut denna users privata meddelanden i panelen
 			}

@@ -45,7 +45,7 @@ public class MessagePreview extends VerticalPanel {
 		this.add(senderResiever);
 		int Cindex= msg.getDatum().toString().indexOf('C');
 		HorizontalPanel container1 = new HorizontalPanel();
-		HTML dateHTML = new HTML("<date>"+msg.getDatum().toString().substring(0, Cindex-1)+"</date>", true);
+		HTML dateHTML = new HTML("<date>"+msg.getDatum().toString().substring(0, Cindex-1)+" </date>", true);
 		HTML deleteHTML = new HTML("  Radera", true);
 		deleteHTML.addStyleName("MsgPreview_Clickable");
 		ClickHandler deleteClickHandler = new ClickHandler() {
@@ -96,9 +96,7 @@ public class MessagePreview extends VerticalPanel {
 					parent.centerPanel.clear();
 					parent.centerPanel.add(centerwidget);
 				}
-
 			}
-
 		};
 		testService.deleteMsg(msg.getId(), callback);
 

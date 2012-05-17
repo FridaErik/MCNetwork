@@ -14,7 +14,7 @@ public interface TestServiceAsync {
 
 	void getUser(Long id, AsyncCallback<MCUser> callback);
 
-	void storeMC(MC mc, AsyncCallback<MC> callback);
+	void storeMC(MC mc, MCUser loggedInUser, AsyncCallback<Boolean> callback);
 
 	void storeUserMC(MCUser mcuser, MC mc, AsyncCallback<Long> callback);
 
@@ -22,7 +22,7 @@ public interface TestServiceAsync {
 			String lan, String city, String fname, String lname,
 			AsyncCallback<ArrayList<MCUser>> callback);
 
-	void getUserByID(String userID, AsyncCallback<ArrayList<MCUser>> callback);
+	void getUserByID(String userID, AsyncCallback<MCUser> callback);
 
 	void updateUser(MCUser mcuser, AsyncCallback<Long> callback);
 

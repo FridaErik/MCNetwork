@@ -225,13 +225,13 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 			testService = GWT.create(TestService.class);
 		}
 		// Set up the callback object.
-		AsyncCallback<ArrayList<MCUser>> callback = new AsyncCallback<ArrayList<MCUser>>() {
+		AsyncCallback<MCUser> callback = new AsyncCallback<MCUser>() {
 			public void onFailure(Throwable caught) {
 				System.out.println("failure när person ska skapa meddelande...(Userview)");
 			}
 			@Override
-			public void onSuccess(ArrayList<MCUser> result) {
-				MessageForm msgform = new MessageForm( result.get(0), viewUser, parent, priv);
+			public void onSuccess(MCUser result) {
+				MessageForm msgform = new MessageForm( result, viewUser, parent, priv);
 				parent.centerPanel.clear();
 				parent.centerPanel.add(msgform);
 			}

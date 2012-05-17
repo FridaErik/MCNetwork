@@ -18,14 +18,14 @@ public interface TestService extends RemoteService {
 
 	MCUser getUser(Long id);
 
-	MC storeMC(MC mc);
+	Boolean storeMC(MC mc, MCUser loggedInUser);
 
 	Long storeUserMC(MCUser mcuser, MC mc);
 
 	ArrayList<MCUser> searchUsers(int yearup, int yeardown, int milesup,
 			int milesdown, String lan, String city, String fname, String lname);
 
-	ArrayList<MCUser> getUserByID(String userID);
+	MCUser getUserByID(String userID);
 
 	long updateUser(MCUser mcuser);
 

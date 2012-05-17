@@ -33,20 +33,37 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 	//TODO
 	@Override
 	public MCUser getUser(Long id) {
+		MCUser detachedUser=null;
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		MCUser theUser = pm.getObjectById(MCUser.class, id); 
+		detachedUser = pm.detachCopy(theUser);
 		//System.out.println(theUser.getFirstName());
 		pm.close();
-		return theUser;
+		
+		return detachedUser;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public MC storeMC(MC mc) {
-		PersistenceManager pm = PMF.get().getPersistenceManager();
-		MC storedMC = pm.makePersistent(mc);
+	public Boolean storeMC(MC mc, MCUser user) {
+	
+		PersistenceManager pm1 = PMF.get().getPersistenceManager();
+		
+		try {
+			
+			MCUser e = pm1.getObjectById(MCUser.class, user.getId());
+			mc.setOwner(e); 	//uppdatera mc
+			e.getMcList().add(mc); //Uppdatera user
+			System.out.println("e.getId(): "+e.getId()+" e.getMcList().size(): "+e.getMcList().size());
+			
+		}
+		finally {
+			pm1.close(); //Spara till databasen
+		}
 
-		return storedMC;
+		return true;
+
+
 	}
 
 	@Override
@@ -534,27 +551,28 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 	}
 
 	@Override
-	public ArrayList<MCUser> getUserByID(String userID) {
+	public MCUser getUserByID(String userID) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
-		ArrayList<MCUser> result = new ArrayList<MCUser>();
+		//ArrayList<MCUser> result = new ArrayList<MCUser>();
+		MCUser result=null;
+		MCUser detachedUser=null;
 		Query q = pm.newQuery(MCUser.class);
 		q.setFilter("userID == '"+ userID+"'");
 		System.out.println(q.toString());
 		try {
+			
 			@SuppressWarnings("unchecked")
 			List<MCUser> results = (List<MCUser>) q.execute();
-			if(results.size()==0){
-				System.out.println("result==null, userID == "+ userID);
-				return null;
-			}
-			for(MCUser a : results){
-				result.add(a);
-			}
-
+			result=results.get(0);
+			System.out.println("user.getId(): "+result.getId()+" Listan.size() "+result.getMcList().size());
+			//För att göra om datanucleus arraylist till java.util.arraylist så den kan skickas till klienten
+			detachedUser = pm.detachCopy(result);
+			
 		} finally {
 			q.closeAll();
 		}
-		return result;
+		System.out.println("user.getId(): "+result.getId()+" Listan.size() "+result.getMcList().size());
+		return detachedUser;
 	}
 	@Override
 	public long updateUser(MCUser mcuser) {
@@ -598,10 +616,10 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 			if(results.size()==0){
 				System.out.println("result==null, recieverid == "+ id);
 				return null;
+			}else{
+				result = new java.util.ArrayList(results);
 			}
-			for(Message a : results){
-				result.add(a);
-			}
+			
 
 		} finally {
 			q.closeAll();

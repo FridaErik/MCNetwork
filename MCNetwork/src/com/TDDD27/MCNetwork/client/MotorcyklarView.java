@@ -26,7 +26,7 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 	private MCNetwork parent;
 	private MCUser loggedInUser=null;
 	private MC MC = null;
-	private Button edit = new Button("Edit");
+	//private Button edit;
 	private Button nymc = new Button("Ny MC");
 	private LoginInfo loginInfo = null;
 	private FlexTable MCTable = new FlexTable();
@@ -57,24 +57,19 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 			testService = GWT.create(TestService.class);
 		}
 		// Set up the callback object.
-		AsyncCallback<ArrayList<MCUser>> callback = new AsyncCallback<ArrayList<MCUser>>() {
+		AsyncCallback<MCUser> callback = new AsyncCallback<MCUser>() {
 			public void onFailure(Throwable caught) {
 
 			}
 			@Override
-			public void onSuccess(ArrayList<MCUser> result) {
+			public void onSuccess(MCUser result) {
 				System.out.println("H‰mtat DBUSer med ID frÂn Google");
 				if(result==null){
 					System.out.println("Anv‰nderan finns inte i databasen");
 					//Hit ska vi aldrig komma för att man ser inte knappen i menyn om man inte är med i databasen
 				}
-				else if(result.size()>1){
-					//Ajaj, någon har klantat sig
-					System.out.println("Dubble ID i Databasen!!!!!!");
-				}
 				else{
-					loggedInUser=result.get(0);
-
+					loggedInUser=result;
 					System.out.println("Hittade en!!!! (i MotorcyklarView)");
 					printMC(loggedInUser);
 				}
@@ -98,12 +93,14 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 
 	protected void printMC(MCUser theUser) {
 		ArrayList<MC> MCList = loggedInUser.getMcList();
-
+		
+		System.out.println("loggedInUser.getId(): "+loggedInUser.getId()+" Listan.size()"+MCList.size());
 		if(!MCList.isEmpty()){
-			for(int i=1; i<=MCList.size(); i++){
+			
+			for(int i=0; i<MCList.size(); i++){
 
 				MC = MCList.get(i); 
-
+				Button edit = new Button("Edit");
 				MCTable.setWidget(i, 1, new HTML("<bold>Motorcykel </bold>"+ MC.getBrand(), true));
 				edit.addClickHandler(new ClickHandler() {
 					public void onClick(ClickEvent event) {
@@ -126,7 +123,7 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 
 	protected void edit(MC MC) {
 
-		MCForm centerwidget = new MCForm(MC, parent); //Behöver kanske egentligen inte skicka med parent här men jag gjorde det för att "den kan vara bra att ha"
+		MCForm centerwidget = new MCForm(MC, loggedInUser, parent); //Behöver kanske egentligen inte skicka med parent här men jag gjorde det för att "den kan vara bra att ha"
 		parent.centerPanel.clear();
 		parent.centerPanel.add(centerwidget);
 

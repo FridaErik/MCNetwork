@@ -1,8 +1,11 @@
 package com.TDDD27.MCNetwork.client;
 
 import com.TDDD27.MCNetwork.shared.MC;
+import com.TDDD27.MCNetwork.shared.MCUser;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -10,10 +13,13 @@ import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
+import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
 
 public class MCForm extends FormPanel{
-
-	private Grid grid = new Grid(4, 3);
+	private static TestServiceAsync testService = GWT.create(TestService.class);
+	
+	private Grid grid = new Grid(5, 3);
 	//private FileUpload upload = new FileUpload();
 	private TextBox textBoxBrand = new TextBox();
 	private HTML textLabelBrand = new HTML("M&auml;rke", true);
@@ -28,19 +34,21 @@ public class MCForm extends FormPanel{
 	private HTML textLabelUrl = new HTML("L&auml;nk f&ouml;r info om modellen", true);
 	private Label errorUrl = new Label("");
 	private Button submit = new Button("Submit");
+	private Boolean submitOK = true;
 
-	public MCForm(MC MC, MCNetwork parent) {
+	public MCForm(MC MC, final MCUser loggedInUser, MCNetwork parent) {
 		super();
 
 		textBoxBrand.setName("textBoxBrand");
 		textBoxModel.setName("textBoxModel");
 		textBoxYear.setName("textBoxYear");
 		textBoxUrl.setName("textBoxUrl");
-		
-		textBoxBrand.setText(MC.getBrand());
-		textBoxModel.setText(MC.getModel());
-		textBoxYear.setText(Integer.toString(MC.getYear()));
-		textBoxUrl.setText(MC.getUrl());
+		if(MC!=null){
+			textBoxBrand.setText(MC.getBrand());
+			textBoxModel.setText(MC.getModel());
+			textBoxYear.setText(Integer.toString(MC.getYear()));
+			textBoxUrl.setText(MC.getUrl());
+		}
 
 		grid.setWidget(0, 0, textLabelBrand);
 		grid.setWidget(0, 1, textBoxBrand);
@@ -57,7 +65,7 @@ public class MCForm extends FormPanel{
 
 		setEncoding(FormPanel.ENCODING_MULTIPART);
 		setMethod(FormPanel.METHOD_POST);
-		setWidget(grid);
+		//setWidget(grid);
 		setStyleName("formPanel");
 		submit.addClickHandler(new ClickHandler() {
 
@@ -65,11 +73,68 @@ public class MCForm extends FormPanel{
 				submit();	
 			}
 		});
-		
+		grid.setWidget(4, 1, submit);
 		this.add(grid);
-		this.add(submit);
+		//this.add(submit);
+
+		//Testar en grej
+		addSubmitHandler(new SubmitHandler() {
+
+			@Override
+			public void onSubmit(SubmitEvent event) {	
+
+				submitOK = true;
+				String brand = textBoxBrand.getText();
+				String model = textBoxModel.getText();
+				int year = Integer.parseInt(textBoxYear.getText());
+				String url = textBoxUrl.getText();
+				//validering
+				checkBrand(brand);
+
+				if(submitOK){
+					//Skicka in MC plus användare till DB
+					MC MC = new MC(brand, model, year, url);
+					storeMC(MC, loggedInUser);
+
+				}
+			}
+
+			private void storeMC(MC mc,	MCUser loggedInUser) {
+				if (testService == null) {
+					testService = GWT.create(TestService.class);
+				}
+
+				// Set up the callback object.
+				AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+					public void onFailure(Throwable caught) {
+					}
+					@Override
+					public void onSuccess(Boolean result) {
+						//TODO if true=det gick bra, if false det gick mindre bra...
+					}
+				};
+			
+				testService.storeMC(mc, loggedInUser, callback);
+				
+			}
+
+		});
 
 
+	}
+	private void checkBrand(String brand) {
+		boolean valid = brand.matches("[a-öA-Ö]*");	
+		if(!valid){
+			errorBrand.setText("Ogiltigt m&auml;rke");
+			submitOK=false;
+		}
+	}
+	private void checkModel(String model) {
+		boolean valid = model.matches("[a-öA-Ö]*");	
+		if(!valid){
+			errorModel.setText("Ogiltigt modellnamn");
+			submitOK=false;
+		}
 	}
 
 	public String getBrand() {
