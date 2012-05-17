@@ -47,6 +47,7 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 	private FlexTable infoTable = new FlexTable();
 	private HTML title = new HTML("", true);
 	private MCUser viewUser;
+	private MCUser myself;
 	private LoginInfo loginInfo = null;
 	private VerticalPanel msgPanel = new VerticalPanel();
 	private ScrollPanel scrollPnl = new ScrollPanel();
@@ -55,6 +56,7 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 		parent=myparent;
 		this.add(title);
 		MCUser mcuser = getUser(id);
+		viewUser=mcuser;
 		Image img = new Image("images/question-mark-icon_21147438.jpg");
 		img.setHeight("100px");
 		leftPanel.add(img);
@@ -82,6 +84,11 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 				createMsgForm(priv);
 			}
 		});
+		addBtn.addClickHandler(new ClickHandler(){
+			public void onClick(ClickEvent event){
+				addFriend(myself, viewUser);
+			}
+		});
 		
 		bottomPanel.add(addBtn);
 		bottomPanel.add(sendPriMsgBtn);
@@ -102,6 +109,7 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 		History.fireCurrentHistoryState();		
 		//HISTORY
 	}
+	
 	@SuppressWarnings("unchecked")
 	public UserView(MCUser mcuser, final MCNetwork myparent) {
 		viewUser=mcuser;
@@ -138,6 +146,11 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 			public void onClick(ClickEvent event){
 				Boolean priv=false;
 				createMsgForm(priv);
+			}
+		});
+		addBtn.addClickHandler(new ClickHandler(){
+			public void onClick(ClickEvent event){
+				addFriend(myself, viewUser);
 			}
 		});
 		
@@ -268,6 +281,11 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 		};
 		testService.getUser(id, callback);
 		return null;
+	}
+	
+	protected void addFriend(MCUser myself, MCUser viewUser) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	private void setErrorMessage(Long userid) {
