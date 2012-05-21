@@ -15,11 +15,13 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
-import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
-
+/**
+ * Klass för att visa en användares lista av 
+ * motorcyklar samt lägga till nya
+ * @author Frida
+ *
+ */
 public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler{
 	private static TestServiceAsync testService = GWT.create(TestService.class);
 
@@ -38,9 +40,11 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 		parent=myParent;
 		LoginServiceAsync loginService = GWT.create(LoginService.class);
 		loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
+			@Override
 			public void onFailure(Throwable error) {
 				//setWidget(new HTML("<H1>Det verkar inte finnas en inloggad användare men då ska inte fliken uppdatera" + " din uppgifter synas i menyn, nåt blir fel</H1>", true));
 			}
+			@Override
 			public void onSuccess(LoginInfo result) {
 				System.out.println("Userform har registrerat att en användare är inloggad");
 				loginInfo = result;
@@ -51,6 +55,12 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 
 	}
 
+	/**
+	 * Hämtar en användare med hjälp av Google-id:t
+	 * och anropar metoden för att skriva ut dennes motorcyklar.
+	 * @param userID
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	private MCUser getDBUser(String userID) {
 		if (testService == null) {
@@ -58,6 +68,7 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 		}
 		// Set up the callback object.
 		AsyncCallback<MCUser> callback = new AsyncCallback<MCUser>() {
+			@Override
 			public void onFailure(Throwable caught) {
 
 			}
@@ -86,23 +97,29 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 		History.newItem("mcview");
 		History.fireCurrentHistoryState();		
 		//HISTORY
-		
+
 		testService.getUserByID(userID, callback);
 		return null;
 	}
 
+	/**
+	 * Skriver ut användarens motorcyklar
+	 * i en tabell
+	 * @param theUser
+	 */
 	protected void printMC(MCUser theUser) {
 		ArrayList<MC> MCList = loggedInUser.getMcList();
-		
+
 		System.out.println("loggedInUser.getId(): "+loggedInUser.getId()+" Listan.size()"+MCList.size());
 		if(!MCList.isEmpty()){
-			
+
 			for(int i=0; i<MCList.size(); i++){
 
 				MC = MCList.get(i); 
 				Button edit = new Button("Edit");
 				MCTable.setWidget(i, 1, new HTML("<bold>Motorcykel </bold>"+ MC.getBrand(), true));
 				edit.addClickHandler(new ClickHandler() {
+					@Override
 					public void onClick(ClickEvent event) {
 						edit(MC);	
 					}
@@ -110,8 +127,9 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 				MCTable.setWidget(i, 2, edit);
 			}
 		}
-		
+
 		nymc.addClickHandler(new ClickHandler() {
+			@Override
 			public void onClick(ClickEvent event) {
 				edit(MC);	
 			}
@@ -120,7 +138,11 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 		this.add(nymc);
 
 	}
-
+	/**
+	 * Metod för att öppna ett formulär
+	 * så att användaren kan ändra uppgifter de angett om en modell
+	 * @param MC
+	 */
 	protected void edit(MC MC) {
 
 		MCForm centerwidget = new MCForm(MC, loggedInUser, parent); //Behšver kanske egentligen inte skicka med parent hŠr men jag gjorde det fšr att "den kan vara bra att ha"
@@ -130,7 +152,9 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 
 	}
 
-
+	/**Hanterar historiken
+	 * 
+	 */
 	@Override
 	public void onValueChange(ValueChangeEvent event) {
 		if (event.getValue().equals("mcview")){

@@ -1,7 +1,6 @@
 package com.TDDD27.MCNetwork.client;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import com.TDDD27.MCNetwork.shared.MC;
 import com.TDDD27.MCNetwork.shared.MCUser;

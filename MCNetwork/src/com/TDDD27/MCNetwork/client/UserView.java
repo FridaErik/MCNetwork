@@ -4,41 +4,38 @@ package com.TDDD27.MCNetwork.client;
 
 import java.util.ArrayList;
 
-
-
 import com.TDDD27.MCNetwork.shared.LoginInfo;
 import com.TDDD27.MCNetwork.shared.MCUser;
 import com.TDDD27.MCNetwork.shared.Message;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-
 import com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException;
-
 import com.google.gwt.user.client.rpc.InvocationException;
-
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ScrollPanel;
-
-import com.google.gwt.user.client.ui.HTML;
-
-import com.google.gwt.user.client.ui.HorizontalPanel;
-
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 
-
+/**
+ * Klass för att visa en användarsida, dvs, information om en
+ * MCUser lagrad i databasen
+ * @author Frida
+ *
+ */
 public class UserView extends VerticalPanel implements ValueChangeHandler{
 	private MCNetwork parent;
 	private static TestServiceAsync testService = GWT.create(TestService.class);
+	private HorizontalPanel btnPanel = new HorizontalPanel();
 	private HorizontalPanel topPanel = new HorizontalPanel();
 	private HorizontalPanel bottomPanel = new HorizontalPanel();
 	private VerticalPanel rightPanel = new VerticalPanel();
@@ -55,23 +52,17 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 	public UserView(Long id, MCNetwork myparent) {
 		parent=myparent;
 		this.add(title);
-		MCUser mcuser = getUser(id);
-		viewUser=mcuser;
-		Image img = new Image("images/question-mark-icon_21147438.jpg");
-		img.setHeight("100px");
-		leftPanel.add(img);
-		topPanel.add(leftPanel);
-		topPanel.add(leftPanel);
-		setMsgPanel();
-		msgPanel.setStyleName("UserViewMsgPanel");
-		scrollPnl.add(msgPanel);
-		rightPanel.add(scrollPnl);
-		topPanel.add(rightPanel);
-		this.add(bottomPanel);
-		this.add(topPanel);
+		
+		//Hämta användare och lagra i infoTable som läggs i leftPanel
+		getUser(id);
+		leftPanel.add(infoTable);
+		this.add(btnPanel);
+		
+		//Skapa knapparna
 		Button addBtn = new Button("Bli kompis");
 		Button sendPriMsgBtn = new Button("Skicka meddelande");
 		sendPriMsgBtn.addClickHandler(new ClickHandler(){
+			@Override
 			public void onClick(ClickEvent event){
 				Boolean priv=true;
 				createMsgForm(priv);
@@ -79,25 +70,44 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 		});
 		Button sendPubMsgBtn = new Button("Skriv p&aring; v&auml;ggen");
 		sendPubMsgBtn.addClickHandler(new ClickHandler(){
+			@Override
 			public void onClick(ClickEvent event){
 				Boolean priv=false;
 				createMsgForm(priv);
 			}
 		});
 		addBtn.addClickHandler(new ClickHandler(){
+			@Override
 			public void onClick(ClickEvent event){
 				addFriend(myself, viewUser);
 			}
 		});
+		btnPanel.add(addBtn);
+		btnPanel.add(sendPriMsgBtn);
+		btnPanel.add(sendPubMsgBtn);
+	
+		topPanel.add(leftPanel);
+		topPanel.add(leftPanel);
 		
-		bottomPanel.add(addBtn);
-		bottomPanel.add(sendPriMsgBtn);
-		bottomPanel.add(sendPubMsgBtn);
+		//Skapa vänsterPanel med bild  TODO
+		Image img = new Image("images/question-mark-icon_21147438.jpg");
+		img.setHeight("100px");
+		leftPanel.add(img);
+		//Ladda meddelande i srollPanel i RightPanel
+		setMsgPanel();
+		msgPanel.setStyleName("UserViewMsgPanel");
+		scrollPnl.add(msgPanel);
+		rightPanel.add(scrollPnl);
+		
+		topPanel.add(rightPanel);
+		this.add(topPanel);
 		this.add(bottomPanel);
+		
 		topPanel.addStyleName("topPanel");
 		bottomPanel.addStyleName("bottomPanel");
 		leftPanel.addStyleName("leftPanel");
 		rightPanel.addStyleName("rightPanel");
+		
 		//HISTORY
 		History.addValueChangeHandler(this);
 		String initToken = History.getToken();
@@ -115,53 +125,81 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 		viewUser=mcuser;
 		parent=myparent;
 		this.add(title);
-		Image img = new Image("images/question-mark-icon_21147438.jpg");
-		img.setHeight("100px");
-		leftPanel.add(img);
+		//Lagra info om user i infoTable som läggs i leftPanel
 		setUserInfo(viewUser);
-		topPanel.add(leftPanel);
-		HTML msgTitle = new HTML("<h2>Meddelande: </h2>", true);
-		msgPanel.add(msgTitle);
-		msgPanel.setWidth("250px");
-		//scrollPnl.setSize("260px", "400px");
-		setMsgPanel();
-		msgPanel.setStyleName("UserViewMsgPanel");
-		
-		
-		scrollPnl.add(msgPanel);
-		rightPanel.add(scrollPnl);
-		topPanel.add(rightPanel);
-		this.add(bottomPanel);
-		this.add(topPanel);
-		Button addBtn = new Button("Bli kompis");
-		Button sendPriMsgBtn = new Button("Skicka meddelande");
-		sendPriMsgBtn.addClickHandler(new ClickHandler(){
-			public void onClick(ClickEvent event){
+		leftPanel.add(infoTable);
+		//Skapa knapparna
+		this.add(btnPanel);
+		SimplePanel btn1 = new SimplePanel();
+		HTML privMsgBtn = new HTML("Skicka meddelande", true);
+		ClickHandler privMsgClickHandler = new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
 				Boolean priv=true;
 				createMsgForm(priv);
 			}
-		});
-		Button sendPubMsgBtn = new Button("Skriv p&aring; v&auml;ggen");
-		sendPubMsgBtn.addClickHandler(new ClickHandler(){
-			public void onClick(ClickEvent event){
+		};
+		privMsgBtn.addClickHandler(privMsgClickHandler);
+		btn1.addStyleName("UserviewBtn");
+		btn1.setWidth("120px");
+		btn1.setHeight("20px");
+		btn1.add(privMsgBtn);
+		SimplePanel btn2 = new SimplePanel();
+		HTML pubMsgBtn = new HTML("Skriv p&aring; v&auml;ggen", true);
+		ClickHandler pubMsgClickHandler = new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
 				Boolean priv=false;
 				createMsgForm(priv);
 			}
-		});
-		addBtn.addClickHandler(new ClickHandler(){
-			public void onClick(ClickEvent event){
+		};
+		pubMsgBtn.addClickHandler(pubMsgClickHandler);
+		btn2.addStyleName("UserviewBtn");
+		btn2.setWidth("100px");
+		btn2.setHeight("20px");
+		btn2.add(pubMsgBtn);
+		SimplePanel btn3 = new SimplePanel();
+		HTML addFriendBtn = new HTML("Bli kompis", true);
+		ClickHandler addFriendClickHandler = new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
 				addFriend(myself, viewUser);
 			}
-		});
+		};
+		addFriendBtn.addClickHandler(addFriendClickHandler);
+		btn3.addStyleName("UserviewBtn");
+		btn3.setWidth("70px");
+		btn3.setHeight("20px");
+		btn3.add(addFriendBtn);
+		btnPanel.add(btn1);
+		btnPanel.add(btn2);
+		btnPanel.add(btn3);
+		btnPanel.addStyleName("btnPanel");
 		
-		bottomPanel.add(addBtn);
-		bottomPanel.add(sendPriMsgBtn);
-		bottomPanel.add(sendPubMsgBtn);
+		//Lägger till bild i leftPanel TODO
+		Image img = new Image("images/question-mark-icon_21147438.jpg");
+		img.setHeight("100px");
+		leftPanel.add(img);
+		topPanel.add(leftPanel);
+		
+		//Ladda meddelande i srollPanel i RightPanel
+		HTML msgTitle = new HTML("<h2>Meddelande: </h2>", true);
+		msgPanel.add(msgTitle);
+		msgPanel.setWidth("250px");
+		setMsgPanel();
+		msgPanel.setStyleName("UserViewMsgPanel");		
+		scrollPnl.add(msgPanel);
+		rightPanel.add(scrollPnl);
+		
+		
+		topPanel.add(rightPanel);
+		this.add(topPanel);
 		this.add(bottomPanel);
 		topPanel.addStyleName("topPanel");
 		bottomPanel.addStyleName("bottomPanel");
 		leftPanel.addStyleName("leftPanel");
 		rightPanel.addStyleName("rightPanel");
+		
 		//HISTORY
 		History.addValueChangeHandler(this);
 		String initToken = History.getToken();
@@ -173,15 +211,20 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 		History.fireCurrentHistoryState();		
 		//HISTORY
 	}
+	/**
+	 * Hämtar meddelande från databasen och skriver ut dem i msgPaneln
+	 */
 	private void setMsgPanel() {
 		if (testService == null) {
 			testService = GWT.create(TestService.class);
 		}
 		// Set up the callback object.
 		AsyncCallback<ArrayList<Message>> callback = new AsyncCallback<ArrayList<Message>>() {
+			@Override
 			public void onFailure(Throwable caught) {
 				System.out.println("failure när person ska skapa meddelande...(Userview)");
 			}
+			@Override
 			public void onSuccess(ArrayList<Message> result) {
 				if(result!=null){
 					System.out.println("Hämtad lista med messages");
@@ -205,13 +248,21 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 		testService.getRecievedMessage(viewUser.getId(), priv, callback);
 
 	}
+	
+	/**
+	 * Metod som genererar ett MessageForm så man kan skicka
+	 * meddelande, anropas från knapparna
+	 * @param priv true=private meddelande, false=på väggen
+	 */
 	protected void createMsgForm(final Boolean priv) {
 		System.out.println("steg 1");
 		LoginServiceAsync loginService = GWT.create(LoginService.class);
 		loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
+			@Override
 			public void onFailure(Throwable error) {
 
 			}
+			@Override
 			public void onSuccess(LoginInfo result) {
 				System.out.println("Hittade en inloggad");
 				loginInfo = result;
@@ -220,12 +271,21 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 		});
 
 	}
+	/**
+	 * Anropas från create messageform
+	 * Hämtar en användare (den som ska skicka ett meddelande) 
+	 * från databasen mha GoogleID
+	 * 
+	 * @param userID
+	 * @param priv
+	 */
 	private void getDBUser(String userID, final Boolean priv) {
 		if (testService == null) {
 			testService = GWT.create(TestService.class);
 		}
 		// Set up the callback object.
 		AsyncCallback<MCUser> callback = new AsyncCallback<MCUser>() {
+			@Override
 			public void onFailure(Throwable caught) {
 				System.out.println("failure när person ska skapa meddelande...(Userview)");
 			}
@@ -238,21 +298,28 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 		};
 		testService.getUserByID(userID, callback);
 	}
-
+	/*
+	 * Metoden skriver info om en MCUser till infoTable
+	 */
 	protected void setUserInfo(MCUser mcuser) {
 		System.out.println("<userH1>"+mcuser.getFirstName()+" "+mcuser.getLastName()+"</userH1>");
-		title = new HTML("<h1>"+mcuser.getFirstName()+" "+mcuser.getLastName()+"<h1>", true);
-		this.add(title);
+		title.setHTML("<h1>"+mcuser.getFirstName()+" "+mcuser.getLastName()+"<h1>");
 		infoTable.setWidget(2, 1, new HTML("<bold>E-mail: </bold>"+mcuser.geteMail(), true));
 		infoTable.setWidget(3, 1, new HTML("<bold>Bostadsort: </bold>"+mcuser.getRegion() + ", " + mcuser.getCity(), true));
 		infoTable.setWidget(4, 1, new HTML("<bold>Antal k&ouml;rda mil: </bold>"+Integer.toString(mcuser.getMilesDriven()), true));	
-
-		leftPanel.add(infoTable);
 	}
-
-	private MCUser getUser(Long id){
+	
+	/**
+	 * Metod som hämtar en MCUser med hjälp av ett MCUser id.
+	 * Anropar sedan setUserInfo. Anropas från konstruktorn 
+	 * när sidan genereras med bara ett id och man inte har användaren.
+	 * @param id
+	 * @return
+	 */
+	private void getUser(Long id){
 		final Long userid = id;
 		AsyncCallback<MCUser> callback = new AsyncCallback<MCUser>() {
+			@Override
 			public void onFailure(Throwable caught) {
 				System.out.println("failure in getUser");
 				try {
@@ -273,6 +340,7 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 				if(!(result.getFirstName()==null)){
 					System.out.println(result.getFirstName());
 					setUserInfo(result);
+					viewUser=result;
 				}
 				else{
 					setErrorMessage(userid);
@@ -280,18 +348,23 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 			}
 		};
 		testService.getUser(id, callback);
-		return null;
 	}
 	
 	protected void addFriend(MCUser myself, MCUser viewUser) {
 		// TODO Auto-generated method stub
 		
 	}
-
+	/**
+	 * Metod, anropas om användaren inte kunde hämtas från databasen
+	 * @param userid
+	 */
 	private void setErrorMessage(Long userid) {
-		HTML errorLabel = new HTML("Ooops! N&aring;got gick fel.", true);
+		HTML errorLabel = new HTML("Ooops! N&aring;got gick fel i kontakten med databasen, f&ouml;rs&ouml;k igen senare.", true);
 		add(errorLabel);
 	}
+	/**
+	 * Hanterar historiken
+	 */
 	@Override
 	public void onValueChange(ValueChangeEvent event) {
 		if (event.getValue().equals("mcuser")){

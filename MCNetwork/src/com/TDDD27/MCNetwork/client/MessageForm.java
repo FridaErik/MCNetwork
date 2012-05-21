@@ -1,8 +1,5 @@
 package com.TDDD27.MCNetwork.client;
 
-import java.util.ArrayList;
-
-import com.TDDD27.MCNetwork.shared.LoginInfo;
 import com.TDDD27.MCNetwork.shared.MCUser;
 import com.TDDD27.MCNetwork.shared.Message;
 import com.google.gwt.core.client.GWT;
@@ -18,11 +15,15 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.TextArea;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+/**
+ * Klass för att skriva och skicka meddelande
+ * Används av andra klasser och fristående.
+ * @author Frida
+ *
+ */
 public class MessageForm extends FormPanel implements ValueChangeHandler {
 	private static TestServiceAsync testService = GWT.create(TestService.class);
 
@@ -41,7 +42,14 @@ public class MessageForm extends FormPanel implements ValueChangeHandler {
 	private VerticalPanel frame = new VerticalPanel();
 
 
-
+	/**
+	 * Skapar ett message form med mottagare, sändare och om meddelande är privat eller ej.
+	 * Den har även koppling till MCNetwork för att kunna påverka vad användaren ser på ett enkelt sätt.
+	 * @param sender användaren som skickar meddelande
+	 * @param resiever användare som tar emot meddelande
+	 * @param theparent MCnetwork (huvudklassen)
+	 * @param priv Om meddelande ska vara privat eller inte
+	 */
 	public MessageForm(final MCUser sender, final MCUser resiever, MCNetwork theparent, final Boolean priv){
 		this.mySender=sender;
 		this.myResiver=resiever;
@@ -61,8 +69,16 @@ public class MessageForm extends FormPanel implements ValueChangeHandler {
 		//HISTORY	
 
 	}
+	/**
+	 * Skapar ett message form med mottagare, sändare och om meddelande är privat eller ej.
+	 * Den har även koppling till MCNetwork för att kunna påverka vad användaren ser på ett enkelt sätt.
+	 * @param senderid id för användaren som skickar meddelande
+	 * @param resieverid id för användare som tar emot meddelande
+	 * @param theparent MCnetwork (huvudklassen)
+	 * @param priv Om meddelande ska vara privat eller inte
+	 */
 	public MessageForm(final long senderid, final Long resiverid, MCNetwork theparent, final Boolean priv){
-		
+
 		getResiver(resiverid);
 		getSender(senderid);//Fixar det grafiska
 		this.myPrivate=priv;
@@ -71,20 +87,35 @@ public class MessageForm extends FormPanel implements ValueChangeHandler {
 	}
 
 
-
+	/**
+	 * Sätter användaren som ska ta emot meddelandet 
+	 * om man bara hade tillgång till id
+	 * @param resiverid
+	 */
 	private void getResiver(Long resiverid) {
 		Boolean isResiver=true;
 		getUser(resiverid, isResiver);
-
 	}
+	/**
+	 * Sätter användaren som ska skicka meddelandet 
+	 * om man bara hade tillgång till id 
+	 * @param senderid
+	 */
 	private void getSender(long senderid) {
 		Boolean isResiver=false;
 		getUser(senderid, isResiver);
 
 	}
+	/**
+	 * Hämtar en användare och sätter den till antingen användare eller mottagare
+	 * @param id
+	 * @param isResiver om användaren är mottagare av meddelandet
+	 * så sätts isResiver till true.
+	 */
 	private void getUser(Long id, final Boolean isResiver) {
 		final Long userid = id;
 		AsyncCallback<MCUser> callback = new AsyncCallback<MCUser>() {
+			@Override
 			public void onFailure(Throwable caught) {
 				System.out.println("failure in getUser");
 				try {
@@ -119,7 +150,12 @@ public class MessageForm extends FormPanel implements ValueChangeHandler {
 		};
 		testService.getUser(id, callback);
 	}
-
+	/**
+	 * Skapar det grafiska som krävs för att ta in den data som behövs för att skicka meddelande
+	 * @param large Om det ska vara en stor eller liten message form, beror på var den används. 
+	 * Om true så får den en storlek lämplig för att användas ensam och false skapar en som
+	 * är lagom stor för att användas på en sida med andra GUI:s
+	 */
 	private void setUpGUI(Boolean large) {
 		HTML title=null;
 		if(myPrivate==true && large){
@@ -130,7 +166,7 @@ public class MessageForm extends FormPanel implements ValueChangeHandler {
 			frame.add(title);
 		}
 		goToReciever=setUpReciverLink(myResiver);
-		
+
 		if(large){
 			textAreaMeddelande.setSize("500px", "200px");
 		}else{
@@ -146,6 +182,7 @@ public class MessageForm extends FormPanel implements ValueChangeHandler {
 		frame.add(grid);
 		this.add(frame);
 		sendBtn.addClickHandler(new ClickHandler(){
+			@Override
 			public void onClick(ClickEvent event){
 				String msgString = textAreaMeddelande.getText();
 				System.out.println(msgString);
@@ -155,6 +192,7 @@ public class MessageForm extends FormPanel implements ValueChangeHandler {
 				}
 				// Set up the callback object.
 				AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+					@Override
 					public void onFailure(Throwable caught) {
 						System.out.println("failure när person ska skapa meddelande...(Userview)");
 					}
@@ -177,12 +215,17 @@ public class MessageForm extends FormPanel implements ValueChangeHandler {
 
 
 
-
+	/**
+	 * Skapar en länk till användarens som man ska skicka till.
+	 * @param resiver användaren som ska länkas till
+	 * @return Returnerar en HTML som funkar som en länk 
+	 */
 	private HTML setUpReciverLink(final MCUser resiver) {
 		HTML toReturn = new HTML("", true);
 		toReturn.setHTML("  G&aring; till "+ resiver.getFirstName()+":s sida >>");
 		toReturn.setStyleName("Clickable");
 		ClickHandler resieverClickHandler = new ClickHandler() {
+			@Override
 			public void onClick(ClickEvent event) {
 				SendToUserPage(resiver);
 			}

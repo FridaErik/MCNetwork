@@ -7,15 +7,16 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
-import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
-
+/**
+ * FormPanel för att registrera motorcyklar (MC)
+ * @author FridaErik
+ *
+ */
 public class MCForm extends FormPanel{
 	private static TestServiceAsync testService = GWT.create(TestService.class);
 	
@@ -69,6 +70,7 @@ public class MCForm extends FormPanel{
 		setStyleName("formPanel");
 		submit.addClickHandler(new ClickHandler() {
 
+			@Override
 			public void onClick(ClickEvent event) {
 				submit();	
 			}
@@ -79,17 +81,28 @@ public class MCForm extends FormPanel{
 
 		//Testar en grej
 		addSubmitHandler(new SubmitHandler() {
-
+			/**
+			 * Hämtar text och validerar innan det skickas till servern
+			 */
 			@Override
 			public void onSubmit(SubmitEvent event) {	
 
 				submitOK = true;
 				String brand = textBoxBrand.getText();
 				String model = textBoxModel.getText();
-				int year = Integer.parseInt(textBoxYear.getText());
+				int year=0;
 				String url = textBoxUrl.getText();
 				//validering
 				checkBrand(brand);
+				checkModel(model);
+				if(textBoxYear.getValue()!= ""){
+					try {
+						year = Integer.parseInt(textBoxYear.getValue());
+					} catch (NumberFormatException e) {
+						errorYear.setText("Ogiltig input");
+						submitOK=false;
+					}
+				}
 
 				if(submitOK){
 					//Skicka in MC plus användare till DB
@@ -106,6 +119,7 @@ public class MCForm extends FormPanel{
 
 				// Set up the callback object.
 				AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+					@Override
 					public void onFailure(Throwable caught) {
 					}
 					@Override
@@ -122,6 +136,10 @@ public class MCForm extends FormPanel{
 
 
 	}
+	/**
+	 * Validering av brand
+	 * @param brand
+	 */
 	private void checkBrand(String brand) {
 		boolean valid = brand.matches("[a-öA-Ö]*");	
 		if(!valid){
@@ -129,14 +147,18 @@ public class MCForm extends FormPanel{
 			submitOK=false;
 		}
 	}
+	/**
+	 * Validering av Model
+	 * @param model
+	 */
 	private void checkModel(String model) {
-		boolean valid = model.matches("[a-öA-Ö]*");	
+		boolean valid = model.matches("[a-öA-Ö0-9]*");	
 		if(!valid){
 			errorModel.setText("Ogiltigt modellnamn");
 			submitOK=false;
 		}
 	}
-
+	//Getters och setters
 	public String getBrand() {
 		return textBoxBrand.getText();
 	}

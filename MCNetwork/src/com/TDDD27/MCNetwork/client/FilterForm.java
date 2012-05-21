@@ -6,7 +6,6 @@ package com.TDDD27.MCNetwork.client;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.TDDD27.MCNetwork.shared.MC;
 import com.TDDD27.MCNetwork.shared.MCUser;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -26,10 +25,8 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
-import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
 
-/**
+/**Klassen möjliggör filtrering av användare (MCUser) enligt olika parametrar
  * @author Frida
  *
  */
@@ -62,7 +59,8 @@ public class FilterForm extends FormPanel implements ValueChangeHandler{
 	private TextBox cityBox=new TextBox();
 	private HTML errorOnSubmit = new HTML("", true);
 
-	/**
+	/**Skapar den grafiska representationen av filtret,
+	 * länkar filtret till sin "parent" (MCNetwork)
 	 * 
 	 */
 	public FilterForm(MCNetwork myparent) {
@@ -125,11 +123,17 @@ public class FilterForm extends FormPanel implements ValueChangeHandler{
 
 		submit.addClickHandler(new ClickHandler() {
 
+			@Override
 			public void onClick(ClickEvent event) {
 				submit();	
 			}
 		});
-
+		/*
+		 * Läser av filtret när användaren klickar på submit
+		 * Om övre och undre gräns för "miles driven" (körda mil)
+		 * lämnas tomma sätts de till 0 och ett högt tal som bör 
+		 * inkludera alla användare.
+		 */
 		addSubmitHandler(new SubmitHandler() {
 
 			@Override
@@ -185,6 +189,18 @@ public class FilterForm extends FormPanel implements ValueChangeHandler{
 
 	}
 
+	/**
+	 * Skicka filterparametrarna till sevrern och skriver ut resultatet
+	 * på sidan i en tabell.
+	 * @param yearup övre gräns för födelseår
+	 * @param yeardown undre gräns för födelseår
+	 * @param milesup övre gräns för körda mil
+	 * @param milesdown undre gräns för körda mil
+	 * @param lan angiven region/län
+	 * @param city angiven stad
+	 * @param lname angivet efternamn
+	 * @param fname engivet förnämn
+	 */
 	protected void sendSearchParameters(int yearup, int yeardown, int milesup,
 			int milesdown, String lan, String city, String lname, String fname) {
 		System.out.println("So far so good");
@@ -194,6 +210,7 @@ public class FilterForm extends FormPanel implements ValueChangeHandler{
 
 		// Set up the callback object.
 		AsyncCallback<ArrayList<MCUser>> callback = new AsyncCallback<ArrayList<MCUser>>() {
+			@Override
 			public void onFailure(Throwable caught) {
 
 			}
@@ -208,10 +225,15 @@ public class FilterForm extends FormPanel implements ValueChangeHandler{
 		testService.searchUsers(yearup, yeardown, milesup, milesdown, lan, city, fname, lname, callback);
 
 	}
-
+	/**
+	 * Skriver ut en lista med användare i en klickbar tabell, om man klickar på en användare skickas 
+	 * man till den användarens sida.
+	 * @param result Lista med användare som ska skrivas ut.
+	 */
 	protected void addResult(final List<MCUser> result) {
 		
 		ClickHandler userRowCheck = new ClickHandler() {
+			@Override
 			public void onClick(ClickEvent event) {
 				Cell src = resultTable.getCellForEvent(event);
 				int rowIndex = src.getRowIndex();
@@ -260,14 +282,27 @@ public class FilterForm extends FormPanel implements ValueChangeHandler{
 
 
 	}
-
+	/**
+	 * Skriver ut användarens användarsida och tar bort filtret.
+	 * @param mcuser användaren vars sida ska visas upp
+	 */
 	protected void SendToUserPage(MCUser mcuser) {
 		UserView centerwidget = new UserView(mcuser, parent);
 		parent.centerPanel.clear();
 		parent.centerPanel.add(centerwidget);
 
 	}
-
+	/**
+	 * Kontrollerar att inparametrarna stämmer med uppsatta krav
+	 * @param fname förnamn (får bara innehålla bokstäver)
+	 * @param lname efternamn (får bara innehålla bokstäver)
+	 * @param city stad (får bara innehålla bokstäver)
+	 * @param yearup övre gräns på födelseår, måste var > undre gräns
+	 * @param yeardown undre gräns på födelseår, måste var < övre gräns
+	 * @param milesup övre gräns på körda mil, måste var > undre gräns
+	 * @param milesdown undre gräns på körda mil, måste var < övre gräns
+	 * @return sant om allt är okej, falskt annars
+	 */
 	protected Boolean checkInput(String fname, String lname, String city, int yearup, int yeardown, int milesup, int milesdown) {
 		boolean validcity = city.matches("[a-öA-Ö]*");	
 		boolean validfname = fname.matches("[a-öA-Ö]*");
@@ -281,7 +316,10 @@ public class FilterForm extends FormPanel implements ValueChangeHandler{
 	}
 
 
-
+	/**
+	 * Generarar en dropdown med Län
+	 * @return returnerar dropdown
+	 */
 	private ListBox getListBoxLan() {
 		ListBox widget = new ListBox();
 		widget.addStyleName("demo-ListBox");
@@ -310,7 +348,10 @@ public class FilterForm extends FormPanel implements ValueChangeHandler{
 		widget.setVisibleItemCount(1);
 		return widget;
 	}
-
+	/**
+	 * Generarar en dropdown med årtal från 1930 till 2002
+	 * @return returnerar dropdown
+	 */
 	private ListBox getListBoxYears() {
 		ListBox widget = new ListBox();
 		widget.addStyleName("demo-ListBox");
@@ -390,7 +431,9 @@ public class FilterForm extends FormPanel implements ValueChangeHandler{
 		widget.setVisibleItemCount(1);
 		return widget;
 	}
-
+	/**
+	 * Hanterar historik
+	 */
 	@Override
 	public void onValueChange(ValueChangeEvent event) {
 		if (event.getValue().equals("filter")){

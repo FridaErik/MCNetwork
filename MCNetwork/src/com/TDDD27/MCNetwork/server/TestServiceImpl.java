@@ -3,9 +3,7 @@ package com.TDDD27.MCNetwork.server;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
-import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 
 import com.TDDD27.MCNetwork.client.TestService;

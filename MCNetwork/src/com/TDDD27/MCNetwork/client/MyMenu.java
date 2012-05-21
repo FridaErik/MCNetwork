@@ -1,19 +1,19 @@
 package com.TDDD27.MCNetwork.client;
 
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-
+/**
+ * Klass för menyn på sidan
+ * @author Frida&Erik
+ *
+ */
 public class MyMenu extends MenuBar {
 	public static MCNetwork myParent;
 
-	public MyMenu() {
-		// TODO Auto-generated constructor stub
-	}
 	public MyMenu(MCNetwork parent, boolean loggedIn) {
 		myParent=parent;
 		MenuItem hemMI = new MenuItem("Startsida", startCmd);
@@ -32,9 +32,12 @@ public class MyMenu extends MenuBar {
 		
 	}
 
-	
+	/**
+	 * Metod för att öppna ett Userform
+	 */
 	static Command registerUserCmd = new Command()
 	{
+		@Override
 		public void execute()
 		{
 			System.out.println("Klick i menyn");
@@ -43,8 +46,12 @@ public class MyMenu extends MenuBar {
 			myParent.centerPanel.add(centerwidget);
 		}
 	};
+	/**
+	 * Metod för att öppna en PrivateMessageView
+	 */
 	static Command meddelandeCmd = new Command()
 	{
+		@Override
 		public void execute()
 		{
 			PrivateMessageView centerwidget = new PrivateMessageView(myParent);
@@ -52,8 +59,12 @@ public class MyMenu extends MenuBar {
 			myParent.centerPanel.add(centerwidget);
 		}
 	};
+	/**
+	 * Metod för att gå tillbaka till startsidan
+	 */
 	static Command startCmd = new Command()
 	{
+		@Override
 		public void execute()
 		{
 			VerticalPanel centerwidget = new VerticalPanel();
@@ -63,9 +74,12 @@ public class MyMenu extends MenuBar {
 			myParent.centerPanel.add(centerwidget);
 		}
 	};
-	//hej
+	/**
+	 * Metod för att öppna ett filterform för att söka efter andra användare
+	 */
 	static Command filterCmd = new Command()
 	{
+		@Override
 		public void execute()
 		{
 			FilterForm centerwidget = new FilterForm(myParent);
@@ -73,8 +87,12 @@ public class MyMenu extends MenuBar {
 			myParent.centerPanel.add(centerwidget);
 		}
 	};
+	/**
+	 * Metod för att öppna MotorcyklarView
+	 */
 	static Command motorcyklarCmd = new Command()
 	{
+		@Override
 		public void execute()
 		{
 			MotorcyklarView centerwidget = new MotorcyklarView(myParent);
@@ -83,14 +101,6 @@ public class MyMenu extends MenuBar {
 		}
 	};
 
-	public MyMenu(Resources resources) {
-		super(resources);
-		// TODO Auto-generated constructor stub
-	}
 
-	public MyMenu(boolean vertical, Resources resources) {
-		super(vertical, resources);
-		// TODO Auto-generated constructor stub
-	}
 
 }

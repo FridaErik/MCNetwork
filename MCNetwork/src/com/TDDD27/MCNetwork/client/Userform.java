@@ -9,39 +9,26 @@ package com.TDDD27.MCNetwork.client;
 
 import gwtupload.client.IUploadStatus.Status;
 import gwtupload.client.IUploader;
-import gwtupload.client.IUploader.OnFinishUploaderHandler;
 import gwtupload.client.MultiUploader;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.TDDD27.MCNetwork.shared.LoginInfo;
-import com.TDDD27.MCNetwork.shared.MC;
 import com.TDDD27.MCNetwork.shared.MCUser;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DisclosurePanel;
-import com.google.gwt.user.client.ui.FileUpload;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /** Formluär för att lägga
  * till ny användare, länkas med
@@ -55,8 +42,6 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 	private MCNetwork parent;
 	private MCUser loggedInUser=null;
 	private Grid grid = new Grid(11, 3);
-	//private MultiUploader  upload = new MultiUploader ();
-
 	private TextBox textBoxFnamn = new TextBox();
 	private HTML textHTMLFnamn = new HTML("<p>F&ouml;rnamn</p>", true);
 	private HTML errorFnamn = new HTML("", true);
@@ -78,7 +63,6 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 	private RadioButton btn3 = new RadioButton("group", "Vill ej ange");
 	private HorizontalPanel radioBtnPanel = new HorizontalPanel();
 	private HTML errorGender = new HTML("", true);
-
 	private ListBox yearList;
 	private HTML textHTMLBYear = new HTML("F&ouml;delse&aring;r", true);
 	private HTML errorBYear = new HTML("", true);
@@ -86,8 +70,6 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 	private HTML textHTMLMiles = new HTML("Antal k&ouml;rda mil (ca)", true);
 	private HTML errorMiles = new HTML("", true);
 
-
-	DisclosurePanel MCDiscPanel = new DisclosurePanel();
 	private Boolean submitOK = true;
 
 	private HTML fileHTML = new HTML("Upload Something", true);
@@ -103,26 +85,32 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 		parent=theparent;
 		LoginServiceAsync loginService = GWT.create(LoginService.class);
 		loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
+			@Override
 			public void onFailure(Throwable error) {
 				setWidget(new HTML("<H1>Det verkar inte finnas en inloggad användare men då ska inte fliken uppdatera" +
 						" din uppgifter synas i menyn, nåt blir fel</H1>", true));
 			}
+			@Override
 			public void onSuccess(LoginInfo result) {
 				System.out.println("Userform har registrerat att en användare är inloggad");
 				loginInfo = result;
 				getDBUser(loginInfo.getUserID());
 			}
 		});
-
-
 	}
-
-	private MCUser getDBUser(String userID) {
+	/**
+	 * Hämtar en användare från databasen med
+	 * hjälp av ett GoogleID
+	 * @param userID GoogleID 
+	 * @return 
+	 */
+	private void getDBUser(String userID) {
 		if (testService == null) {
 			testService = GWT.create(TestService.class);
 		}
 		// Set up the callback object.
 		AsyncCallback<MCUser> callback = new AsyncCallback<MCUser>() {
+			@Override
 			public void onFailure(Throwable caught) {
 
 			}
@@ -145,81 +133,10 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 
 
 		testService.getUserByID(userID, callback);
-		return null;
 	}
-
-
-
-	@SuppressWarnings("deprecation")
-	protected void fillForm(MCUser currentUser) {
-		textBoxFnamn.setText(currentUser.getFirstName());
-		textBoxLnamn.setText(currentUser.getLastName());
-		textBoxEmail.setText(currentUser.geteMail());
-		textBoxCity.setText(currentUser.getCity());
-		int index1 = 0;
-		for(int i=0; i<=regionList.getItemCount()-1; i++){
-			if(regionList.getItemText(i).equals(currentUser.getRegion())){
-				index1=i;
-			}
-		}
-		regionList.setSelectedIndex(index1);
-		if(currentUser.getGender().equals("Man")){
-			btn1.setValue(true);
-		}
-		else if(currentUser.getGender().equals("Kvinna")) {
-			btn2.setValue(true);
-		}
-		else{
-			btn3.setValue(true);
-		}
-		int index2 = 0;
-		for(int i=0; i<=yearList.getItemCount()-1; i++){
-			if(Integer.parseInt(yearList.getItemText(i))==(currentUser.getBirthYear())){
-				index2=i;
-			}
-		}
-		yearList.setSelectedIndex(index2);
-		textBoxMiles.setText(Integer.toString(currentUser.getMilesDriven()));
-	}
-
-	protected void clearUserForm() {
-		textBoxFnamn.setText("");
-		textBoxLnamn.setText("");
-		textBoxEmail.setText("");
-		textBoxCity.setText("");
-		textBoxFnamn.setText("");
-		textBoxMiles.setText("");
-		this.clear();
-		
-		//this.removeFromParent();
-	}
-	protected void setSuccessText(String text){
-		HTML SuccesLabel = new HTML("<H1>"+text+"</H1>", true);
-		this.add(SuccesLabel);
-	}
-	private void addUser(final MCUser mcuser) {
-		MCUser returnUser = null;
-		if (testService == null) {
-			testService = GWT.create(TestService.class);
-		}
-
-		// Set up the callback object.
-		AsyncCallback<Long> callback = new AsyncCallback<Long>() {
-			public void onFailure(Throwable caught) {
-			}
-			@Override
-			public void onSuccess(Long result) {
-				clearUserForm();
-				setSuccessText("Ny anv&auml;ndare tillagd, välkommen "+ mcuser.getFirstName());
-			}
-		};
-
-		System.out.println("Region: "+ mcuser.getRegion());
-		testService.storeUser(mcuser, callback);
-
-	}
-
-
+	/**
+	 * Metod för att skapa ett tomt formulär
+	 */
 	private void setEmptyForm(){
 		System.out.println("SetEmptyForm");
 		// Add a finish handler which will load the image once the upload finishes
@@ -259,11 +176,22 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 		grid.setWidget(7, 0, textHTMLMiles);
 		grid.setWidget(7, 1, textBoxMiles);
 		grid.setWidget(7, 2, errorMiles);
-		//grid.setWidget(8, 0, fileHTML);
-		//grid.setWidget(8, 1, upload);
+		
+		
+		//Funkar inte än
+		/*MultiUploader defaultUploader = new MultiUploader();
+
+		// Add a finish handler which will load the image once the upload finishes
+		defaultUploader.addOnFinishUploadHandler(onFinishUploaderHandler);
+		grid.setWidget(8, 0, fileHTML);
+		grid.setWidget(8, 1, defaultUploader);*/
+		
+		
+		
 		grid.setWidget(10, 0, submit);
 		submit.addClickHandler(new ClickHandler() {
 
+			@Override
 			public void onClick(ClickEvent event) {
 				submit();	
 			}
@@ -343,6 +271,113 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 
 		});
 	}
+
+	/**
+	 * Fyller formuläret med information från
+	 * en användare (MCUser) som hämtats i databasen.
+	 * @param currentUser
+	 */
+	@SuppressWarnings("deprecation")
+	protected void fillForm(MCUser currentUser) {
+		textBoxFnamn.setText(currentUser.getFirstName());
+		textBoxLnamn.setText(currentUser.getLastName());
+		textBoxEmail.setText(currentUser.geteMail());
+		textBoxCity.setText(currentUser.getCity());
+		int index1 = 0;
+		for(int i=0; i<=regionList.getItemCount()-1; i++){
+			if(regionList.getItemText(i).equals(currentUser.getRegion())){
+				index1=i;
+			}
+		}
+		regionList.setSelectedIndex(index1);
+		if(currentUser.getGender().equals("Man")){
+			btn1.setValue(true);
+		}
+		else if(currentUser.getGender().equals("Kvinna")) {
+			btn2.setValue(true);
+		}
+		else{
+			btn3.setValue(true);
+		}
+		int index2 = 0;
+		for(int i=0; i<=yearList.getItemCount()-1; i++){
+			if(Integer.parseInt(yearList.getItemText(i))==(currentUser.getBirthYear())){
+				index2=i;
+			}
+		}
+		yearList.setSelectedIndex(index2);
+		textBoxMiles.setText(Integer.toString(currentUser.getMilesDriven()));
+	}
+	/**
+	 * Tömmer formuläret på information
+	 */
+	protected void clearUserForm() {
+		textBoxFnamn.setText("");
+		textBoxLnamn.setText("");
+		textBoxEmail.setText("");
+		textBoxCity.setText("");
+		textBoxFnamn.setText("");
+		textBoxMiles.setText("");
+		this.clear();
+		
+		//this.removeFromParent();
+	}
+	/**
+	 * Metod för att skriva ut ett meddelande
+	 * @param text
+	 */
+	protected void setSuccessText(String text){
+		HTML SuccesLabel = new HTML("<H1>"+text+"</H1>", true);
+		this.add(SuccesLabel);
+	}
+	/**
+	 * Metod för att lagra en nya användare i databasen
+	 * @param mcuser
+	 */
+	private void addUser(final MCUser mcuser) {
+		MCUser returnUser = null;
+		if (testService == null) {
+			testService = GWT.create(TestService.class);
+		}
+
+		// Set up the callback object.
+		AsyncCallback<Long> callback = new AsyncCallback<Long>() {
+			@Override
+			public void onFailure(Throwable caught) {
+			}
+			@Override
+			public void onSuccess(Long result) {
+				clearUserForm();
+				setSuccessText("Ny anv&auml;ndare tillagd, välkommen "+ mcuser.getFirstName());
+			}
+		};
+
+		System.out.println("Region: "+ mcuser.getRegion());
+		testService.storeUser(mcuser, callback);
+
+	}
+
+	
+	
+	private IUploader.OnFinishUploaderHandler onFinishUploaderHandler = new IUploader.OnFinishUploaderHandler() {
+		@Override
+		public void onFinish(IUploader uploader) {
+			System.out.println("onFinish");
+			if (uploader.getStatus() == Status.SUCCESS) {
+				System.out.println("Serverresponse: " +uploader.getServerResponse());
+
+				String info = uploader.getServerResponse();
+				int endIndex = info.indexOf("<");
+				bildPath = info.substring(39, endIndex);
+				System.out.println("bildPath:" + bildPath);
+
+			}
+		}
+	};
+	/**
+	 * Metod för att uppdatera en användare som redan existerar
+	 * @param mcuser
+	 */
 	protected void updateUser(final MCUser mcuser) {
 		if (testService == null) {
 			testService = GWT.create(TestService.class);
@@ -350,6 +385,7 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 
 		// Set up the callback object.
 		AsyncCallback<Long> callback = new AsyncCallback<Long>() {
+			@Override
 			public void onFailure(Throwable caught) {
 			}
 			@Override
@@ -362,7 +398,10 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 		testService.updateUser(mcuser, callback);
 
 	}
-
+	/**
+	 * Metod som returnerar en dropdownlist med län
+	 * @return ListBox dropdownlist med län
+	 */
 	private ListBox getListBoxLan() {
 		ListBox widget = new ListBox();
 		widget.addStyleName("demo-ListBox");
@@ -390,7 +429,11 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 		widget.setVisibleItemCount(1);
 		return widget;
 	}
-
+	/**
+	 * Metod som returnerar en dropdownlist med 
+	 * årtal från 1930 till 2002
+	 * @return ListBox dropdownlist med årtal
+	 */
 	private ListBox getListBoxYears() {
 		ListBox widget = new ListBox();
 		widget.addStyleName("demo-ListBox");
@@ -470,19 +513,18 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 		widget.setVisibleItemCount(1);
 		return widget;
 	}
-
+	/**
+	 * Hanterar historiken
+	 */
 	@Override
 	public void onValueChange(ValueChangeEvent event) {
-		/*if (event.getValue().equals("start")){
-            parent.centerPanel.clear();
-            parent.centerPanel.add(parent.centerwidget);
-        }*/
 		if (event.getValue().equals("registration")){
 			parent.centerPanel.clear();
 			parent.centerPanel.add(this);
 		}
 
 	}
+	//---------------Metoder för validering---------------//
 	private void checkUrl(String url) {
 		//TODO
 	}

@@ -18,12 +18,15 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-/**
- * @author Frida
+
+/**Klass för att visa privata meddelande, 
+ * Skriver ut en lista av MessagePreviews och
+ * om man klickar på dem visas hela meddelandet
+ * (MessageView) samt möjligheten att svara 
+ * (MessgeForm) 
+ * @author Frida&Erik
  *
  */
-
-
 public class PrivateMessageView extends HorizontalPanel implements ValueChangeHandler{
 	private static TestServiceAsync testService = GWT.create(TestService.class);
 	private VerticalPanel msgPanel = new VerticalPanel();
@@ -47,8 +50,7 @@ public class PrivateMessageView extends HorizontalPanel implements ValueChangeHa
 		rightpanel.addStyleName("PrivateMessageView_rightpanel");
 		rightpanel.setVisible(false);
 		parent=myParent;
-		Boolean priv=true;
-		getLoggedInUser(priv);
+		getLoggedInUser();
 		scrollPnl.add(msgPanel);
 		scrollPnl.setHeight("340px");
 		scrollPnl.setWidth("270px");
@@ -65,15 +67,68 @@ public class PrivateMessageView extends HorizontalPanel implements ValueChangeHa
 		//HISTORY
 
 	}
+	/**
+	 * Metod för att hämta GoogleID från den inloggade användaren
+	 * För att sedan anropa getDBUser som hämtar användaren från 
+	 * databasen
+	 */
+	protected void getLoggedInUser() {
+		LoginServiceAsync loginService = GWT.create(LoginService.class);
+		loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
+			@Override
+			public void onFailure(Throwable error) {
+
+			}
+			@Override
+			public void onSuccess(LoginInfo result) {
+				System.out.println("Hittade en inloggad");
+				loginInfo = result;
+				getDBUser(loginInfo.getUserID());
+			}
+		});
+
+	}
+	/**
+	 * Hämtar användaren från databasen med hjälp av ett GoogleID
+	 * Anropar sedan metod för att hämta och skriva ut meddelande (Message)
+	 * @param userID
+	 */
+	private void getDBUser(String userID) {
+		if (testService == null) {
+			testService = GWT.create(TestService.class);
+		}
+		// Set up the callback object.
+		AsyncCallback<MCUser> callback = new AsyncCallback<MCUser>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				System.out.println("failure när person ska visa sina meddelanden...(Userview)");
+			}
+			@Override
+			public void onSuccess(MCUser result) {
+				loggedInUser=result;
+				System.out.println("loggedInUser.getId(): "+loggedInUser.getId()+" Listan.size()"+loggedInUser.getMcList().size());
+				setMsgPanel();
+				//Hämta och skriv ut denna users privata meddelanden i panelen
+			}
+		};
+		testService.getUserByID(userID, callback);
+	}
+	/**
+	 * Metod som hämtar en lista med användarens meddelande
+	 * samt anropar intern metoden för att skriva ut meddelanden 
+	 * som MessagePreviews
+	 */
 	private void setMsgPanel() {
 		if (testService == null) {
 			testService = GWT.create(TestService.class);
 		}
 		// Set up the callback object.
 		AsyncCallback<ArrayList<Message>> callback = new AsyncCallback<ArrayList<Message>>() {
+			@Override
 			public void onFailure(Throwable caught) {
 				System.out.println("failure när person ska skapa meddelande...(Userview)");
 			}
+			@Override
 			public void onSuccess(ArrayList<Message> result) {
 				if(result!=null){
 					System.out.println("Hämtad lista med messages");
@@ -97,67 +152,37 @@ public class PrivateMessageView extends HorizontalPanel implements ValueChangeHa
 		testService.getRecievedMessage(loggedInUser.getId(), priv, callback);
 
 	}
-	protected void getLoggedInUser(final Boolean priv) {
-		System.out.println("steg 1");
-		LoginServiceAsync loginService = GWT.create(LoginService.class);
-		loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
-			public void onFailure(Throwable error) {
 
-			}
-			public void onSuccess(LoginInfo result) {
-				System.out.println("Hittade en inloggad");
-				loginInfo = result;
-				getDBUser(loginInfo.getUserID(), priv);
-			}
-		});
-
+	/**
+	 * Skapar den högra panelen, när man klickar på en MessagePreview så anropar den klassen
+	 * denna metoden för att ladda hela meddelandet och en svarspanel i den högrapanelen.
+	 * @param msg Meddelandet som ska skrivas ut
+	 */
+	public void setUpRightPanel(Message msg) {
+		rightpanel.clear();
+		MessageView centerwidget = new MessageView(msg, parent);
+		rightpanel.add(centerwidget);
+		MessageForm replyform = new MessageForm(msg.getresieverid(), msg.getsenderid(), parent, true);
+		HTML replytitle = new HTML("<bold>Svara</bold>");
+		rightpanel.add(replytitle);
+		rightpanel.add(replyform);
+		rightpanel.setVisible(true);
 	}
-
-	private void getDBUser(String userID, final Boolean priv) {
-		if (testService == null) {
-			testService = GWT.create(TestService.class);
+	/**
+	 * Hanterar historiken
+	 */
+	@Override
+	public void onValueChange(ValueChangeEvent event) {
+		if (event.getValue().equals("privMsgView")){
+			parent.centerPanel.clear();
+			parent.centerPanel.add(this);
 		}
-		// Set up the callback object.
-		AsyncCallback<MCUser> callback = new AsyncCallback<MCUser>() {
-			public void onFailure(Throwable caught) {
-				System.out.println("failure när person ska visa sina meddelanden...(Userview)");
-			}
-			@Override
-			public void onSuccess(MCUser result) {
-				loggedInUser=result;
-				System.out.println("loggedInUser.getId(): "+loggedInUser.getId()+" Listan.size()"+loggedInUser.getMcList().size());
-				setMsgPanel();
-				//Hämta och skriv ut denna users privata meddelanden i panelen
-			}
-		};
-		testService.getUserByID(userID, callback);
+
 	}
 	public VerticalPanel getRightpanel() {
 		return rightpanel;
 	}
 	public void setRightpanel(VerticalPanel rightpanel) {
 		this.rightpanel = rightpanel;
-	}
-	@Override
-	public void onValueChange(ValueChangeEvent event) {
-		if (event.getValue().equals("privMsgView")){
-            parent.centerPanel.clear();
-            parent.centerPanel.add(this);
-        }
-
-	}
-	public void setUpRightPanel(MessageView centerwidget, Long resiverid, Long senderid) {
-		rightpanel.clear();
-		rightpanel.add(centerwidget);
-		MessageForm replyform = new MessageForm(resiverid, senderid, parent, true);
-		HTML replytitle = new HTML("<bold>Svara</bold>");
-		rightpanel.add(replytitle);
-		rightpanel.add(replyform);
-		rightpanel.setVisible(true);
-		/*privmsgview.getRightpanel().clear();
-		privmsgview.getRightpanel().add(centerwidget);
-		privmsgview.getRightpanel().add(new MessageForm(message.getresieverid(), message.getsenderid(), parent, message.getPriv()));
-		privmsgview.getRightpanel().setVisible(true);*/
-		
 	}
 }

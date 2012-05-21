@@ -3,20 +3,15 @@
  */
 package com.TDDD27.MCNetwork.client;
 
-import java.util.ArrayList;
-
 import com.TDDD27.MCNetwork.shared.MCUser;
 import com.TDDD27.MCNetwork.shared.Message;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.HTMLTable.Cell;
 
 /**
  * @author Frida
@@ -30,9 +25,16 @@ public class MessagePreview extends VerticalPanel {
 	private HTML msgArea = new HTML("", true);
 	private Message message;
 	private MCNetwork parent;
+	
 	/**
-	 * @param privmsgview 
-	 * 
+	 * Klass för en preview av ett meddelande som visar grundinfo 
+	 * om ett Message, avsändare, mottagare, tidpunkt, 
+	 * början på meddelandet och möjligheten att radera meddelandet.
+	 * Används av klassen PrivateMessageView
+	 * @param msg Meddelandet som ska visas
+	 * @param privmsgview Den PrivateMessageView som instansen är en del av.
+	 * @param myparent MCNetwork huvudklassen, behövs för att kunna påverka 
+	 * vad användaren ser på ett enkelt sätt.
 	 */
 	public MessagePreview(final Message msg, final PrivateMessageView privmsgview, MCNetwork myparent) {
 		this.addStyleName("MessagePreview");
@@ -49,6 +51,7 @@ public class MessagePreview extends VerticalPanel {
 		HTML deleteHTML = new HTML("  Radera", true);
 		deleteHTML.addStyleName("MsgPreview_Clickable");
 		ClickHandler deleteClickHandler = new ClickHandler() {
+			@Override
 			public void onClick(ClickEvent event) {
 				parent.centerPanel.clear();
 				deleteMsg(msg);
@@ -68,9 +71,10 @@ public class MessagePreview extends VerticalPanel {
 		//System.out.println(endindex);
 		msgArea.setHTML(msg.getMessage().substring(0, endindex)+"...");
 		ClickHandler resieverClickHandler = new ClickHandler() {
+			@Override
 			public void onClick(ClickEvent event) {
-				MessageView centerwidget = new MessageView(message, parent);
-				privmsgview.setUpRightPanel(centerwidget, message.getresieverid(), message.getsenderid());
+				
+				privmsgview.setUpRightPanel(msg);
 			}
 		};
 		msgArea.addClickHandler(resieverClickHandler);
@@ -80,12 +84,17 @@ public class MessagePreview extends VerticalPanel {
 
 
 	}
+	/**
+	 * Metod för att radera meddelande, anropar servern för att radera från databasen
+	 * @param msg meddelandet som ska raderas.
+	 */
 	protected void deleteMsg(Message msg) {
 		if (testService == null) {
 			testService = GWT.create(TestService.class);
 		}
 		// Set up the callback object.
 		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+			@Override
 			public void onFailure(Throwable caught) {
 
 			}
@@ -101,6 +110,10 @@ public class MessagePreview extends VerticalPanel {
 		testService.deleteMsg(msg.getId(), callback);
 
 	}
+	/**
+	 * Hämtar mottagare med hjälp av ett id
+	 * @param resieverid
+	 */
 	private void setReciever(Long resieverid) {
 
 		if (testService == null) {
@@ -108,6 +121,7 @@ public class MessagePreview extends VerticalPanel {
 		}
 		// Set up the callback object.
 		AsyncCallback<MCUser> callback = new AsyncCallback<MCUser>() {
+			@Override
 			public void onFailure(Throwable caught) {
 				System.out.println("failure när person ska skapa meddelande...(Userview)");
 			}
@@ -116,6 +130,7 @@ public class MessagePreview extends VerticalPanel {
 				resiver.setHTML("<bold> Till: "+ result.getFirstName()+" "+result.getLastName()+"</bold>");
 				resiver.setStyleName("MsgPreview_Clickable");
 				ClickHandler resieverClickHandler = new ClickHandler() {
+					@Override
 					public void onClick(ClickEvent event) {
 						SendToUserPage(result);
 					}
@@ -126,13 +141,17 @@ public class MessagePreview extends VerticalPanel {
 		testService.getUser(resieverid, callback);
 
 	}
-
+	/**
+	 * Hämtar sändaren med hjälp av id
+	 * @param senderid
+	 */
 	private void setSender(Long senderid) {
 		if (testService == null) {
 			testService = GWT.create(TestService.class);
 		}
 		// Set up the callback object.
 		AsyncCallback<MCUser> callback = new AsyncCallback<MCUser>() {
+			@Override
 			public void onFailure(Throwable caught) {
 				System.out.println("failure när person ska skapa meddelande...(Userview)");
 			}
@@ -141,6 +160,7 @@ public class MessagePreview extends VerticalPanel {
 				sender.setHTML("<bold>Fr&aring;n: "+ result.getFirstName()+" "+result.getLastName()+" -</bold>");
 				sender.setStyleName("MsgPreview_Clickable");
 				ClickHandler senderClickHandler = new ClickHandler() {
+					@Override
 					public void onClick(ClickEvent event) {
 						SendToUserPage(result);
 					}
@@ -153,6 +173,10 @@ public class MessagePreview extends VerticalPanel {
 		testService.getUser(senderid, callback);
 
 	}
+	/**
+	 * Metod för att skicka användaren till en MCUser:s användarsida.
+	 * @param mcuser
+	 */
 	protected void SendToUserPage(MCUser mcuser) {
 		UserView centerwidget = new UserView(mcuser, parent);
 		parent.centerPanel.clear();
