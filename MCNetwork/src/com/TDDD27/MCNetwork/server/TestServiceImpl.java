@@ -37,23 +37,23 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 		detachedUser = pm.detachCopy(theUser);
 		//System.out.println(theUser.getFirstName());
 		pm.close();
-		
+
 		return detachedUser;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public Boolean storeMC(MC mc, MCUser user) {
-	
+
 		PersistenceManager pm1 = PMF.get().getPersistenceManager();
-		
+
 		try {
-			
+
 			MCUser e = pm1.getObjectById(MCUser.class, user.getId());
 			mc.setOwner(e); 	//uppdatera mc
 			e.getMcList().add(mc); //Uppdatera user
 			System.out.println("e.getId(): "+e.getId()+" e.getMcList().size(): "+e.getMcList().size());
-			
+
 		}
 		finally {
 			pm1.close(); //Spara till databasen
@@ -62,6 +62,23 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 		return true;
 
 
+	}
+	public boolean updateMC(MC mc, MCUser user) {
+		PersistenceManager pm1 = PMF.get().getPersistenceManager();
+
+		try {
+			MC dbMC = pm1.getObjectById(MC.class, mc.getId());
+			dbMC.setBrand(mc.getBrand());
+			dbMC.setImage(mc.getImage());
+			dbMC.setModel(mc.getModel());
+			dbMC.setUrl(mc.getUrl());
+			dbMC.setYear(mc.getYear());
+		}
+		finally {
+			pm1.close(); //Spara till databasen
+		}
+
+		return true;
 	}
 
 	@Override
@@ -558,14 +575,14 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 		q.setFilter("userID == '"+ userID+"'");
 		System.out.println(q.toString());
 		try {
-			
+
 			@SuppressWarnings("unchecked")
 			List<MCUser> results = (List<MCUser>) q.execute();
 			result=results.get(0);
 			System.out.println("user.getId(): "+result.getId()+" Listan.size() "+result.getMcList().size());
 			//För att göra om datanucleus arraylist till java.util.arraylist så den kan skickas till klienten
 			detachedUser = pm.detachCopy(result);
-			
+
 		} finally {
 			q.closeAll();
 		}
@@ -617,7 +634,7 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 			}else{
 				result = new java.util.ArrayList(results);
 			}
-			
+
 
 		} finally {
 			q.closeAll();
@@ -637,6 +654,30 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 		}
 		pm.close();
 		return true;
+	}
+	@Override
+	public boolean createFriendship(MCUser viewUser, MCUser myself) {
+		if( viewUser!=null && myself!=null){
+			PersistenceManager pm = PMF.get().getPersistenceManager();
+			try {
+				//Lägger till i "myselfs" lista, dvs den som klickade på knappen.
+				MCUser e1 = pm.getObjectById(MCUser.class, myself.getId());
+				e1.getFriendsList().add(viewUser.getId());
+				//Lägger till i "viewusers" lista, dvs den vars sida vi var inne på.
+				MCUser e2 = pm.getObjectById(MCUser.class, viewUser.getId());
+				e2.getFriendsList().add(myself.getId());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return false;
+			} finally {
+				pm.close();
+			}
+			return true;
+		}
+		System.out.println("Försöker skapa vänner men en av dem är null");
+		return false;
+
 	}
 
 }

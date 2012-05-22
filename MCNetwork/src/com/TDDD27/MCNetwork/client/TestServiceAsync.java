@@ -31,4 +31,9 @@ public interface TestServiceAsync {
 
 	void deleteMsg(String id, AsyncCallback<Boolean> callback);
 
+	void createFriendship(MCUser viewUser, MCUser myself,
+			AsyncCallback<Boolean> callback);
+
+	void updateMC(MC mc, MCUser loggedInUser, AsyncCallback<Boolean> callback);
+
 }

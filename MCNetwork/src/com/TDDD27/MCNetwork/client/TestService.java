@@ -33,6 +33,10 @@ public interface TestService extends RemoteService {
 
 	boolean deleteMsg(String id);
 
+	boolean createFriendship(MCUser viewUser, MCUser myself);
+
+	boolean updateMC(MC mc, MCUser loggedInUser);
+
 
 
 }

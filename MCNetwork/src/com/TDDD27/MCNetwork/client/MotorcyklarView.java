@@ -32,6 +32,7 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 	private Button nymc = new Button("Ny MC");
 	private LoginInfo loginInfo = null;
 	private FlexTable MCTable = new FlexTable();
+	private Boolean editBoolean = false;
 
 
 	public MotorcyklarView(MCNetwork myParent) {
@@ -115,13 +116,14 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 
 			for(int i=0; i<MCList.size(); i++){
 
-				MC = MCList.get(i); 
+				final MC myMC = MCList.get(i); 
 				Button edit = new Button("Edit");
-				MCTable.setWidget(i, 1, new HTML("<bold>Motorcykel </bold>"+ MC.getBrand(), true));
+				MCTable.setWidget(i, 1, new HTML("<bold>Motorcykel </bold>"+ myMC.getBrand(), true));
 				edit.addClickHandler(new ClickHandler() {
 					@Override
 					public void onClick(ClickEvent event) {
-						edit(MC);	
+						editBoolean=true;
+						edit(myMC);	
 					}
 				});
 				MCTable.setWidget(i, 2, edit);
@@ -131,7 +133,8 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 		nymc.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				edit(MC);	
+				editBoolean=false;
+				edit(null);	
 			}
 		});
 		this.add(MCTable);
@@ -144,12 +147,9 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 	 * @param MC
 	 */
 	protected void edit(MC MC) {
-
-		MCForm centerwidget = new MCForm(MC, loggedInUser, parent); //Behšver kanske egentligen inte skicka med parent hŠr men jag gjorde det fšr att "den kan vara bra att ha"
+		MCForm centerwidget = new MCForm(MC, loggedInUser, parent, editBoolean); //Behöver kanske egentligen inte skicka med parent här men jag gjorde det för att "den kan vara bra att ha"
 		parent.centerPanel.clear();
 		parent.centerPanel.add(centerwidget);
-
-
 	}
 
 	/**Hanterar historiken

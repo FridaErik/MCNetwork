@@ -5,6 +5,9 @@ import com.TDDD27.MCNetwork.shared.MCUser;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -17,9 +20,9 @@ import com.google.gwt.user.client.ui.TextBox;
  * @author FridaErik
  *
  */
-public class MCForm extends FormPanel{
+public class MCForm extends FormPanel implements ValueChangeHandler{
 	private static TestServiceAsync testService = GWT.create(TestService.class);
-	
+
 	private Grid grid = new Grid(5, 3);
 	//private FileUpload upload = new FileUpload();
 	private TextBox textBoxBrand = new TextBox();
@@ -37,14 +40,17 @@ public class MCForm extends FormPanel{
 	private Button submit = new Button("Submit");
 	private Boolean submitOK = true;
 
-	public MCForm(MC MC, final MCUser loggedInUser, MCNetwork parent) {
-		super();
+	private MCNetwork parent;
 
+	public MCForm(final MC MC, final MCUser loggedInUser, MCNetwork parent, final Boolean edit) {
+		super();
+		this.parent=parent;
 		textBoxBrand.setName("textBoxBrand");
 		textBoxModel.setName("textBoxModel");
 		textBoxYear.setName("textBoxYear");
 		textBoxUrl.setName("textBoxUrl");
 		if(MC!=null){
+			
 			textBoxBrand.setText(MC.getBrand());
 			textBoxModel.setText(MC.getModel());
 			textBoxYear.setText(Integer.toString(MC.getYear()));
@@ -77,6 +83,17 @@ public class MCForm extends FormPanel{
 		});
 		grid.setWidget(4, 1, submit);
 		this.add(grid);
+
+		//HISTORY
+		History.addValueChangeHandler(this);
+		String initToken = History.getToken();
+		if(initToken.length()==0){
+			History.newItem("mcForm");
+			System.out.println("HistoryToken = 0");
+		}
+		History.newItem("mcForm");
+		History.fireCurrentHistoryState();		
+		//HISTORY
 		//this.add(submit);
 
 		//Testar en grej
@@ -105,37 +122,62 @@ public class MCForm extends FormPanel{
 				}
 
 				if(submitOK){
-					//Skicka in MC plus användare till DB
-					MC MC = new MC(brand, model, year, url);
-					storeMC(MC, loggedInUser);
-
+					//Skicka in MC plus anv‰ndare till DB
+					
+					if (!edit){
+						MC newMC = new MC(brand, model, year, url);
+						storeMC(newMC, loggedInUser);
+					}
+					if (edit){
+						MC.setBrand(brand);
+						MC.setModel(model);
+						MC.setYear(year);
+						MC.setUrl(url);
+						updateMC(MC, loggedInUser);
+					}
 				}
 			}
-
-			private void storeMC(MC mc,	MCUser loggedInUser) {
-				if (testService == null) {
-					testService = GWT.create(TestService.class);
-				}
-
-				// Set up the callback object.
-				AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
-					@Override
-					public void onFailure(Throwable caught) {
-					}
-					@Override
-					public void onSuccess(Boolean result) {
-						//TODO if true=det gick bra, if false det gick mindre bra...
-					}
-				};
-			
-				testService.storeMC(mc, loggedInUser, callback);
-				
-			}
-
 		});
+	}
+	
+	private void storeMC(MC mc,	MCUser loggedInUser) {
+		if (testService == null) {
+			testService = GWT.create(TestService.class);
+		}
 
+		// Set up the callback object.
+		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+			@Override
+			public void onFailure(Throwable caught) {
+			}
+			@Override
+			public void onSuccess(Boolean result) {
+				//TODO if true=det gick bra, if false det gick mindre bra...
+			}
+		};
+
+		testService.storeMC(mc, loggedInUser, callback);
 
 	}
+	private void updateMC(MC mc, MCUser loggedInUser) {
+		if (testService == null) {
+			testService = GWT.create(TestService.class);
+		}
+		// Set up the callback object.
+		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+			@Override
+			public void onFailure(Throwable caught) {
+
+			}
+			@Override
+			public void onSuccess(Boolean result) {
+				//TODO if true=det gick bra, if false det gick mindre bra...
+			}
+		};
+
+		testService.updateMC(mc, loggedInUser, callback);
+	}
+
 	/**
 	 * Validering av brand
 	 * @param brand
@@ -230,6 +272,13 @@ public class MCForm extends FormPanel{
 		textBoxUrl.setText("");
 
 
+	}
+	@Override
+	public void onValueChange(ValueChangeEvent event) {
+		if (event.getValue().equals("mcForm")){
+			parent.centerPanel.clear();
+			parent.centerPanel.add(this);
+		}
 	}
 
 

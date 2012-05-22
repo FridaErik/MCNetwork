@@ -178,8 +178,8 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 		grid.setWidget(7, 2, errorMiles);
 		
 		
-		//Funkar inte än
-		/*MultiUploader defaultUploader = new MultiUploader();
+/*		//Funkar inte än
+		MultiUploader defaultUploader = new MultiUploader();
 
 		// Add a finish handler which will load the image once the upload finishes
 		defaultUploader.addOnFinishUploadHandler(onFinishUploaderHandler);
