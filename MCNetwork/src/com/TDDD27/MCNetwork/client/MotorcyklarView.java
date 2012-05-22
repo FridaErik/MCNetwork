@@ -118,6 +118,7 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 
 				final MC myMC = MCList.get(i); 
 				Button edit = new Button("Edit");
+				Button delete = new Button("Delete");
 				MCTable.setWidget(i, 1, new HTML("<bold>Motorcykel </bold>"+ myMC.getBrand(), true));
 				edit.addClickHandler(new ClickHandler() {
 					@Override
@@ -126,7 +127,14 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 						edit(myMC);	
 					}
 				});
+				edit.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						deleteMC(myMC, loggedInUser);	
+					}
+				});
 				MCTable.setWidget(i, 2, edit);
+				MCTable.setWidget(i, 3, delete);
 			}
 		}
 
@@ -150,6 +158,25 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 		MCForm centerwidget = new MCForm(MC, loggedInUser, parent, editBoolean); //Behöver kanske egentligen inte skicka med parent här men jag gjorde det för att "den kan vara bra att ha"
 		parent.centerPanel.clear();
 		parent.centerPanel.add(centerwidget);
+	}
+	
+	private void deleteMC(MC mc, MCUser loggedInUser) {
+		if (testService == null) {
+			testService = GWT.create(TestService.class);
+		}
+		// Set up the callback object.
+		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+			@Override
+			public void onFailure(Throwable caught) {
+
+			}
+			@Override
+			public void onSuccess(Boolean result) {
+				//TODO if true=det gick bra, if false det gick mindre bra...
+			}
+		};
+
+		testService.deleteMC(mc, loggedInUser, callback);
 	}
 
 	/**Hanterar historiken

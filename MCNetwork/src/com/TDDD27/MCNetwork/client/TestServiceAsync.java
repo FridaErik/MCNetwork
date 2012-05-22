@@ -36,4 +36,7 @@ public interface TestServiceAsync {
 
 	void updateMC(MC mc, MCUser loggedInUser, AsyncCallback<Boolean> callback);
 
+	void deleteMC(com.TDDD27.MCNetwork.shared.MC mc, MCUser loggedInUser,
+			AsyncCallback<Boolean> callback);
+
 }

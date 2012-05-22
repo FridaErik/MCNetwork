@@ -80,6 +80,19 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 
 		return true;
 	}
+	public boolean deleteMC(MC mc, MCUser user) {
+		PersistenceManager pm1 = PMF.get().getPersistenceManager();
+
+		try {
+			MCUser thisuser = pm1.getObjectById(MCUser.class, user.getId());
+			thisuser.getMcList().remove(mc); //Ta bort MCn ur listan
+		}
+		finally {
+			pm1.close(); //Spara till databasen
+		}
+
+		return true;
+	}
 
 	@Override
 	public Long storeUserMC(MCUser mcuser, MC mc) {

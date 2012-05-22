@@ -37,6 +37,8 @@ public interface TestService extends RemoteService {
 
 	boolean updateMC(MC mc, MCUser loggedInUser);
 
+	boolean deleteMC(MC mc, MCUser loggedInUser);
+
 
 
 }
