@@ -19,6 +19,7 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DisclosurePanel;
+import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
@@ -173,10 +174,10 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 		grid.setWidget(7, 0, textHTMLMiles);
 		grid.setWidget(7, 1, textBoxMiles);
 		grid.setWidget(7, 2, errorMiles);
-	/*	
+	
 		
-		//Funkar inte än
-		MultiUploader defaultUploader = new MultiUploader();
+		/*//Funkar inte än
+		FileUpload defaultUploader = new FileUpload();
 
 		// Add a finish handler which will load the image once the upload finishes
 		defaultUploader.addOnFinishUploadHandler(onFinishUploaderHandler);
@@ -345,7 +346,9 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 			@Override
 			public void onSuccess(Long result) {
 				clearUserForm();
-				setSuccessText("Ny anv&auml;ndare tillagd, välkommen "+ mcuser.getFirstName());
+				parent.centerPanel.clear();
+				parent.centerPanel.add(new ImageUploadGUI(result));
+				//setSuccessText("Ny anv&auml;ndare tillagd, välkommen "+ mcuser.getFirstName());
 			}
 		};
 
@@ -388,7 +391,9 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 			@Override
 			public void onSuccess(Long result) {
 				clearUserForm();
-				setSuccessText(mcuser.getFirstName()+", din uppgifter är uppdaterade!");
+				parent.centerPanel.clear();
+				parent.centerPanel.add(new ImageUploadGUI(result));
+				//setSuccessText(mcuser.getFirstName()+", din uppgifter är uppdaterade!");
 			}
 		};
 	

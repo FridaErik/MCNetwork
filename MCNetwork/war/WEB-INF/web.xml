@@ -24,6 +24,26 @@
     <url-pattern>/mcnetwork/login</url-pattern>
   </servlet-mapping>
   
+  <servlet>
+    <servlet-name>blobServlet</servlet-name>
+    <servlet-class>com.TDDD27.MCNetwork.server.BlobServiceImpl</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>uploadServlet</servlet-name>
+    <servlet-class>com.TDDD27.MCNetwork.server.UploadServiceImpl</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>blobServlet</servlet-name>
+    <url-pattern>/mcnetwork/blobservice</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>uploadServlet</servlet-name>
+    <url-pattern>/mcnetwork/uploadservice</url-pattern>
+  </servlet-mapping>
+  
   <!-- <precompilation-enabled>false</precompilation-enabled> -->
   
   
