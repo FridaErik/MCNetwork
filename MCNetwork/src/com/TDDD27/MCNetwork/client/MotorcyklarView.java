@@ -127,7 +127,7 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 						edit(myMC);	
 					}
 				});
-				edit.addClickHandler(new ClickHandler() {
+				delete.addClickHandler(new ClickHandler() {
 					@Override
 					public void onClick(ClickEvent event) {
 						deleteMC(myMC, loggedInUser);	
@@ -172,7 +172,8 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 			}
 			@Override
 			public void onSuccess(Boolean result) {
-				//TODO if true=det gick bra, if false det gick mindre bra...
+				parent.centerPanel.clear();
+				parent.centerPanel.add(new MotorcyklarView(parent));
 			}
 		};
 

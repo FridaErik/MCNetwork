@@ -52,233 +52,19 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 	public UserView(Long id, MCNetwork myparent) {
 		parent=myparent;
 		this.add(title);
-
 		//Hämta användare och lagra i infoTable som läggs i leftPanel
 		getUser(id);
-		leftPanel.add(infoTable);
-		this.add(btnPanel);
+		setMyself();
 
-		Button addBtn = new Button("Bli kompis");
-		Button sendPriMsgBtn = new Button("Skicka meddelande");
-		sendPriMsgBtn.addClickHandler(new ClickHandler(){
-			@Override
-			public void onClick(ClickEvent event){
-				Boolean priv=true;
-				createMsgForm(priv);
-			}
-		});
-		Button sendPubMsgBtn = new Button("Skriv p&aring; v&auml;ggen");
-		sendPubMsgBtn.addClickHandler(new ClickHandler(){
-			@Override
-			public void onClick(ClickEvent event){
-				Boolean priv=false;
-				createMsgForm(priv);
-			}
-		});
-		addBtn.addClickHandler(new ClickHandler(){
-			@Override
-			public void onClick(ClickEvent event){
-				addFriend(myself, viewUser);
-			}
-		});
-		btnPanel.add(addBtn);
-		btnPanel.add(sendPriMsgBtn);
-		btnPanel.add(sendPubMsgBtn);
-
-		topPanel.add(leftPanel);
-		topPanel.add(leftPanel);
-
-		//Skapa vänsterPanel med bild  TODO
-		Image img = new Image("images/question-mark-icon_21147438.jpg");
-		img.setHeight("100px");
-		leftPanel.add(img);
-		//Ladda meddelande i srollPanel i RightPanel
-		setMsgPanel();
-		msgPanel.setStyleName("UserViewMsgPanel");
-		scrollPnl.add(msgPanel);
-		rightPanel.add(scrollPnl);
-
-		topPanel.add(rightPanel);
-		this.add(topPanel);
-		this.add(bottomPanel);
-
-		topPanel.addStyleName("topPanel");
-		bottomPanel.addStyleName("bottomPanel");
-		leftPanel.addStyleName("leftPanel");
-		rightPanel.addStyleName("rightPanel");
-
-		//HISTORY
-		History.addValueChangeHandler(this);
-		String initToken = History.getToken();
-		if(initToken.length()==0){
-			History.newItem("mcuser");
-			System.out.println("HistoryToken = 0");
-		}
-		History.newItem("mcuser");
-		History.fireCurrentHistoryState();		
-		//HISTORY
 	}
 
 	@SuppressWarnings("unchecked")
 	public UserView(MCUser mcuser, final MCNetwork myparent) {
 		viewUser=mcuser;
 		parent=myparent;
-		//setMyself();
-		this.add(title);
-		//Lagra info om user i infoTable som läggs i leftPanel
-		setUserInfo(viewUser);
-		leftPanel.add(infoTable);
-		//Skapa knapparna
-		this.add(btnPanel);
-		SimplePanel btn1 = new SimplePanel();
-		HTML privMsgBtn = new HTML("Skicka meddelande", true);
-		ClickHandler privMsgClickHandler = new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				Boolean priv=true;
-				createMsgForm(priv);
-			}
-		};
-		privMsgBtn.addClickHandler(privMsgClickHandler);
-		btn1.addStyleName("UserviewBtn");
-		btn1.setWidth("120px");
-		btn1.setHeight("20px");
-		btn1.add(privMsgBtn);
-		SimplePanel btn2 = new SimplePanel();
-		HTML pubMsgBtn = new HTML("Skriv p&aring; v&auml;ggen", true);
-		ClickHandler pubMsgClickHandler = new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				Boolean priv=false;
-				createMsgForm(priv);
-			}
-		};
-		pubMsgBtn.addClickHandler(pubMsgClickHandler);
-		btn2.addStyleName("UserviewBtn");
-		btn2.setWidth("100px");
-		btn2.setHeight("20px");
-		btn2.add(pubMsgBtn);
-		SimplePanel btn3 = new SimplePanel();
-		Boolean friends=false;
-		while(myself==null){
-			//Väntar på att myself ska vara satt
-		}
-		for( Long a : viewUser.getFriendsList()){
-			if(myself.getId()==a){
-				friends=true;
-			}
-		}
-
-		//TODO if(not friends)
-		if(!friends){
-			HTML addFriendBtn = new HTML("Bli kompis", true);
-			ClickHandler addFriendClickHandler = new ClickHandler() {
-				@Override
-				public void onClick(ClickEvent event) {
-					addFriend(myself, viewUser);
-				}
-			};
-			addFriendBtn.addClickHandler(addFriendClickHandler);
-			btn3.add(addFriendBtn);
-			btn3.setWidth("70px");
-		}else{
-			HTML removeFriendBtn = new HTML("Ta bort kompis", true);
-			ClickHandler removeFriendClickHandler = new ClickHandler() {
-				@Override
-				public void onClick(ClickEvent event) {
-					removeFriend(myself, viewUser);
-				}
-			};
-			removeFriendBtn.addClickHandler(removeFriendClickHandler);
-			btn3.add(removeFriendBtn);
-			btn3.setWidth("85px");
-		}
-		btn3.addStyleName("UserviewBtn");
-
-		btn3.setHeight("20px");
-
-		btnPanel.add(btn1);
-		btnPanel.add(btn2);
-		btnPanel.add(btn3);
-		btnPanel.addStyleName("btnPanel");
-
-		//Lägger till bild i leftPanel TODO
-		Image img = new Image("images/question-mark-icon_21147438.jpg");
-		img.setHeight("100px");
-		leftPanel.add(img);
-		topPanel.add(leftPanel);
-
-		//Ladda meddelande i srollPanel i RightPanel
-		HTML msgTitle = new HTML("<h2>Meddelande: </h2>", true);
-		msgPanel.add(msgTitle);
-		msgPanel.setWidth("250px");
-		setMsgPanel();
-		msgPanel.setStyleName("UserViewMsgPanel");		
-		scrollPnl.add(msgPanel);
-		rightPanel.add(scrollPnl);
-
-
-		topPanel.add(rightPanel);
-		this.add(topPanel);
-		this.add(bottomPanel);
-		topPanel.addStyleName("topPanel");
-		bottomPanel.addStyleName("bottomPanel");
-		leftPanel.addStyleName("leftPanel");
-		rightPanel.addStyleName("rightPanel");
-
-		//HISTORY
-		History.addValueChangeHandler(this);
-		String initToken = History.getToken();
-		if(initToken.length()==0){
-			History.newItem("mcuser");
-			System.out.println("HistoryToken = 0");
-		}
-		History.newItem("mcuser");
-		History.fireCurrentHistoryState();		
-		//HISTORY
-	}
-	protected void removeFriend(MCUser myself2, MCUser viewUser2) {
-		// TODO Auto-generated method stub
-
+		setMyself();	
 	}
 
-	/**
-	 * Hämtar meddelande från databasen och skriver ut dem i msgPaneln
-	 */
-	private void setMsgPanel() {
-		if (testService == null) {
-			testService = GWT.create(TestService.class);
-		}
-		// Set up the callback object.
-		AsyncCallback<ArrayList<Message>> callback = new AsyncCallback<ArrayList<Message>>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				System.out.println("failure när person ska skapa meddelande...(Userview)");
-			}
-			@Override
-			public void onSuccess(ArrayList<Message> result) {
-				if(result!=null){
-					System.out.println("Hämtad lista med messages");
-					printOutMsg(result);
-				}
-				else{
-					System.out.println("Hittade inga messages");
-				}
-			}
-
-
-			private void printOutMsg(ArrayList<Message> result) {
-				for( Message a : result){
-					MessageView msgview = new MessageView(a, parent);
-					msgPanel.add(msgview);
-				}
-
-			}
-		};
-		Boolean priv=false;
-		testService.getRecievedMessage(viewUser.getId(), priv, callback);
-
-	}
 	/**
 	 * 
 	 */
@@ -318,14 +104,172 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 					public void onSuccess(MCUser result) {
 						System.out.println("SetMyself-->GetDBUser-->Success");
 						myself=result;
+						SetUpGUI();
 					}
+
 				};
 				testService.getUserByID(userID, callback);
 			}
 		});
+	}
+	private void SetUpGUI() {
+		//Rensning
+		this.clear();
+		leftPanel.clear();
+		btnPanel.clear();
+		topPanel.clear();
+		msgPanel.clear();
+		rightPanel.clear();
+		bottomPanel.clear();
+		scrollPnl=new ScrollPanel();
+		//Från scratch
+		this.add(title);
+		//Lagra info om user i infoTable som läggs i leftPanel
+		//Lägger till bild i leftPanel TODO
+		Image img = new Image("images/question-mark-icon_21147438.jpg");
+		img.setHeight("100px");
+		leftPanel.add(img);
+		topPanel.add(leftPanel);
+		setUserInfo(viewUser);
+		leftPanel.add(infoTable);
+		//Skapa knapparna
+		this.add(btnPanel);
+		SimplePanel btn1 = new SimplePanel();
+		HTML privMsgBtn = new HTML("Skicka meddelande", true);
+		ClickHandler privMsgClickHandler = new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				Boolean priv=true;
+				createMsgForm(priv);
+			}
+		};
+		privMsgBtn.addClickHandler(privMsgClickHandler);
+		btn1.addStyleName("UserviewBtn");
+		btn1.setWidth("120px");
+		btn1.setHeight("20px");
+		btn1.add(privMsgBtn);
+		SimplePanel btn2 = new SimplePanel();
+		HTML pubMsgBtn = new HTML("Skriv p&aring; v&auml;ggen", true);
+		ClickHandler pubMsgClickHandler = new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				Boolean priv=false;
+				createMsgForm(priv);
+			}
+		};
+		pubMsgBtn.addClickHandler(pubMsgClickHandler);
+		btn2.addStyleName("UserviewBtn");
+		btn2.setWidth("100px");
+		btn2.setHeight("20px");
+		btn2.add(pubMsgBtn);
+		SimplePanel btn3 = new SimplePanel();
+		Boolean friends=false;
+		for( Long a : myself.getFriendsList()){
+			System.out.println("myself.getFriendlist.length : "+ myself.getFriendsList().size());
+			if(viewUser.getId()==a){
+				System.out.println("Friendloop id: "+a);
+				friends=true;
+			}
+		}
+		//if(not friends)
+		if(!friends){
+			HTML addFriendBtn = new HTML("Bli kompis", true);
+			ClickHandler addFriendClickHandler = new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					addFriend(myself, viewUser);
+				}
+			};
+			addFriendBtn.addClickHandler(addFriendClickHandler);
+			btn3.add(addFriendBtn);
+			btn3.setWidth("70px");
+		}else{ //if friends
+			HTML removeFriendBtn = new HTML("Ta bort kompis", true);
+			ClickHandler removeFriendClickHandler = new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					removeFriend(myself, viewUser);
+				}
+			};
+			removeFriendBtn.addClickHandler(removeFriendClickHandler);
+			btn3.add(removeFriendBtn);
+			btn3.setWidth("90px");
+		}
+		btn3.addStyleName("UserviewBtn");
+		btn3.setHeight("20px");
+		btnPanel.add(btn1);
+		btnPanel.add(btn2);
+		btnPanel.add(btn3);
+		btnPanel.addStyleName("btnPanel");
+
+
+
+		//Ladda meddelande i srollPanel i RightPanel
+		HTML msgTitle = new HTML("<h2>Meddelande: </h2>", true);
+		msgPanel.add(msgTitle);
+		msgPanel.setWidth("250px");
+		setMsgPanel();
+		msgPanel.setStyleName("UserViewMsgPanel");		
+		scrollPnl.add(msgPanel);
+		rightPanel.add(scrollPnl);
+
+		topPanel.add(rightPanel);
+		this.add(topPanel);
+		this.add(bottomPanel);
+		topPanel.addStyleName("topPanel");
+		bottomPanel.addStyleName("bottomPanel");
+		leftPanel.addStyleName("leftPanel");
+		rightPanel.addStyleName("rightPanel");
+
+		//HISTORY
+		History.addValueChangeHandler(this);
+		String initToken = History.getToken();
+		if(initToken.length()==0){
+			History.newItem("mcuser");
+			System.out.println("HistoryToken = 0");
+		}
+		History.newItem("mcuser");
+		History.fireCurrentHistoryState();		
+		//HISTORY
 
 	}
+	/**
+	 * Hämtar meddelande från databasen och skriver ut dem i msgPaneln
+	 */
+	private void setMsgPanel() {
+		if (testService == null) {
+			testService = GWT.create(TestService.class);
+		}
+		// Set up the callback object.
+		AsyncCallback<ArrayList<Message>> callback = new AsyncCallback<ArrayList<Message>>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				System.out.println("failure när person ska skapa meddelande...(Userview)");
+			}
+			@Override
+			public void onSuccess(ArrayList<Message> result) {
+				if(result!=null){
+					System.out.println("Hämtad lista med messages");
+					printOutMsg(result);
+				}
+				else{
+					System.out.println("Hittade inga messages");
+				}
+			}
 
+
+			private void printOutMsg(ArrayList<Message> result) {
+				for( Message a : result){
+					MessageView msgview = new MessageView(a, parent);
+					msgPanel.add(msgview);
+				}
+
+			}
+		};
+		Boolean priv=false;
+		testService.getRecievedMessage(viewUser.getId(), priv, callback);
+
+	}
 	/**
 	 * Metod som genererar ett MessageForm så man kan skicka
 	 * meddelande, anropas från knapparna
@@ -366,7 +310,7 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 					@Override
 					public void onSuccess(MCUser result) {
 						myself=result;
-						MessageForm msgform = new MessageForm(result, viewUser, parent, priv);
+						MessageForm msgform = new MessageForm(result, viewUser, parent, priv, null);
 						parent.centerPanel.clear();
 						parent.centerPanel.add(msgform);
 					}
@@ -430,7 +374,7 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 		testService.getUser(id, callback);
 	}
 
-	protected void addFriend(MCUser myself, MCUser viewUser) {
+	protected void addFriend(MCUser myself1, MCUser viewUser1) {
 		if (testService == null) {
 			testService = GWT.create(TestService.class);
 		}
@@ -441,11 +385,31 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 			}
 			@Override
 			public void onSuccess(Boolean result) {
-				//TODO
+				parent.centerPanel.clear();
+				parent.centerPanel.add(new UserView(viewUser, parent));
 			}
 
 		};
 		testService.createFriendship(viewUser, myself, callback);
+
+	}
+	protected void removeFriend(MCUser myself2, MCUser viewUser2) {
+		if (testService == null) {
+			testService = GWT.create(TestService.class);
+		}
+		// Set up the callback object.
+		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+			@Override
+			public void onFailure(Throwable caught) {
+			}
+			@Override
+			public void onSuccess(Boolean result) {
+				parent.centerPanel.clear();
+				parent.centerPanel.add(new UserView(viewUser, parent));
+			}
+
+		};
+		testService.removeFriendship(viewUser, myself, callback);
 
 	}
 	/**

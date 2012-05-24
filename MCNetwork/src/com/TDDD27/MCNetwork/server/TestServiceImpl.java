@@ -85,7 +85,10 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 
 		try {
 			MCUser thisuser = pm1.getObjectById(MCUser.class, user.getId());
-			thisuser.getMcList().remove(mc); //Ta bort MCn ur listan
+			System.out.println("id: "+ thisuser.getId());
+			MC dbMC = pm1.getObjectById(MC.class, mc.getId());
+			thisuser.getMcList().remove(dbMC); //Ta bort MCn ur listan
+			pm1.deletePersistent(dbMC);
 		}
 		finally {
 			pm1.close(); //Spara till databasen
@@ -111,6 +114,7 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 			int milesdown, String lan, String city, String fname, String lname) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		ArrayList<MCUser> result = new ArrayList<MCUser>();
+		ArrayList<MCUser> toReturn = new ArrayList<MCUser>();
 		if(lan.equals("Alla") && city.equals("") && fname.equals("") && lname.equals("")){
 			//Sök bara med födelseår och miles
 			Query q1 = pm.newQuery(MCUser.class);
@@ -127,7 +131,8 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 					for (MCUser a : results1){
 						for(MCUser b : results2){
 							if(a.equals(b)){
-								result.add(a);
+								MCUser temp = pm.detachCopy(a);
+								result.add(temp);
 							}
 						}
 					}
@@ -136,6 +141,7 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 				q1.closeAll();
 				q2.closeAll();
 			}
+			
 			return result;
 		}
 		else if(lan.equals("Alla") && city.equals("") && fname.equals("") && !lname.equals("")){
@@ -155,7 +161,8 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 					for (MCUser a : results1){
 						for(MCUser b : results2){
 							if(a.equals(b)){
-								result.add(a);
+								MCUser temp = pm.detachCopy(a);
+								result.add(temp);
 							}
 						}
 					}
@@ -183,7 +190,8 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 					for (MCUser a : results1){
 						for(MCUser b : results2){
 							if(a.equals(b)){
-								result.add(a);
+								MCUser temp = pm.detachCopy(a);
+								result.add(temp);
 							}
 						}
 					}
@@ -212,7 +220,8 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 					for (MCUser a : results1){
 						for(MCUser b : results2){
 							if(a.equals(b)){
-								result.add(a);
+								MCUser temp = pm.detachCopy(a);
+								result.add(temp);
 							}
 						}
 					}
@@ -240,7 +249,8 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 					for (MCUser a : results1){
 						for(MCUser b : results2){
 							if(a.equals(b)){
-								result.add(a);
+								MCUser temp = pm.detachCopy(a);
+								result.add(temp);
 							}
 						}
 					}
@@ -269,7 +279,8 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 					for (MCUser a : results1){
 						for(MCUser b : results2){
 							if(a.equals(b)){
-								result.add(a);
+								MCUser temp = pm.detachCopy(a);
+								result.add(temp);
 							}
 						}
 					}
@@ -298,7 +309,8 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 					for (MCUser a : results1){
 						for(MCUser b : results2){
 							if(a.equals(b)){
-								result.add(a);
+								MCUser temp = pm.detachCopy(a);
+								result.add(temp);
 							}
 						}
 					}
@@ -327,7 +339,8 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 					for (MCUser a : results1){
 						for(MCUser b : results2){
 							if(a.equals(b)){
-								result.add(a);
+								MCUser temp = pm.detachCopy(a);
+								result.add(temp);
 							}
 						}
 					}
@@ -356,7 +369,8 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 					for (MCUser a : results1){
 						for(MCUser b : results2){
 							if(a.equals(b)){
-								result.add(a);
+								MCUser temp = pm.detachCopy(a);
+								result.add(temp);
 							}
 						}
 					}
@@ -385,7 +399,8 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 					for (MCUser a : results1){
 						for(MCUser b : results2){
 							if(a.equals(b)){
-								result.add(a);
+								MCUser temp = pm.detachCopy(a);
+								result.add(temp);
 							}
 						}
 					}
@@ -414,7 +429,8 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 					for (MCUser a : results1){
 						for(MCUser b : results2){
 							if(a.equals(b)){
-								result.add(a);
+								MCUser temp = pm.detachCopy(a);
+								result.add(temp);
 							}
 						}
 					}
@@ -442,7 +458,8 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 					for (MCUser a : results1){
 						for(MCUser b : results2){
 							if(a.equals(b)){
-								result.add(a);
+								MCUser temp = pm.detachCopy(a);
+								result.add(temp);
 							}
 						}
 					}
@@ -470,7 +487,8 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 					for (MCUser a : results1){
 						for(MCUser b : results2){
 							if(a.equals(b)){
-								result.add(a);
+								MCUser temp = pm.detachCopy(a);
+								result.add(temp);
 							}
 						}
 					}
@@ -499,7 +517,8 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 					for (MCUser a : results1){
 						for(MCUser b : results2){
 							if(a.equals(b)){
-								result.add(a);
+								MCUser temp = pm.detachCopy(a);
+								result.add(temp);
 							}
 						}
 					}
@@ -527,7 +546,8 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 					for (MCUser a : results1){
 						for(MCUser b : results2){
 							if(a.equals(b)){
-								result.add(a);
+								MCUser temp = pm.detachCopy(a);
+								result.add(temp);
 							}
 						}
 					}
@@ -555,7 +575,8 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 					for (MCUser a : results1){
 						for(MCUser b : results2){
 							if(a.equals(b)){
-								result.add(a);
+								MCUser temp = pm.detachCopy(a);
+								result.add(temp);
 							}
 						}
 					}
@@ -590,16 +611,19 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 		try {
 
 			@SuppressWarnings("unchecked")
-			List<MCUser> results = (List<MCUser>) q.execute();
-			result=results.get(0);
-			System.out.println("user.getId(): "+result.getId()+" Listan.size() "+result.getMcList().size());
-			//För att göra om datanucleus arraylist till java.util.arraylist så den kan skickas till klienten
-			detachedUser = pm.detachCopy(result);
+			List<MCUser> results=null;
+			results = (List<MCUser>) q.execute();
+			if(results!=null && results.size()>0){
+				result=results.get(0);
+				//För att göra om datanucleus arraylist till java.util.arraylist så den kan skickas till klienten
+				detachedUser = pm.detachCopy(result);
+				System.out.println("user.getId(): "+result.getId()+" Listan.size() "+result.getMcList().size());
+			}
 
 		} finally {
 			q.closeAll();
 		}
-		System.out.println("user.getId(): "+result.getId()+" Listan.size() "+result.getMcList().size());
+		
 		return detachedUser;
 	}
 	@Override
@@ -679,6 +703,10 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 				//Lägger till i "viewusers" lista, dvs den vars sida vi var inne på.
 				MCUser e2 = pm.getObjectById(MCUser.class, viewUser.getId());
 				e2.getFriendsList().add(myself.getId());
+				
+				
+				Message notification = new Message(myself.getId(), viewUser.getId(), myself.getFirstName()+" "+myself.getLastName()+" har lagt till dig som vän. ", true);
+				pm.makePersistent(notification);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -691,6 +719,29 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 		System.out.println("Försöker skapa vänner men en av dem är null");
 		return false;
 
+	}
+	@Override
+	public boolean removeFriendship(MCUser viewUser, MCUser myself) {
+		if( viewUser!=null && myself!=null){
+			PersistenceManager pm = PMF.get().getPersistenceManager();
+			try {
+				//Lägger till i "myselfs" lista, dvs den som klickade på knappen.
+				MCUser e1 = pm.getObjectById(MCUser.class, myself.getId());
+				e1.getFriendsList().remove(viewUser.getId());
+				//Lägger till i "viewusers" lista, dvs den vars sida vi var inne på.
+				MCUser e2 = pm.getObjectById(MCUser.class, viewUser.getId());
+				e2.getFriendsList().remove(myself.getId());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return false;
+			} finally {
+				pm.close();
+			}
+			return true;
+		}
+		System.out.println("Försöker skapa vänner men en av dem är null");
+		return false;
 	}
 
 }

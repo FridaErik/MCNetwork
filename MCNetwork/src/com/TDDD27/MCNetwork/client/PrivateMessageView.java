@@ -162,7 +162,7 @@ public class PrivateMessageView extends HorizontalPanel implements ValueChangeHa
 		rightpanel.clear();
 		MessageView centerwidget = new MessageView(msg, parent);
 		rightpanel.add(centerwidget);
-		MessageForm replyform = new MessageForm(msg.getresieverid(), msg.getsenderid(), parent, true);
+		MessageForm replyform = new MessageForm(msg.getresieverid(), msg.getsenderid(), parent, true, msg.getMessage());
 		HTML replytitle = new HTML("<bold>Svara</bold>");
 		rightpanel.add(replytitle);
 		rightpanel.add(replyform);

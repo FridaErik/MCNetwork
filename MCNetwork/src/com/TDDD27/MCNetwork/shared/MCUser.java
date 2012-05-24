@@ -62,7 +62,6 @@ public class MCUser implements Serializable
 	//child are the same class, making it difficult to model tree structures. This will be fixed in 
 	//a future release. You can work around this by storing explicit Key values for either the parent 
 	//or children.
-	
 	@Persistent
 	private ArrayList<Long> friendsList = new ArrayList<Long>();
 

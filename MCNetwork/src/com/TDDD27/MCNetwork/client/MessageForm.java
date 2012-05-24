@@ -40,6 +40,7 @@ public class MessageForm extends FormPanel implements ValueChangeHandler {
 	private Boolean myPrivate;
 	private HTML confirmation = new HTML("", true);
 	private VerticalPanel frame = new VerticalPanel();
+	private String prevMsg;
 
 
 	/**
@@ -50,11 +51,12 @@ public class MessageForm extends FormPanel implements ValueChangeHandler {
 	 * @param theparent MCnetwork (huvudklassen)
 	 * @param priv Om meddelande ska vara privat eller inte
 	 */
-	public MessageForm(final MCUser sender, final MCUser resiever, MCNetwork theparent, final Boolean priv){
+	public MessageForm(final MCUser sender, final MCUser resiever, MCNetwork theparent, final Boolean priv, String prevMsg){
 		this.mySender=sender;
 		this.myResiver=resiever;
 		this.myPrivate=priv;
 		parent=theparent;
+		this.prevMsg=prevMsg;
 		Boolean large=true;
 		setUpGUI(large);
 		//HISTORY
@@ -77,12 +79,13 @@ public class MessageForm extends FormPanel implements ValueChangeHandler {
 	 * @param theparent MCnetwork (huvudklassen)
 	 * @param priv Om meddelande ska vara privat eller inte
 	 */
-	public MessageForm(final long senderid, final Long resiverid, MCNetwork theparent, final Boolean priv){
+	public MessageForm(final long senderid, final Long resiverid, MCNetwork theparent, final Boolean priv, String prevMsg){
 
 		getResiver(resiverid);
 		getSender(senderid);//Fixar det grafiska
 		this.myPrivate=priv;
 		parent=theparent;
+		this.prevMsg=prevMsg;
 
 	}
 
@@ -179,6 +182,9 @@ public class MessageForm extends FormPanel implements ValueChangeHandler {
 		Button sendBtn = new Button("Skicka");
 		grid.setWidget(2, 0, sendBtn);
 		grid.setWidget(2, 1, goToReciever);
+		if(prevMsg!=null){
+			textAreaMeddelande.setText("\n \n"+'"'+prevMsg+'"');
+		}
 		frame.add(grid);
 		this.add(frame);
 		sendBtn.addClickHandler(new ClickHandler(){

@@ -39,4 +39,7 @@ public interface TestServiceAsync {
 	void deleteMC(com.TDDD27.MCNetwork.shared.MC mc, MCUser loggedInUser,
 			AsyncCallback<Boolean> callback);
 
+	void removeFriendship(MCUser viewUser, MCUser myself,
+			AsyncCallback<Boolean> callback);
+
 }

@@ -39,6 +39,8 @@ public interface TestService extends RemoteService {
 
 	boolean deleteMC(MC mc, MCUser loggedInUser);
 
+	boolean removeFriendship(MCUser viewUser, MCUser myself);
+
 
 
 }

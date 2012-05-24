@@ -23,7 +23,7 @@ import com.google.gwt.user.client.ui.TextBox;
 public class MCForm extends FormPanel implements ValueChangeHandler{
 	private static TestServiceAsync testService = GWT.create(TestService.class);
 
-	private Grid grid = new Grid(5, 3);
+	private Grid grid = new Grid(6, 3);
 	//private FileUpload upload = new FileUpload();
 	private TextBox textBoxBrand = new TextBox();
 	private HTML textLabelBrand = new HTML("M&auml;rke", true);
@@ -39,6 +39,7 @@ public class MCForm extends FormPanel implements ValueChangeHandler{
 	private Label errorUrl = new Label("");
 	private Button submit = new Button("Submit");
 	private Boolean submitOK = true;
+	private HTML response = new HTML("", true);
 
 	private MCNetwork parent;
 
@@ -82,6 +83,7 @@ public class MCForm extends FormPanel implements ValueChangeHandler{
 			}
 		});
 		grid.setWidget(4, 1, submit);
+		grid.setWidget(5, 0, response);
 		this.add(grid);
 
 		//HISTORY
@@ -152,7 +154,7 @@ public class MCForm extends FormPanel implements ValueChangeHandler{
 			}
 			@Override
 			public void onSuccess(Boolean result) {
-				//TODO if true=det gick bra, if false det gick mindre bra...
+				response.setHTML("Tillagd");
 			}
 		};
 
@@ -171,7 +173,7 @@ public class MCForm extends FormPanel implements ValueChangeHandler{
 			}
 			@Override
 			public void onSuccess(Boolean result) {
-				//TODO if true=det gick bra, if false det gick mindre bra...
+				response.setHTML("Uppdaterad");
 			}
 		};
 

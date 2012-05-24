@@ -4,9 +4,6 @@
 package com.TDDD27.MCNetwork.client;
 
 
-
-
-
 import gwtupload.client.IUploadStatus.Status;
 import gwtupload.client.IUploader;
 import gwtupload.client.MultiUploader;
@@ -176,9 +173,9 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 		grid.setWidget(7, 0, textHTMLMiles);
 		grid.setWidget(7, 1, textBoxMiles);
 		grid.setWidget(7, 2, errorMiles);
+	/*	
 		
-		
-/*		//Funkar inte än
+		//Funkar inte än
 		MultiUploader defaultUploader = new MultiUploader();
 
 		// Add a finish handler which will load the image once the upload finishes
@@ -369,7 +366,7 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 				String info = uploader.getServerResponse();
 				int endIndex = info.indexOf("<");
 				bildPath = info.substring(39, endIndex);
-				System.out.println("bildPath:" + bildPath);
+				System.out.println("bildPath: " + bildPath);
 
 			}
 		}

@@ -35,7 +35,7 @@ public class SampleUploadServlet extends UploadAction {
 
 					/// Create a temporary file placed in the default system temp folder
 					File dir = new File("C://Users/Frida/Git/MCNetwork/MCNetwork/war/images");
-					File file = File.createTempFile("productpic-", ".jpg", dir); //EV. fel typ av file, fel import? ??????????????????
+					File file = File.createTempFile("productpic-", ".jpg", dir); 
 					item.write(file);
 
 					/// Send a customized message to the client.
