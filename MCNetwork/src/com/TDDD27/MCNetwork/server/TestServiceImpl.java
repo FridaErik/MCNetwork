@@ -5,14 +5,19 @@ import java.util.List;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
+import javax.servlet.http.HttpServlet;
 
 import com.TDDD27.MCNetwork.client.TestService;
 import com.TDDD27.MCNetwork.shared.MC;
 import com.TDDD27.MCNetwork.shared.MCUser;
 import com.TDDD27.MCNetwork.shared.Message;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
-public class TestServiceImpl  extends RemoteServiceServlet implements TestService {
+public class TestServiceImpl extends RemoteServiceServlet implements TestService {
 	/**
 	 * 
 	 */
@@ -97,6 +102,23 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 		return true;
 	}
 
+	public boolean deleteFriend(Long friend, MCUser user) {
+		PersistenceManager pm1 = PMF.get().getPersistenceManager();
+
+		try {
+			MCUser thisuser = pm1.getObjectById(MCUser.class, user.getId());
+			System.out.println("id: "+ thisuser.getId());
+
+			thisuser.getFriendsList().remove(friend); //Ta bort vännen ur listan
+
+		}
+		finally {
+			pm1.close(); //Spara till databasen
+		}
+
+		return true;
+	}
+
 	@Override
 	public Long storeUserMC(MCUser mcuser, MC mc) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -141,7 +163,7 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 				q1.closeAll();
 				q2.closeAll();
 			}
-			
+
 			return result;
 		}
 		else if(lan.equals("Alla") && city.equals("") && fname.equals("") && !lname.equals("")){
@@ -623,9 +645,26 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 		} finally {
 			q.closeAll();
 		}
-		
+
 		return detachedUser;
 	}
+	@Override
+	public ArrayList<MCUser> getFriendsByID(ArrayList<Long> friendsID) {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		//ArrayList<MCUser> result = new ArrayList<MCUser>();
+		ArrayList<MCUser> result = new ArrayList<MCUser>();
+		MCUser detachedUser=null;
+		for(int i=0; i<friendsID.size(); i++){
+			final Long thisFriendID = friendsID.get(i); 
+			MCUser thisFriend = pm.getObjectById(MCUser.class, thisFriendID); 
+			detachedUser = pm.detachCopy(thisFriend);
+			System.out.println("Namn: " +detachedUser.getFirstName());
+			result.add(detachedUser);
+		}
+		pm.close();
+		return result;
+	}
+
 	@Override
 	public long updateUser(MCUser mcuser) {
 		System.out.println("Fˆrsˆker gˆra en update, id ‰r :"+mcuser.getId());
@@ -703,8 +742,8 @@ public class TestServiceImpl  extends RemoteServiceServlet implements TestServic
 				//L‰gger till i "viewusers" lista, dvs den vars sida vi var inne pÂ.
 				MCUser e2 = pm.getObjectById(MCUser.class, viewUser.getId());
 				e2.getFriendsList().add(myself.getId());
-				
-				
+
+
 				Message notification = new Message(myself.getId(), viewUser.getId(), myself.getFirstName()+" "+myself.getLastName()+" har lagt till dig som v‰n. ", true);
 				pm.makePersistent(notification);
 			} catch (Exception e) {
