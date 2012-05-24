@@ -5,8 +5,10 @@ package com.TDDD27.MCNetwork.client;
 import java.util.ArrayList;
 
 import com.TDDD27.MCNetwork.shared.LoginInfo;
+import com.TDDD27.MCNetwork.shared.MC;
 import com.TDDD27.MCNetwork.shared.MCUser;
 import com.TDDD27.MCNetwork.shared.Message;
+import com.TDDD27.MCNetwork.shared.Picture;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -35,6 +37,9 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class UserView extends VerticalPanel implements ValueChangeHandler{
 	private MCNetwork parent;
 	private static TestServiceAsync testService = GWT.create(TestService.class);
+	// Use an RPC call to the Blob Service to get the blobstore upload url
+	BlobServiceAsync blobService = GWT.create(BlobService.class);
+
 	private HorizontalPanel btnPanel = new HorizontalPanel();
 	private HorizontalPanel topPanel = new HorizontalPanel();
 	private HorizontalPanel bottomPanel = new HorizontalPanel();
@@ -48,6 +53,8 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 	private LoginInfo loginInfo = null;
 	private VerticalPanel msgPanel = new VerticalPanel();
 	private ScrollPanel scrollPnl = new ScrollPanel();
+	private Image img;
+	private FlexTable MCTable = new FlexTable();
 
 	public UserView(Long id, MCNetwork myparent) {
 		parent=myparent;
@@ -126,11 +133,14 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 		this.add(title);
 		//Lagra info om user i infoTable som läggs i leftPanel
 		//Lägger till bild i leftPanel TODO
-		Image img = new Image("images/question-mark-icon_21147438.jpg");
-		img.setHeight("100px");
+		getPicture(viewUser.getUserPicId());
+
+		//Image img = new Image("images/question-mark-icon_21147438.jpg");
+		img = new Image("");
 		leftPanel.add(img);
 		topPanel.add(leftPanel);
 		setUserInfo(viewUser);
+		setMCInfo(viewUser);
 		leftPanel.add(infoTable);
 		//Skapa knapparna
 		this.add(btnPanel);
@@ -162,7 +172,11 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 		btn2.setWidth("100px");
 		btn2.setHeight("20px");
 		btn2.add(pubMsgBtn);
-		SimplePanel btn3 = new SimplePanel();
+
+		btnPanel.add(btn1);
+		btnPanel.add(btn2);
+
+		SimplePanel btn3;
 		Boolean friends=false;
 		for( Long a : myself.getFriendsList()){
 			System.out.println("myself.getFriendlist.length : "+ myself.getFriendsList().size());
@@ -172,7 +186,8 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 			}
 		}
 		//if(not friends)
-		if(!friends){
+		if(!friends && viewUser.getId()!=myself.getId()){
+			btn3 = new SimplePanel();
 			HTML addFriendBtn = new HTML("Bli kompis", true);
 			ClickHandler addFriendClickHandler = new ClickHandler() {
 				@Override
@@ -183,7 +198,11 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 			addFriendBtn.addClickHandler(addFriendClickHandler);
 			btn3.add(addFriendBtn);
 			btn3.setWidth("70px");
-		}else{ //if friends
+			btn3.addStyleName("UserviewBtn");
+			btn3.setHeight("20px");
+			btnPanel.add(btn3);
+		}else if(friends && viewUser.getId()!=myself.getId()){ //if friends
+			btn3 = new SimplePanel();
 			HTML removeFriendBtn = new HTML("Ta bort kompis", true);
 			ClickHandler removeFriendClickHandler = new ClickHandler() {
 				@Override
@@ -194,12 +213,11 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 			removeFriendBtn.addClickHandler(removeFriendClickHandler);
 			btn3.add(removeFriendBtn);
 			btn3.setWidth("90px");
+			btn3.addStyleName("UserviewBtn");
+			btn3.setHeight("20px");
+			btnPanel.add(btn3);
 		}
-		btn3.addStyleName("UserviewBtn");
-		btn3.setHeight("20px");
-		btnPanel.add(btn1);
-		btnPanel.add(btn2);
-		btnPanel.add(btn3);
+
 		btnPanel.addStyleName("btnPanel");
 
 
@@ -216,6 +234,7 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 		topPanel.add(rightPanel);
 		this.add(topPanel);
 		this.add(bottomPanel);
+		this.add(MCTable);
 		topPanel.addStyleName("topPanel");
 		bottomPanel.addStyleName("bottomPanel");
 		leftPanel.addStyleName("leftPanel");
@@ -332,6 +351,18 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 		infoTable.setWidget(3, 1, new HTML("<bold>Bostadsort: </bold>"+mcuser.getRegion() + ", " + mcuser.getCity(), true));
 		infoTable.setWidget(4, 1, new HTML("<bold>Antal k&ouml;rda mil: </bold>"+Integer.toString(mcuser.getMilesDriven()), true));	
 	}
+	
+	protected void setMCInfo(MCUser theUser) {
+		ArrayList<MC> MCList = theUser.getMcList();
+		System.out.println("theUser.getId(): "+theUser.getId()+" MCLIST.size()"+theUser.getMcList().size());
+		if(!MCList.isEmpty()){
+
+			for(int i=0; i<theUser.getMcList().size(); i++){
+				final MC myMC = MCList.get(i); 
+			    MCTable.setWidget(i, 1, new HTML("<bold>Motorcykel </bold>"+ myMC.getBrand() +" "+ myMC.getModel(), true));
+			}
+		}
+	}
 
 	/**
 	 * Metod som hämtar en MCUser med hjälp av ett MCUser id.
@@ -412,6 +443,32 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 		testService.removeFriendship(viewUser, myself, callback);
 
 	}
+
+	public void getPicture(Long id) {
+
+		if(id!=null){
+			//Make another call to the Blob Service to retrieve the meta-data
+			blobService.getPicture(id, new AsyncCallback<Picture>() {
+
+				@Override
+				public void onSuccess(Picture result) {
+
+					img.setUrl(result.getImageUrl());
+					img.setHeight("100px");
+
+				}
+				@Override
+				public void onFailure(Throwable caught) {
+					caught.printStackTrace();
+				}
+			});
+		}else{
+			System.out.println("picture.id==null");
+		}
+
+
+	}
+
 	/**
 	 * Metod, anropas om användaren inte kunde hämtas från databasen
 	 * @param userid

@@ -7,6 +7,8 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import javax.servlet.http.HttpServlet;
 
+import org.apache.naming.java.javaURLContextFactory;
+
 import com.TDDD27.MCNetwork.client.TestService;
 import com.TDDD27.MCNetwork.shared.MC;
 import com.TDDD27.MCNetwork.shared.MCUser;
@@ -40,6 +42,8 @@ public class TestServiceImpl extends RemoteServiceServlet implements TestService
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		MCUser theUser = pm.getObjectById(MCUser.class, id); 
 		detachedUser = pm.detachCopy(theUser);
+		java.util.ArrayList<MC> templist = new ArrayList<MC>(theUser.getMcList());
+		detachedUser.setMcList(templist);
 		//System.out.println(theUser.getFirstName());
 		pm.close();
 
@@ -102,22 +106,6 @@ public class TestServiceImpl extends RemoteServiceServlet implements TestService
 		return true;
 	}
 
-	public boolean deleteFriend(Long friend, MCUser user) {
-		PersistenceManager pm1 = PMF.get().getPersistenceManager();
-
-		try {
-			MCUser thisuser = pm1.getObjectById(MCUser.class, user.getId());
-			System.out.println("id: "+ thisuser.getId());
-
-			thisuser.getFriendsList().remove(friend); //Ta bort vŠnnen ur listan
-
-		}
-		finally {
-			pm1.close(); //Spara till databasen
-		}
-
-		return true;
-	}
 
 	@Override
 	public Long storeUserMC(MCUser mcuser, MC mc) {
@@ -639,7 +627,9 @@ public class TestServiceImpl extends RemoteServiceServlet implements TestService
 				result=results.get(0);
 				//För att göra om datanucleus arraylist till java.util.arraylist så den kan skickas till klienten
 				detachedUser = pm.detachCopy(result);
-				System.out.println("user.getId(): "+result.getId()+" Listan.size() "+result.getMcList().size());
+				java.util.ArrayList<MC> templist = new ArrayList<MC>(result.getMcList());
+				detachedUser.setMcList(templist);
+				System.out.println("user.getId(): "+detachedUser.getId()+" MClistan.size() "+detachedUser.getMcList().size());
 			}
 
 		} finally {
@@ -684,7 +674,7 @@ public class TestServiceImpl extends RemoteServiceServlet implements TestService
 		} finally {
 			pm.close();
 		}
-		return 0;
+		return mcuser.getId();
 	}
 	@Override
 	public boolean storeMsg(Message msg) {
@@ -743,7 +733,6 @@ public class TestServiceImpl extends RemoteServiceServlet implements TestService
 				MCUser e2 = pm.getObjectById(MCUser.class, viewUser.getId());
 				e2.getFriendsList().add(myself.getId());
 
-
 				Message notification = new Message(myself.getId(), viewUser.getId(), myself.getFirstName()+" "+myself.getLastName()+" har lagt till dig som vän. ", true);
 				pm.makePersistent(notification);
 			} catch (Exception e) {
@@ -781,6 +770,16 @@ public class TestServiceImpl extends RemoteServiceServlet implements TestService
 		}
 		System.out.println("Försöker skapa vänner men en av dem är null");
 		return false;
+	}
+	public static void setUserPic(long mcuserid, long picid) {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		try {
+			MCUser e = pm.getObjectById(MCUser.class, mcuserid);
+			e.setUserPicId(picid);
+		} finally {
+			pm.close();
+		}
+		
 	}
 
 }

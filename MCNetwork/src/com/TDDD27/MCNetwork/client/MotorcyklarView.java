@@ -82,12 +82,13 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 				}
 				else{
 					loggedInUser=result;
-					System.out.println("Hittade en!!!! (i MotorcyklarView)");
+					System.out.println("Hittade en!!!! (i MotorcyklarView) id: "+loggedInUser.getId()+ " med MClist.size(): "+result.getMcList());
 					printMC(loggedInUser);
 				}
 			}
 		};
 
+		testService.getUserByID(userID, callback);
 		//HISTORY
 		History.addValueChangeHandler(this);
 		String initToken = History.getToken();
@@ -99,7 +100,6 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 		History.fireCurrentHistoryState();		
 		//HISTORY
 
-		testService.getUserByID(userID, callback);
 		return null;
 	}
 
@@ -109,17 +109,17 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 	 * @param theUser
 	 */
 	protected void printMC(MCUser theUser) {
-		ArrayList<MC> MCList = loggedInUser.getMcList();
+		ArrayList<MC> MCList = theUser.getMcList();
 
-		System.out.println("loggedInUser.getId(): "+loggedInUser.getId()+" Listan.size()"+MCList.size());
+		System.out.println("loggedInUser.getId(): "+theUser.getId()+" MCLIST.size()"+theUser.getMcList().size());
 		if(!MCList.isEmpty()){
 
-			for(int i=0; i<MCList.size(); i++){
+			for(int i=0; i<theUser.getMcList().size(); i++){
 
 				final MC myMC = MCList.get(i); 
 				Button edit = new Button("Edit");
 				Button delete = new Button("Delete");
-				MCTable.setWidget(i, 1, new HTML("<bold>Motorcykel </bold>"+ myMC.getBrand(), true));
+				MCTable.setWidget(i, 1, new HTML("<bold>Motorcykel </bold>"+ myMC.getBrand() +" "+ myMC.getModel(), true));
 				edit.addClickHandler(new ClickHandler() {
 					@Override
 					public void onClick(ClickEvent event) {
@@ -159,7 +159,7 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 		parent.centerPanel.clear();
 		parent.centerPanel.add(centerwidget);
 	}
-	
+
 	private void deleteMC(MC mc, MCUser loggedInUser) {
 		if (testService == null) {
 			testService = GWT.create(TestService.class);

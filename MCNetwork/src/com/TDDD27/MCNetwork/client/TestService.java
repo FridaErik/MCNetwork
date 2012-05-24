@@ -41,8 +41,6 @@ public interface TestService extends RemoteService {
 
 	boolean removeFriendship(MCUser viewUser, MCUser myself);
 
-	boolean deleteFriend(Long friendId, MCUser loggedInUser);
-
 	ArrayList<MCUser> getFriendsByID(ArrayList<Long> friendsID);
 
 

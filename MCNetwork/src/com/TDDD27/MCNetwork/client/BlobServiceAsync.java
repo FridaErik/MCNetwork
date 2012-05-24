@@ -7,6 +7,6 @@ public interface BlobServiceAsync {
 
 	void getBlobStoreUploadUrl(AsyncCallback<String> asyncCallback);
 
-	void getPicture(String id, AsyncCallback<com.TDDD27.MCNetwork.shared.Picture> asyncCallback);
+	void getPicture(Long id, AsyncCallback<com.TDDD27.MCNetwork.shared.Picture> asyncCallback);
 
 }

@@ -26,7 +26,7 @@ public class MyMenu extends MenuBar {
 			this.addItem(msgMI);
 			MenuItem mcMI = new MenuItem("Mina motorcyklar", motorcyklarCmd);
 			this.addItem(mcMI);
-			MenuItem frMI = new MenuItem("Mina vänner", friendsCmd);
+			MenuItem frMI = new MenuItem("Mina kompisar", friendsCmd);
 			this.addItem(frMI);
 		}
 		MenuItem filterMI = new MenuItem("Hitta andra", filterCmd);

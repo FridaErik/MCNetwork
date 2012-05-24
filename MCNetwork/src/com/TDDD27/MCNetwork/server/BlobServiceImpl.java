@@ -28,10 +28,10 @@ public class BlobServiceImpl extends RemoteServiceServlet implements
   
   //Programmet klagar om vi gör detta i båda BlobService och UploadService, 
   //testar att kommentera bort det här
-  /*//Register the Objectify Service for the Picture entity
+  //Register the Objectify Service for the Picture entity
   static {
     ObjectifyService.register(Picture.class);
-  }*/
+  }
 
   //Generate a Blobstore Upload URL from the GAE BlobstoreService
   @Override
@@ -45,20 +45,21 @@ public class BlobServiceImpl extends RemoteServiceServlet implements
 
   //Retrieve the Blob's meta-data from the Datastore using Objectify
   @Override
-  public Picture getPicture(String id) {
+  public Picture getPicture(Long id) {
     
-    long l = Long.parseLong(id);
+    long l = id;
     Picture picture = ofy.get(Picture.class, l);
     System.out.println("Skickar ut Picture från getPicture(id) i BlobstoreServiceImpl");
     return picture;
   }
+  
   
   //Override doGet to serve blobs.  This will be called automatically by the Image Widget
   //in the client
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
-
+	  System.out.println("I doGet i BlobstoreServiceImpl");
         BlobKey blobKey = new BlobKey(req.getParameter("blob-key"));
         blobstoreService.serve(blobKey, resp);
 

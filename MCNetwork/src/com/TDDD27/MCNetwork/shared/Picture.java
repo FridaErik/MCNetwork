@@ -12,6 +12,7 @@ public class Picture implements Serializable {
   public String title;
   public String description;
   public String imageUrl;
+  public Long userId;
 
   public void setTitle(String title) {
     this.title = title;
@@ -45,4 +46,12 @@ public class Picture implements Serializable {
   public Long getId() {
     return id;
   }
+
+public Long getUserId() {
+	return userId;
+}
+
+public void setUserId(Long userId) {
+	this.userId = userId;
+}
 }

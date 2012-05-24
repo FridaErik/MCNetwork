@@ -26,7 +26,7 @@ public class UploadServiceImpl extends HttpServlet {
   Objectify ofy = ObjectifyService.begin();
 
   static {
-    ObjectifyService.register(Picture.class);
+    //ObjectifyService.register(Picture.class);
   }
 
   //Override the doPost method to store the Blob's meta-data
@@ -40,15 +40,18 @@ public class UploadServiceImpl extends HttpServlet {
     Picture picture = new Picture();
     picture.setDescription(req.getParameter("descriptionTextBox"));
     picture.setTitle(req.getParameter("titleTextBox"));
+    picture.setUserId(Long.parseLong(req.getParameter("idTextBox")));
     //Map the ImageURL to the blobservice servlet, which will serve the image
     System.out.println("/mcnetwork/blobservice?blob-key= + blobKey.getKeyString(): "+"/mcnetwork/blobservice?blob-key=" + blobKey.getKeyString());
     picture.setImageUrl("/mcnetwork/blobservice?blob-key=" + blobKey.getKeyString());
 
     ofy.put(picture);
+    TestServiceImpl.setUserPic(Long.parseLong(req.getParameter("idTextBox")), picture.id);
 
     //Redirect recursively to this servlet (calls doGet)
     System.out.println("Resultatet av doPost i UploadServiceImpl: "+"/mcnetwork/uploadservice?id=" + picture.id);
     res.sendRedirect("/mcnetwork/uploadservice?id=" + picture.id);
+    //res.getWriter().print(picture.id); 
   }
 
   @Override

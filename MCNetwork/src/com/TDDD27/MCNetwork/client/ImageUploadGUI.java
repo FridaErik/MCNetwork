@@ -36,23 +36,36 @@ public class ImageUploadGUI extends VerticalPanel {
 	VerticalPanel mainVerticalPanel = new VerticalPanel();
 	HorizontalPanel hp1 = new HorizontalPanel();
 	HorizontalPanel hp2 = new HorizontalPanel();
-	HTML titleLabel = new HTML("Title");
-	HTML descriptionLabel = new HTML("Description");
+	HorizontalPanel hp0 = new HorizontalPanel();
+	HTML titleLabel = new HTML("Title", true);
+	HTML idLabel = new HTML("ID", true);
+	HTML descriptionLabel = new HTML("Description", true);
 	TextBox titleTextBox = new TextBox();
+	TextBox idTextBox = new TextBox();
 	TextBox descriptionTextBox = new TextBox();
 	FileUpload upload = new FileUpload();
 	Button submitButton = new Button("Submit");
+	Long userId;
 
 	FlexTable resultsTable = new FlexTable();
 	/**
 	 * 
 	 */
 	public ImageUploadGUI(Long userid) {
+		System.out.println("userid: "+userid);
+		userId=userid;
+		idLabel.setVisible(false);
+		//"Påhittig" lösning för att få över Id't till uploadService
+		idTextBox.setText(userid.toString());
+		idTextBox.setVisible(false);
+		hp0.add(idLabel);
+		hp0.add(idTextBox);
 		hp1.add(titleLabel);
 		hp1.add(titleTextBox);
 		hp2.add(descriptionLabel);
 		hp2.add(descriptionTextBox);
 
+		mainVerticalPanel.add(hp0);
 		mainVerticalPanel.add(hp1);
 		mainVerticalPanel.add(hp2);
 		mainVerticalPanel.add(upload);
@@ -75,7 +88,10 @@ public class ImageUploadGUI extends VerticalPanel {
 		// HTTP call as parameters
 		titleTextBox.setName("titleTextBox");
 		descriptionTextBox.setName("descriptionTextBox");
+		idTextBox.setName("idTextBox");
 		upload.setName("upload");
+
+
 
 		this.add(uploadForm);
 
@@ -87,73 +103,68 @@ public class ImageUploadGUI extends VerticalPanel {
 
 					@Override
 					public void onSuccess(String result) {
-						System.out.println("Success i getBlobStoreUploadUrl()");
 						// Set the form action to the newly created
 						// blobstore upload URL
 						uploadForm.setAction(result.toString());
-						System.out.println("Steg 1 i getBlobStoreUploadUrl()");
 						// Submit the form to complete the upload
 						uploadForm.submit();
-						System.out.println("Steg 2 i getBlobStoreUploadUrl()");
 						uploadForm.reset();
-						System.out.println("Steg 3 i getBlobStoreUploadUrl()");
+
 					}
 
 					@Override
-		              public void onFailure(Throwable caught) {
-		                caught.printStackTrace();
-		              }
-		            });
+					public void onFailure(Throwable caught) {
+						caught.printStackTrace();
+					}
+				});
 
-		      }
-		    });
-		
+			}
+		});
+
 		uploadForm.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
 			@Override
 			public void onSubmitComplete(SubmitCompleteEvent event) {
 				System.out.println("onSubmitComplete");
-				//The submit complete Event Results will contain the unique
-				//identifier for the picture's meta-data.  Trim it to remove
-				//trailing spaces and line breaks
-				if(event==null){
-					System.out.println("event==null");
-				}
-				else{
-					System.out.println("event!=null");
-				}
-				getPicture(event.getResults().trim());
-
+				//TODO skicka till users sida
 			}
+
+
 
 
 		});
 
 	}
 
-	public void getPicture(String id) {
+	public void getPicture(Long id) {
 
-		//Make another call to the Blob Service to retrieve the meta-data
-		blobService.getPicture(id, new AsyncCallback<Picture>() {
+		if(id!=null){
+			//Make another call to the Blob Service to retrieve the meta-data
+			blobService.getPicture(id, new AsyncCallback<Picture>() {
 
-			@Override
-			public void onSuccess(Picture result) {
+				@Override
+				public void onSuccess(Picture result) {
 
-				Image image = new Image();
-				image.setUrl(result.getImageUrl());
+					Image image = new Image();
+					image.setUrl(result.getImageUrl());
 
-				//Use Getters from the Picture object to load the FlexTable
-				resultsTable.setWidget(0, 0, image);
-				resultsTable.setText(1, 0, result.getTitle());
-				resultsTable.setText(2, 0, result.getDescription());
+					//Use Getters from the Picture object to load the FlexTable
+					resultsTable.setWidget(0, 0, image);
+					resultsTable.setText(1, 0, result.getTitle());
+					resultsTable.setText(2, 0, result.getDescription());
 
-			}
-			@Override
-			public void onFailure(Throwable caught) {
-				caught.printStackTrace();
-			}
-		});
+				}
+				@Override
+				public void onFailure(Throwable caught) {
+					caught.printStackTrace();
+				}
+			});
+		}else{
+			System.out.println("picture.id==null");
+		}
+
 
 	}
+	
 
 
 }

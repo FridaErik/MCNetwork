@@ -9,6 +9,6 @@ public interface BlobService extends RemoteService{
 
 	String getBlobStoreUploadUrl();
 
-	Picture getPicture(String id);
+	Picture getPicture(Long id);
 
 }

@@ -54,6 +54,9 @@ public class MCUser implements Serializable
 
 	@Persistent
 	private String gender;
+	
+	@Persistent
+	private Long userPicId;
 
 	@Persistent(mappedBy = "owner")
 	private ArrayList<MC> mcList = new ArrayList<MC>();
@@ -201,6 +204,14 @@ public class MCUser implements Serializable
 
 	public void setFriendsList(ArrayList<Long> friendsList) {
 		this.friendsList = friendsList;
+	}
+
+	public Long getUserPicId() {
+		return userPicId;
+	}
+
+	public void setUserPicId(Long userPicId) {
+		this.userPicId = userPicId;
 	}
 
 

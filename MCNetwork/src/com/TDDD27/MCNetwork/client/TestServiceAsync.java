@@ -42,9 +42,6 @@ public interface TestServiceAsync {
 	void removeFriendship(MCUser viewUser, MCUser myself,
 			AsyncCallback<Boolean> callback);
 
-	void deleteFriend(Long friendId, MCUser loggedInUser,
-			AsyncCallback<Boolean> callback);
-
 	void getFriendsByID(ArrayList<Long> friendsID,
 			AsyncCallback<ArrayList<MCUser>> callback);
 
