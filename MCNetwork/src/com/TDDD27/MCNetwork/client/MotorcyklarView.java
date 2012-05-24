@@ -37,7 +37,7 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 
 	public MotorcyklarView(MCNetwork myParent) {
 		super();
-		System.out.println("Skapar ny UserForm");
+		System.out.println("Skapar ny MotorcyklarView");
 		parent=myParent;
 		LoginServiceAsync loginService = GWT.create(LoginService.class);
 		loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
@@ -47,7 +47,7 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 			}
 			@Override
 			public void onSuccess(LoginInfo result) {
-				System.out.println("Userform har registrerat att en användare är inloggad");
+				System.out.println("MotorcyklarView har registrerat att en användare är inloggad");
 				loginInfo = result;
 				getDBUser(loginInfo.getUserID());
 			}
