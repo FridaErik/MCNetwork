@@ -18,26 +18,23 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.VerticalPanel;
 /**
  * Klass för att visa en användares lista av 
- * motorcyklar samt lägga till nya
+ * vŠnner 
  * @author Frida
  *
  */
-public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler{
+public class FriendsView extends VerticalPanel implements ValueChangeHandler{
 	private static TestServiceAsync testService = GWT.create(TestService.class);
 
 	private MCNetwork parent;
 	private MCUser loggedInUser=null;
-	private MC MC = null;
-	//private Button edit;
-	private Button nymc = new Button("Ny MC");
 	private LoginInfo loginInfo = null;
-	private FlexTable MCTable = new FlexTable();
-	private Boolean editBoolean = false;
+	private FlexTable friendTable = new FlexTable();
+	private ArrayList<MCUser> myFriends = new ArrayList<MCUser>();
 
-
-	public MotorcyklarView(MCNetwork myParent) {
+	
+	public FriendsView(MCNetwork myParent) {
 		super();
-		System.out.println("Skapar ny MotorcyklarView");
+		System.out.println("Skapar ny FriendsView");
 		parent=myParent;
 		LoginServiceAsync loginService = GWT.create(LoginService.class);
 		loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
@@ -83,7 +80,7 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 				else{
 					loggedInUser=result;
 					System.out.println("Hittade en!!!! (i MotorcyklarView)");
-					printMC(loggedInUser);
+					printFriends(loggedInUser);
 				}
 			}
 		};
@@ -108,59 +105,33 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 	 * i en tabell
 	 * @param theUser
 	 */
-	protected void printMC(MCUser theUser) {
-		ArrayList<MC> MCList = loggedInUser.getMcList();
+	protected void printFriends(MCUser theUser) {
+		ArrayList<Long> FriendsList = loggedInUser.getFriendsList();
 
-		System.out.println("loggedInUser.getId(): "+loggedInUser.getId()+" Listan.size()"+MCList.size());
-		if(!MCList.isEmpty()){
+		System.out.println("loggedInUser.getId(): "+loggedInUser.getId()+" Listan.size()"+FriendsList.size());
+		if(!FriendsList.isEmpty()){
+			myFriends = getFriendsByID(FriendsList);
 
-			for(int i=0; i<MCList.size(); i++){
-
-				final MC myMC = MCList.get(i); 
-				Button edit = new Button("Edit");
+			for(int i=0; i<FriendsList.size(); i++){
+				final Long FriendId = FriendsList.get(i); 
+				final MCUser myFriend = myFriends.get(i);
 				Button delete = new Button("Delete");
-				MCTable.setWidget(i, 1, new HTML("<bold>Motorcykel </bold>"+ myMC.getBrand(), true));
-				edit.addClickHandler(new ClickHandler() {
-					@Override
-					public void onClick(ClickEvent event) {
-						editBoolean=true;
-						edit(myMC);	
-					}
-				});
+				friendTable.setWidget(i, 1, new HTML(myFriend.getFirstName() + " " + myFriend.getLastName(), true));
 				delete.addClickHandler(new ClickHandler() {
 					@Override
 					public void onClick(ClickEvent event) {
-						deleteMC(myMC, loggedInUser);	
+						deleteFriend(FriendId, loggedInUser);	
 					}
 				});
-				MCTable.setWidget(i, 2, edit);
-				MCTable.setWidget(i, 3, delete);
+				
+				friendTable.setWidget(i, 2, delete);
 			}
 		}
 
-		nymc.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				editBoolean=false;
-				edit(null);	
-			}
-		});
-		this.add(MCTable);
-		this.add(nymc);
+		this.add(friendTable);
 
 	}
-	/**
-	 * Metod för att öppna ett formulär
-	 * så att användaren kan ändra uppgifter de angett om en modell
-	 * @param MC
-	 */
-	protected void edit(MC MC) {
-		MCForm centerwidget = new MCForm(MC, loggedInUser, parent, editBoolean); //Behöver kanske egentligen inte skicka med parent här men jag gjorde det för att "den kan vara bra att ha"
-		parent.centerPanel.clear();
-		parent.centerPanel.add(centerwidget);
-	}
-	
-	private void deleteMC(MC mc, MCUser loggedInUser) {
+	protected void deleteFriend(Long friendId, MCUser loggedInUser2) {
 		if (testService == null) {
 			testService = GWT.create(TestService.class);
 		}
@@ -177,15 +148,39 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 			}
 		};
 
-		testService.deleteMC(mc, loggedInUser, callback);
+		testService.deleteFriend(friendId, loggedInUser, callback);
 	}
+
+	protected ArrayList<MCUser> getFriendsByID(ArrayList<Long> FriendsID) {
+		if (testService == null) {
+			testService = GWT.create(TestService.class);
+		}
+		// Set up the callback object.
+		AsyncCallback<ArrayList<MCUser>> callback = new AsyncCallback<ArrayList<MCUser>>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				myFriends = null;
+			}
+			@Override
+			public void onSuccess(ArrayList<MCUser> result) {
+				myFriends = result;
+				
+			}
+		};
+
+		testService.getFriendsByID(FriendsID, callback);
+		return myFriends;
+	}
+	
+	
+	
 
 	/**Hanterar historiken
 	 * 
 	 */
 	@Override
 	public void onValueChange(ValueChangeEvent event) {
-		if (event.getValue().equals("mcview")){
+		if (event.getValue().equals("friendsview")){
 			parent.centerPanel.clear();
 			parent.centerPanel.add(this);
 		}

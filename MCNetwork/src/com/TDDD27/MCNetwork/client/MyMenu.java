@@ -26,6 +26,8 @@ public class MyMenu extends MenuBar {
 			this.addItem(msgMI);
 			MenuItem mcMI = new MenuItem("Mina motorcyklar", motorcyklarCmd);
 			this.addItem(mcMI);
+			MenuItem frMI = new MenuItem("Mina vänner", friendsCmd);
+			this.addItem(frMI);
 		}
 		MenuItem filterMI = new MenuItem("Hitta andra", filterCmd);
 		this.addItem(filterMI);
@@ -96,6 +98,17 @@ public class MyMenu extends MenuBar {
 		public void execute()
 		{
 			MotorcyklarView centerwidget = new MotorcyklarView(myParent);
+			myParent.centerPanel.clear();
+			myParent.centerPanel.add(centerwidget);
+		}
+	};
+	
+	static Command friendsCmd = new Command()
+	{
+		@Override
+		public void execute()
+		{
+			FriendsView centerwidget = new FriendsView(myParent);
 			myParent.centerPanel.clear();
 			myParent.centerPanel.add(centerwidget);
 		}
