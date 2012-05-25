@@ -23,6 +23,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RadioButton;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 
 /** Formluär för att lägga
@@ -69,7 +70,7 @@ public class Userform extends FormPanel {
 
 	private HTML fileHTML = new HTML("Upload Something", true);
 	private String bildPath ="";
-	private Button submit = new Button("Submit");
+	//private Button submit = new Button("Submit");
 	private LoginInfo loginInfo = null;
 
 
@@ -172,17 +173,29 @@ public class Userform extends FormPanel {
 		grid.setWidget(7, 1, textBoxMiles);
 		grid.setWidget(7, 2, errorMiles);
 	
-
-		
-		
-		grid.setWidget(10, 0, submit);
-		submit.addClickHandler(new ClickHandler() {
-
+		SimplePanel submit = new SimplePanel();
+		HTML submitBtn = new HTML("Uppdatera", true);
+		ClickHandler updateClickHandler = new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				submit();	
 			}
-		});
+		};
+		submitBtn.addClickHandler(updateClickHandler);
+		submit.add(submitBtn);
+		submit.setWidth("120px");
+		submit.addStyleName("GreenBtn");
+		submit.setHeight("20px");
+		
+		
+		grid.setWidget(10, 0, submit);
+	/*	submit.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				
+			}
+		});*/
 
 		setEncoding(FormPanel.ENCODING_MULTIPART);
 		setMethod(FormPanel.METHOD_POST);
@@ -323,7 +336,7 @@ public class Userform extends FormPanel {
 			}
 			@Override
 			public void onSuccess(Long result) {
-				HTML notification = new HTML("Dina uppgifter är registrerade", true);
+				HTML notification = new HTML("Dina uppgifter &auml;r registrerade", true);
 				grid.setWidget(11, 1, notification);
 			}
 		};
@@ -351,7 +364,7 @@ public class Userform extends FormPanel {
 			}
 			@Override
 			public void onSuccess(Long result) {
-				HTML notification = new HTML("Dina uppgifter är uppdaterad", true);
+				HTML notification = new HTML("Dina uppgifter &auml;r uppdaterad", true);
 				grid.setWidget(11, 1, notification);
 				
 			}

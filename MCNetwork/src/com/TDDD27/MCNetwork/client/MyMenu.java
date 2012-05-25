@@ -21,20 +21,35 @@ public class MyMenu extends MenuBar {
 		if(loggedIn){
 			System.out.println("Menyn har registrerat att en användare är inloggad");
 			if(parent.getLoggedInUser()!=null){
-				MenuItem regMI = new MenuItem("Min sida", myPageCmd);
+				MenuItem myPageMI = new MenuItem("Min sida", myPageCmd);
+				this.addItem(myPageMI);
+				MenuItem msgMI = new MenuItem("Mina meddelanden", meddelandeCmd);
+				this.addItem(msgMI);
+				MenuItem mcMI = new MenuItem("Mina motorcyklar", motorcyklarCmd);
+				this.addItem(mcMI);
+				MenuItem frMI = new MenuItem("Mina kompisar", friendsCmd);
+				this.addItem(frMI);
+			}
+			else{
+				MenuItem regMI = new MenuItem("Registrera dig", registerCmd);
 				this.addItem(regMI);
 			}
-			MenuItem msgMI = new MenuItem("Mina meddelanden", meddelandeCmd);
-			this.addItem(msgMI);
-			MenuItem mcMI = new MenuItem("Mina motorcyklar", motorcyklarCmd);
-			this.addItem(mcMI);
-			MenuItem frMI = new MenuItem("Mina kompisar", friendsCmd);
-			this.addItem(frMI);
+			
 		}
 		MenuItem filterMI = new MenuItem("Hitta andra", filterCmd);
 		this.addItem(filterMI);
 		
 	}
+	static Command registerCmd = new Command()
+	{
+		@Override
+		public void execute()
+		{
+			EditUserView centerwidget = new EditUserView(myParent);
+			myParent.centerPanel.clear();
+			myParent.centerPanel.add(centerwidget);
+		}
+	};
 
 	/**
 	 * Metod för att öppna ett Userform

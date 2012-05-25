@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.NamedFrame;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -43,7 +44,6 @@ public class ImageUploadGUI extends VerticalPanel {
 	TextBox idTextBox = new TextBox();
 	TextBox descriptionTextBox = new TextBox();
 	FileUpload upload = new FileUpload();
-	Button submitButton = new Button("Submit");
 	Long userId;
 
 	/**
@@ -66,7 +66,38 @@ public class ImageUploadGUI extends VerticalPanel {
 
 		mainVerticalPanel.add(grid);
 		mainVerticalPanel.add(upload);
-		mainVerticalPanel.add(submitButton);
+		SimplePanel submit = new SimplePanel();
+		HTML submitBtn = new HTML("Uppdatera", true);
+		ClickHandler updateClickHandler = new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				blobService.getBlobStoreUploadUrl(new AsyncCallback<String>() {
+
+					@Override
+					public void onSuccess(String result) {
+						// Set the form action to the newly created
+						// blobstore upload URL
+						uploadForm.setAction(result.toString());
+						// Submit the form to complete the upload
+						uploadForm.submit();
+						uploadForm.reset();
+
+					}
+
+					@Override
+					public void onFailure(Throwable caught) {
+						caught.printStackTrace();
+					}
+				});	
+			}
+		};
+		submitBtn.addClickHandler(updateClickHandler);
+		submit.add(submitBtn);
+		submit.setWidth("120px");
+		submit.addStyleName("GreenBtn");
+		submit.setHeight("20px");
+		
+		mainVerticalPanel.add(submit);
 
 		uploadForm.setWidget(mainVerticalPanel);
 		
@@ -88,7 +119,7 @@ public class ImageUploadGUI extends VerticalPanel {
 
 		this.add(uploadForm);
 
-		submitButton.addClickHandler(new ClickHandler() {
+		/*submitButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 
@@ -112,12 +143,12 @@ public class ImageUploadGUI extends VerticalPanel {
 				});
 
 			}
-		});
+		});*/
 
 		uploadForm.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
 			@Override
 			public void onSubmitComplete(SubmitCompleteEvent event) {
-				HTML notification = new HTML("Din bild är uppdaterad", true);
+				HTML notification = new HTML("Din bild &auml;r uppdaterad</br> Det kan ta en stund innan bilden syns p&aring; din sida.", true);
 				mainVerticalPanel.add(notification);
 			}
 

@@ -13,6 +13,13 @@ h2 {
 	margin: 2px;
 	text-align: center;
 }
+h3{
+	color: black;
+	font-size: 1.2 em;
+	font-weight: bold;
+	font-family: sans-serif;
+	margin: 6px 2px 1px 2px;
+}
 
 body {
 	width: 22em;
@@ -32,6 +39,18 @@ error {
 	cursor: pointer;
 	text-decoration: underline;
 	color: #777777;
+}
+.GreenBtn {
+	text-align: center;
+	padding: 5px;
+	margin: 5px;
+	border-radius: 5px;
+	background-color: #CAF0E5;
+	border: 1px solid grey;
+}
+.GreenBtn:hover {
+	cursor: pointer;
+	background-color: #6CA394;
 }
 /*--------------------Sökpanel--------------------*/
 .searchPanel {
@@ -143,18 +162,7 @@ bold {
 .btnPanel {
 	margin: 10px 5px 10px 5px;
 }
-.UserviewBtn {
-	text-align: center;
-	padding: 5px;
-	margin: 5px;
-	border-radius: 5px;
-	background-color: #CAF0E5;
-	border: 1px solid grey;
-}
-.UserviewBtn:hover {
-	cursor: pointer;
-	background-color: #6CA394;
-}
+
 
 .msgtext {
 	background-color: white;

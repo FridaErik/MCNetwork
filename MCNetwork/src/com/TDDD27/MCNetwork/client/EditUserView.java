@@ -22,9 +22,11 @@ public class EditUserView extends HorizontalPanel implements ValueChangeHandler{
 		HTML titleLeft = new HTML("<H1>Personuppgifter</H1>", true);
 		leftPanel.add(titleLeft);
 		leftPanel.add(new Userform(parent));
-		HTML titleRight = new HTML("<H1>Bild</H1>", true);
-		rightPanel.add(titleRight);
-		rightPanel.add(new ImageUploadGUI(parent.getLoggedInUser().getId()));
+		if(parent.getLoggedInUser()!=null){
+			HTML titleRight = new HTML("<H1>Bild</H1>", true);
+			rightPanel.add(titleRight);
+			rightPanel.add(new ImageUploadGUI(parent.getLoggedInUser().getId()));
+		}
 		leftPanel.addStyleName("editUserViewLeft");
 		rightPanel.addStyleName("editUserViewRight");
 		

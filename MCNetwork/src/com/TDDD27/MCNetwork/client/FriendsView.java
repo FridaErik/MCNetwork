@@ -32,7 +32,7 @@ public class FriendsView extends VerticalPanel implements ValueChangeHandler{
 	private ArrayList<MCUser> myFriends = new ArrayList<MCUser>();
 	private ArrayList<Long> FriendsList = new ArrayList<Long>();
 
-	
+
 	public FriendsView(MCNetwork myParent) {
 		super();
 		System.out.println("Skapar ny FriendsView");
@@ -114,16 +114,21 @@ public class FriendsView extends VerticalPanel implements ValueChangeHandler{
 			//FriendsList = loggedInUser.getFriendsList();
 			myFriends = getFriendsByID(FriendsList);
 			//System.out.println("loggedInUser.getId(): "+loggedInUser.getId()+" Listan.size()"+myFriends.size());
-			
-			
+
+		}else{
+			HTML noFriends = new HTML("<H2>Du har inga kompisar &auml;n</H2>", true);
+			friendTable.setWidget(0, 0, noFriends);
 		}
 
 		this.add(friendTable);
 
 	}
-	
+
 	protected void printList(ArrayList<MCUser> list){
-		for(int i=0; i<list.size(); i++){
+
+		HTML friends = new HTML("<H1>Dina kompisar</H1>", true);
+		friendTable.setWidget(0, 0, friends);
+		for(int i=1; i<list.size()+1; i++){
 			//final Long FriendId = FriendsList.get(i); 
 			final MCUser myFriend = list.get(i);
 			Button delete = new Button("Delete");
@@ -131,12 +136,12 @@ public class FriendsView extends VerticalPanel implements ValueChangeHandler{
 			HTML friendWidget = new HTML();
 			friendWidget.setHTML(myFriend.getFirstName()+" "+myFriend.getLastName());
 			friendWidget.setStyleName("Clickable");
-			
+
 			ClickHandler resieverClickHandler = new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-			SendToUserPage(myFriend);
-			}
+				@Override
+				public void onClick(ClickEvent event) {
+					SendToUserPage(myFriend);
+				}
 			};
 
 			friendWidget.addClickHandler(resieverClickHandler);
@@ -148,19 +153,21 @@ public class FriendsView extends VerticalPanel implements ValueChangeHandler{
 					deleteFriend(myFriend, loggedInUser);	
 				}
 			});
-			
+
 			friendTable.setWidget(i, 2, delete);
+
 		}
+
 	}
-	
+
 	protected void SendToUserPage(MCUser mcuser) {
 
 		UserView centerwidget = new UserView(mcuser, parent);
 		parent.centerPanel.clear();
 		parent.centerPanel.add(centerwidget);
 
-		}
-	
+	}
+
 	protected void deleteFriend(MCUser friend, MCUser loggedInUser2) {
 		if (testService == null) {
 			testService = GWT.create(TestService.class);
@@ -202,9 +209,9 @@ public class FriendsView extends VerticalPanel implements ValueChangeHandler{
 		testService.getFriendsByID(FriendsID, callback);
 		return myFriends;
 	}
-	
-	
-	
+
+
+
 
 	/**Hanterar historiken
 	 * 

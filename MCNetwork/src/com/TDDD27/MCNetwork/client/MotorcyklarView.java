@@ -15,6 +15,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 /**
  * Klass för att visa en användares lista av 
@@ -28,8 +29,6 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 	private MCNetwork parent;
 	private MCUser loggedInUser=null;
 	private MC MC = null;
-	//private Button edit;
-	private Button nymc = new Button("Ny MC");
 	private LoginInfo loginInfo = null;
 	private FlexTable MCTable = new FlexTable();
 	private Boolean editBoolean = false;
@@ -117,34 +116,60 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 			for(int i=0; i<theUser.getMcList().size(); i++){
 
 				final MC myMC = MCList.get(i); 
-				Button edit = new Button("Edit");
-				Button delete = new Button("Delete");
+				//Button edit = new Button("Edit");
+				//Button delete = new Button("Delete");
 				MCTable.setWidget(i, 1, new HTML("<bold>Motorcykel  </bold>"+ myMC.getBrand() +"   "+ myMC.getModel() +"   "+ myMC.getYear(), true));
-				edit.addClickHandler(new ClickHandler() {
+				//Knappar
+				SimplePanel edit = new SimplePanel();
+				HTML editBtn = new HTML("Redigera", true);
+				ClickHandler editClickHandler = new ClickHandler() {
 					@Override
 					public void onClick(ClickEvent event) {
 						editBoolean=true;
 						edit(myMC);	
 					}
-				});
-				delete.addClickHandler(new ClickHandler() {
+				};
+				editBtn.addClickHandler(editClickHandler);
+				edit.add(editBtn);
+				edit.setWidth("90px");
+				edit.addStyleName("GreenBtn");
+				edit.setHeight("20px");
+				
+				SimplePanel delete = new SimplePanel();
+				HTML deleteBtn = new HTML("Ta bort", true);
+				ClickHandler deleteClickHandler = new ClickHandler() {
 					@Override
 					public void onClick(ClickEvent event) {
-						deleteMC(myMC, loggedInUser);	
+						deleteMC(myMC, loggedInUser);
 					}
-				});
+				};
+				deleteBtn.addClickHandler(deleteClickHandler);
+				delete.add(deleteBtn);
+				delete.setWidth("90px");
+				delete.addStyleName("GreenBtn");
+				delete.setHeight("20px");
+
 				MCTable.setWidget(i, 2, edit);
 				MCTable.setWidget(i, 3, delete);
 			}
 		}
-
-		nymc.addClickHandler(new ClickHandler() {
+		
+		SimplePanel nymc = new SimplePanel();
+		HTML nymcBtn = new HTML("L&auml;gg till MC", true);
+		ClickHandler nymcClickHandler = new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				editBoolean=false;
-				edit(null);	
+				edit(null);
 			}
-		});
+		};
+		nymcBtn.addClickHandler(nymcClickHandler);
+		nymc.add(nymcBtn);
+		nymc.setWidth("90px");
+		nymc.addStyleName("GreenBtn");
+		nymc.setHeight("20px");
+
+
 		this.add(MCTable);
 		this.add(nymc);
 

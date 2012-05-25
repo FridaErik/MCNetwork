@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -165,7 +166,7 @@ public class MessageForm extends FormPanel implements ValueChangeHandler {
 			title = new HTML("<H1>Skicka privat meddelande till "+myResiver.getFirstName()+"</H1>", true);
 			frame.add(title);
 		}else if(large){
-			title = new HTML("<H1>Skriv n&arintg;t p&aring;"+myResiver.getFirstName()+" v&auml;gg</H1>", true);
+			title = new HTML("<H1>Skriv n&aring;t p&aring; "+myResiver.getFirstName()+"s v&auml;gg</H1>", true);
 			frame.add(title);
 		}
 		goToReciever=setUpReciverLink(myResiver);
@@ -179,17 +180,13 @@ public class MessageForm extends FormPanel implements ValueChangeHandler {
 		grid.setWidget(0, 0, confirmation);
 		grid.setWidget(1, 1, errorMeddelande);
 		grid.setWidget(1, 0, textAreaMeddelande);
-		Button sendBtn = new Button("Skicka");
-		grid.setWidget(2, 0, sendBtn);
-		grid.setWidget(2, 1, goToReciever);
-		if(prevMsg!=null){
-			textAreaMeddelande.setText("\n \n"+'"'+prevMsg+'"');
-		}
-		frame.add(grid);
-		this.add(frame);
-		sendBtn.addClickHandler(new ClickHandler(){
+		
+		//Knappen
+		SimplePanel sendBtn = new SimplePanel();
+		HTML removeFriendBtn = new HTML("Skicka", true);
+		ClickHandler removeFriendClickHandler = new ClickHandler() {
 			@Override
-			public void onClick(ClickEvent event){
+			public void onClick(ClickEvent event) {
 				String msgString = textAreaMeddelande.getText();
 				System.out.println(msgString);
 
@@ -212,10 +209,22 @@ public class MessageForm extends FormPanel implements ValueChangeHandler {
 				};
 				Message msg= new Message(mySender.getId(), myResiver.getId(), msgString, myPrivate);
 				testService.storeMsg(msg, callback);
-
-
 			}
-		});
+		};
+		removeFriendBtn.addClickHandler(removeFriendClickHandler);
+		sendBtn.add(removeFriendBtn);
+		sendBtn.setWidth("70px");
+		sendBtn.addStyleName("GreenBtn");
+		sendBtn.setHeight("20px");
+		grid.setWidget(2, 0, sendBtn);
+		
+		
+		grid.setWidget(2, 1, goToReciever);
+		if(prevMsg!=null){
+			textAreaMeddelande.setText("\n \n"+'"'+prevMsg+'"');
+		}
+		frame.add(grid);
+		this.add(frame);
 
 	}
 
@@ -231,7 +240,6 @@ public class MessageForm extends FormPanel implements ValueChangeHandler {
 		toReturn.setHTML("  G&aring; till "+ resiver.getFirstName()+":s sida >>");
 		toReturn.setStyleName("Clickable");
 		ClickHandler resieverClickHandler = new ClickHandler() {
-			@Override
 			public void onClick(ClickEvent event) {
 				SendToUserPage(resiver);
 			}
