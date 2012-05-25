@@ -154,7 +154,8 @@ public class MCForm extends FormPanel implements ValueChangeHandler{
 			}
 			@Override
 			public void onSuccess(Boolean result) {
-				response.setHTML("Tillagd");
+				parent.centerPanel.clear();
+				parent.centerPanel.add(new MotorcyklarView(parent));
 			}
 		};
 
@@ -173,7 +174,8 @@ public class MCForm extends FormPanel implements ValueChangeHandler{
 			}
 			@Override
 			public void onSuccess(Boolean result) {
-				response.setHTML("Uppdaterad");
+				parent.centerPanel.clear();
+				parent.centerPanel.add(new MotorcyklarView(parent));
 			}
 		};
 

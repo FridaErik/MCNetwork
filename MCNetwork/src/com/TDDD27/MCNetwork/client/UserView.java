@@ -49,7 +49,7 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 	private FlexTable infoTable = new FlexTable();
 	private HTML title = new HTML("", true);
 	private MCUser viewUser;
-	private MCUser myself;
+	private MCUser myself = null;
 	private LoginInfo loginInfo = null;
 	private VerticalPanel msgPanel = new VerticalPanel();
 	private ScrollPanel scrollPnl = new ScrollPanel();
@@ -143,82 +143,103 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 		setMCInfo(viewUser);
 		leftPanel.add(infoTable);
 		//Skapa knapparna
-		this.add(btnPanel);
-		SimplePanel btn1 = new SimplePanel();
-		HTML privMsgBtn = new HTML("Skicka meddelande", true);
-		ClickHandler privMsgClickHandler = new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				Boolean priv=true;
-				createMsgForm(priv);
-			}
-		};
-		privMsgBtn.addClickHandler(privMsgClickHandler);
-		btn1.addStyleName("UserviewBtn");
-		btn1.setWidth("120px");
-		btn1.setHeight("20px");
-		btn1.add(privMsgBtn);
-		SimplePanel btn2 = new SimplePanel();
-		HTML pubMsgBtn = new HTML("Skriv p&aring; v&auml;ggen", true);
-		ClickHandler pubMsgClickHandler = new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				Boolean priv=false;
-				createMsgForm(priv);
-			}
-		};
-		pubMsgBtn.addClickHandler(pubMsgClickHandler);
-		btn2.addStyleName("UserviewBtn");
-		btn2.setWidth("100px");
-		btn2.setHeight("20px");
-		btn2.add(pubMsgBtn);
-
-		btnPanel.add(btn1);
-		btnPanel.add(btn2);
-
-		SimplePanel btn3;
-		Boolean friends=false;
-		for( Long a : myself.getFriendsList()){
-			System.out.println("myself.getFriendlist.length : "+ myself.getFriendsList().size());
-			if(viewUser.getId()==a){
-				System.out.println("Friendloop id: "+a);
-				friends=true;
-			}
-		}
-		//if(not friends)
-		if(!friends && viewUser.getId()!=myself.getId()){
-			btn3 = new SimplePanel();
-			HTML addFriendBtn = new HTML("Bli kompis", true);
-			ClickHandler addFriendClickHandler = new ClickHandler() {
+		if(myself!=null){
+			this.add(btnPanel);
+			SimplePanel btn1 = new SimplePanel();
+			HTML privMsgBtn = new HTML("Skicka meddelande", true);
+			ClickHandler privMsgClickHandler = new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
-					addFriend(myself, viewUser);
+					Boolean priv=true;
+					createMsgForm(priv);
 				}
 			};
-			addFriendBtn.addClickHandler(addFriendClickHandler);
-			btn3.add(addFriendBtn);
-			btn3.setWidth("70px");
-			btn3.addStyleName("UserviewBtn");
-			btn3.setHeight("20px");
-			btnPanel.add(btn3);
-		}else if(friends && viewUser.getId()!=myself.getId()){ //if friends
-			btn3 = new SimplePanel();
-			HTML removeFriendBtn = new HTML("Ta bort kompis", true);
-			ClickHandler removeFriendClickHandler = new ClickHandler() {
+			privMsgBtn.addClickHandler(privMsgClickHandler);
+			btn1.addStyleName("UserviewBtn");
+			btn1.setWidth("120px");
+			btn1.setHeight("20px");
+			btn1.add(privMsgBtn);
+			SimplePanel btn2 = new SimplePanel();
+			HTML pubMsgBtn = new HTML("Skriv p&aring; v&auml;ggen", true);
+			ClickHandler pubMsgClickHandler = new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
-					removeFriend(myself, viewUser);
+					Boolean priv=false;
+					createMsgForm(priv);
 				}
 			};
-			removeFriendBtn.addClickHandler(removeFriendClickHandler);
-			btn3.add(removeFriendBtn);
-			btn3.setWidth("90px");
-			btn3.addStyleName("UserviewBtn");
-			btn3.setHeight("20px");
-			btnPanel.add(btn3);
+			pubMsgBtn.addClickHandler(pubMsgClickHandler);
+			btn2.addStyleName("UserviewBtn");
+			btn2.setWidth("100px");
+			btn2.setHeight("20px");
+			btn2.add(pubMsgBtn);
+
+			btnPanel.add(btn1);
+			btnPanel.add(btn2);
+
+			SimplePanel btn3;
+			Boolean friends=false;
+			for( Long a : myself.getFriendsList()){
+				System.out.println("myself.getFriendlist.length : "+ myself.getFriendsList().size());
+				if(viewUser.getId()==a){
+					System.out.println("Friendloop id: "+a);
+					friends=true;
+				}
+			}
+			//if(not friends)
+			System.out.println("viewUser.getId(): "+ viewUser.getId()+"myself.getId(): "+ myself.getId());
+			if(!friends && viewUser.getId()!=myself.getId()){
+				btn3 = new SimplePanel();
+				HTML addFriendBtn = new HTML("Bli kompis", true);
+				ClickHandler addFriendClickHandler = new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						addFriend(myself, viewUser);
+					}
+				};
+				addFriendBtn.addClickHandler(addFriendClickHandler);
+				btn3.add(addFriendBtn);
+				btn3.setWidth("70px");
+				btn3.addStyleName("UserviewBtn");
+				btn3.setHeight("20px");
+				btnPanel.add(btn3);
+			}else if(friends && viewUser.getId()!=myself.getId()){ //if friends
+				btn3 = new SimplePanel();
+				HTML removeFriendBtn = new HTML("Ta bort kompis", true);
+				ClickHandler removeFriendClickHandler = new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						removeFriend(myself, viewUser);
+					}
+				};
+				removeFriendBtn.addClickHandler(removeFriendClickHandler);
+				btn3.add(removeFriendBtn);
+				btn3.setWidth("90px");
+				btn3.addStyleName("UserviewBtn");
+				btn3.setHeight("20px");
+				btnPanel.add(btn3);
+			}
+			else{
+				btn3 = new SimplePanel();
+				HTML removeFriendBtn = new HTML("Uppdatera uppgifter", true);
+				ClickHandler updateClickHandler = new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						parent.centerPanel.clear();
+						parent.centerPanel.add(new EditUserView(parent));
+					}
+				};
+				removeFriendBtn.addClickHandler(updateClickHandler);
+				btn3.add(removeFriendBtn);
+				btn3.setWidth("120px");
+				btn3.addStyleName("UserviewBtn");
+				btn3.setHeight("20px");
+				btnPanel.add(btn3);
+			}
+
+			btnPanel.addStyleName("btnPanel");
 		}
 
-		btnPanel.addStyleName("btnPanel");
 
 
 
@@ -351,7 +372,7 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 		infoTable.setWidget(3, 1, new HTML("<bold>Bostadsort: </bold>"+mcuser.getRegion() + ", " + mcuser.getCity(), true));
 		infoTable.setWidget(4, 1, new HTML("<bold>Antal k&ouml;rda mil: </bold>"+Integer.toString(mcuser.getMilesDriven()), true));	
 	}
-	
+
 	protected void setMCInfo(MCUser theUser) {
 		ArrayList<MC> MCList = theUser.getMcList();
 		System.out.println("theUser.getId(): "+theUser.getId()+" MCLIST.size()"+theUser.getMcList().size());
@@ -359,7 +380,7 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 
 			for(int i=0; i<theUser.getMcList().size(); i++){
 				final MC myMC = MCList.get(i); 
-			    MCTable.setWidget(i, 1, new HTML("<bold>Motorcykel </bold>"+ myMC.getBrand() +" "+ myMC.getModel(), true));
+				MCTable.setWidget(i, 1, new HTML("<bold>Motorcykel </bold>"+ myMC.getBrand() +" "+ myMC.getModel() +" "+ myMC.getYear(), true));
 			}
 		}
 	}
@@ -394,7 +415,7 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 				System.out.println("succes in get user");
 				if(!(result.getFirstName()==null)){
 					System.out.println(result.getFirstName());
-					setUserInfo(result);
+
 					viewUser=result;
 				}
 				else{

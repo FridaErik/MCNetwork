@@ -119,7 +119,7 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 				final MC myMC = MCList.get(i); 
 				Button edit = new Button("Edit");
 				Button delete = new Button("Delete");
-				MCTable.setWidget(i, 1, new HTML("<bold>Motorcykel </bold>"+ myMC.getBrand() +" "+ myMC.getModel(), true));
+				MCTable.setWidget(i, 1, new HTML("<bold>Motorcykel  </bold>"+ myMC.getBrand() +"   "+ myMC.getModel() +"   "+ myMC.getYear(), true));
 				edit.addClickHandler(new ClickHandler() {
 					@Override
 					public void onClick(ClickEvent event) {

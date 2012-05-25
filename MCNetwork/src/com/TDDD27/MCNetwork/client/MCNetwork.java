@@ -2,6 +2,7 @@ package com.TDDD27.MCNetwork.client;
 
 
 import com.TDDD27.MCNetwork.shared.LoginInfo;
+import com.TDDD27.MCNetwork.shared.MCUser;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -42,7 +43,12 @@ public class MCNetwork implements EntryPoint, ValueChangeHandler {
 	private HTML loginLabel = new HTML("Please sign in to your Google Account to access the StockWatcher application.", true);
 	private Anchor signInLink = new Anchor("Sign In");
 	private Anchor signOutLink = new Anchor("Sign Out");
+	
+	private MCUser loggedInUser=null;
 
+	public MCUser getLoggedInUser() {
+		return loggedInUser;
+	}
 	/**
 	 * This is the entry point method.
 	 */
@@ -58,9 +64,36 @@ public class MCNetwork implements EntryPoint, ValueChangeHandler {
 			@Override
 			public void onSuccess(LoginInfo result) {
 				loginInfo = result;
-				loadMCNetwork();
+				getDBUser(result);
+				//loadMCNetwork();
 			}
 		});
+	}
+	/**
+	 * Hämtar en användare från databasen med
+	 * hjälp av ett GoogleID
+	 * @param userID GoogleID 
+	 * @return 
+	 */
+	private void getDBUser(LoginInfo info) {
+		if (testService == null) {
+			testService = GWT.create(TestService.class);
+		}
+		// Set up the callback object.
+		AsyncCallback<MCUser> callback = new AsyncCallback<MCUser>() {
+			@Override
+			public void onFailure(Throwable caught) {
+
+			}
+			@Override
+			public void onSuccess(MCUser result) {
+				loggedInUser=result;
+				loadMCNetwork();
+			}
+		};
+
+
+		testService.getUserByID(info.getUserID(), callback);
 	}
 	/**
 	 * Tar fram det grafiska för huvudklassen MCNetwork som funkar som en omgivande 

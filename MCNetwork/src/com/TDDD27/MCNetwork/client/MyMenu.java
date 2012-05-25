@@ -20,8 +20,10 @@ public class MyMenu extends MenuBar {
 		this.addItem(hemMI);
 		if(loggedIn){
 			System.out.println("Menyn har registrerat att en användare är inloggad");
-			MenuItem regMI = new MenuItem("Uppdatera uppgifter", registerUserCmd);
-			this.addItem(regMI);
+			if(parent.getLoggedInUser()!=null){
+				MenuItem regMI = new MenuItem("Min sida", myPageCmd);
+				this.addItem(regMI);
+			}
 			MenuItem msgMI = new MenuItem("Mina meddelanden", meddelandeCmd);
 			this.addItem(msgMI);
 			MenuItem mcMI = new MenuItem("Mina motorcyklar", motorcyklarCmd);
@@ -37,13 +39,13 @@ public class MyMenu extends MenuBar {
 	/**
 	 * Metod för att öppna ett Userform
 	 */
-	static Command registerUserCmd = new Command()
+	static Command myPageCmd = new Command()
 	{
 		@Override
 		public void execute()
 		{
-			System.out.println("Klick i menyn");
-			Userform centerwidget = new Userform(myParent);
+			
+			UserView centerwidget = new UserView(myParent.getLoggedInUser(), myParent);
 			myParent.centerPanel.clear();
 			myParent.centerPanel.add(centerwidget);
 		}

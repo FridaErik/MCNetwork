@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
+import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -33,10 +34,8 @@ public class ImageUploadGUI extends VerticalPanel {
 	// Use an RPC call to the Blob Service to get the blobstore upload url
 	BlobServiceAsync blobService = GWT.create(BlobService.class);
 
+	private Grid grid = new Grid(3, 2);
 	VerticalPanel mainVerticalPanel = new VerticalPanel();
-	HorizontalPanel hp1 = new HorizontalPanel();
-	HorizontalPanel hp2 = new HorizontalPanel();
-	HorizontalPanel hp0 = new HorizontalPanel();
 	HTML titleLabel = new HTML("Title", true);
 	HTML idLabel = new HTML("ID", true);
 	HTML descriptionLabel = new HTML("Description", true);
@@ -47,37 +46,31 @@ public class ImageUploadGUI extends VerticalPanel {
 	Button submitButton = new Button("Submit");
 	Long userId;
 
-	FlexTable resultsTable = new FlexTable();
 	/**
 	 * 
 	 */
 	public ImageUploadGUI(Long userid) {
-		System.out.println("userid: "+userid);
+		System.out.println("userid för image: "+userid);
 		userId=userid;
 		idLabel.setVisible(false);
 		//"Påhittig" lösning för att få över Id't till uploadService
 		idTextBox.setText(userid.toString());
 		idTextBox.setVisible(false);
-		hp0.add(idLabel);
-		hp0.add(idTextBox);
-		hp1.add(titleLabel);
-		hp1.add(titleTextBox);
-		hp2.add(descriptionLabel);
-		hp2.add(descriptionTextBox);
+		
+		grid.setWidget(0, 0, idLabel);
+		grid.setWidget(0, 1, idTextBox);
+		grid.setWidget(1, 0, titleLabel);
+		grid.setWidget(1, 1, titleTextBox);
+		grid.setWidget(2, 0, descriptionLabel);
+		grid.setWidget(2, 1, descriptionTextBox);
 
-		mainVerticalPanel.add(hp0);
-		mainVerticalPanel.add(hp1);
-		mainVerticalPanel.add(hp2);
+		mainVerticalPanel.add(grid);
 		mainVerticalPanel.add(upload);
-
 		mainVerticalPanel.add(submitButton);
-		mainVerticalPanel.add(resultsTable);
-
-		hp1.setSpacing(5);
-		hp2.setSpacing(5);
-		mainVerticalPanel.setSpacing(5);
 
 		uploadForm.setWidget(mainVerticalPanel);
+		
+
 
 		// The upload form, when submitted, will trigger an HTTP call to the
 		// servlet.  The following parameters must be set
@@ -124,8 +117,8 @@ public class ImageUploadGUI extends VerticalPanel {
 		uploadForm.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
 			@Override
 			public void onSubmitComplete(SubmitCompleteEvent event) {
-				System.out.println("onSubmitComplete");
-				//TODO skicka till users sida
+				HTML notification = new HTML("Din bild är uppdaterad", true);
+				mainVerticalPanel.add(notification);
 			}
 
 
@@ -133,34 +126,7 @@ public class ImageUploadGUI extends VerticalPanel {
 
 		});
 
-	}
-
-	public void getPicture(Long id) {
-
-		if(id!=null){
-			//Make another call to the Blob Service to retrieve the meta-data
-			blobService.getPicture(id, new AsyncCallback<Picture>() {
-
-				@Override
-				public void onSuccess(Picture result) {
-
-					Image image = new Image();
-					image.setUrl(result.getImageUrl());
-
-					//Use Getters from the Picture object to load the FlexTable
-					resultsTable.setWidget(0, 0, image);
-					resultsTable.setText(1, 0, result.getTitle());
-					resultsTable.setText(2, 0, result.getDescription());
-
-				}
-				@Override
-				public void onFailure(Throwable caught) {
-					caught.printStackTrace();
-				}
-			});
-		}else{
-			System.out.println("picture.id==null");
-		}
+	
 
 
 	}

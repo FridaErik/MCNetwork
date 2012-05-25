@@ -13,9 +13,6 @@ import com.TDDD27.MCNetwork.shared.MCUser;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DisclosurePanel;
@@ -34,12 +31,12 @@ import com.google.gwt.user.client.ui.TextBox;
  * @author Frida
  *
  */
-public class Userform extends FormPanel implements ValueChangeHandler {
+public class Userform extends FormPanel {
 	private static TestServiceAsync testService = GWT.create(TestService.class);
 
 	private MCNetwork parent;
 	private MCUser loggedInUser=null;
-	private Grid grid = new Grid(11, 3);
+	private Grid grid = new Grid(12, 3);
 	private TextBox textBoxFnamn = new TextBox();
 	private HTML textHTMLFnamn = new HTML("<p>F&ouml;rnamn</p>", true);
 	private HTML errorFnamn = new HTML("", true);
@@ -175,15 +172,7 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 		grid.setWidget(7, 1, textBoxMiles);
 		grid.setWidget(7, 2, errorMiles);
 	
-		
-		/*//Funkar inte än
-		FileUpload defaultUploader = new FileUpload();
 
-		// Add a finish handler which will load the image once the upload finishes
-		defaultUploader.addOnFinishUploadHandler(onFinishUploaderHandler);
-		grid.setWidget(8, 0, fileHTML);
-		grid.setWidget(8, 1, defaultUploader);*/
-		
 		
 		
 		grid.setWidget(10, 0, submit);
@@ -198,16 +187,7 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 		setEncoding(FormPanel.ENCODING_MULTIPART);
 		setMethod(FormPanel.METHOD_POST);
 		setWidget(grid);
-		//HISTORY
-		History.addValueChangeHandler(this);
-		String initToken = History.getToken();
-		if(initToken.length()==0){
-			History.newItem("registration");
-			System.out.println("HistoryToken = 0");
-		}
-		History.newItem("registration");
-		History.fireCurrentHistoryState();		
-		//HISTORY
+		
 		setStyleName("formPanel");
 
 		addSubmitHandler(new SubmitHandler() {
@@ -310,15 +290,13 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 	 * Tömmer formuläret på information
 	 */
 	protected void clearUserForm() {
-		textBoxFnamn.setText("");
+		/*textBoxFnamn.setText("");
 		textBoxLnamn.setText("");
 		textBoxEmail.setText("");
 		textBoxCity.setText("");
 		textBoxFnamn.setText("");
-		textBoxMiles.setText("");
-		this.clear();
-		
-		//this.removeFromParent();
+		textBoxMiles.setText("");*/
+		//this.clear();
 	}
 	/**
 	 * Metod för att skriva ut ett meddelande
@@ -345,10 +323,8 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 			}
 			@Override
 			public void onSuccess(Long result) {
-				clearUserForm();
-				parent.centerPanel.clear();
-				parent.centerPanel.add(new ImageUploadGUI(result));
-				//setSuccessText("Ny anv&auml;ndare tillagd, välkommen "+ mcuser.getFirstName());
+				HTML notification = new HTML("Dina uppgifter är registrerade", true);
+				grid.setWidget(11, 1, notification);
 			}
 		};
 
@@ -359,21 +335,6 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 
 	
 	
-	private IUploader.OnFinishUploaderHandler onFinishUploaderHandler = new IUploader.OnFinishUploaderHandler() {
-		@Override
-		public void onFinish(IUploader uploader) {
-			System.out.println("onFinish");
-			if (uploader.getStatus() == Status.SUCCESS) {
-				System.out.println("Serverresponse: " +uploader.getServerResponse());
-
-				String info = uploader.getServerResponse();
-				int endIndex = info.indexOf("<");
-				bildPath = info.substring(39, endIndex);
-				System.out.println("bildPath: " + bildPath);
-
-			}
-		}
-	};
 	/**
 	 * Metod för att uppdatera en användare som redan existerar
 	 * @param mcuser
@@ -390,10 +351,9 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 			}
 			@Override
 			public void onSuccess(Long result) {
-				clearUserForm();
-				parent.centerPanel.clear();
-				parent.centerPanel.add(new ImageUploadGUI(result));
-				//setSuccessText(mcuser.getFirstName()+", din uppgifter är uppdaterade!");
+				HTML notification = new HTML("Dina uppgifter är uppdaterad", true);
+				grid.setWidget(11, 1, notification);
+				
 			}
 		};
 	
@@ -518,14 +478,7 @@ public class Userform extends FormPanel implements ValueChangeHandler {
 	/**
 	 * Hanterar historiken
 	 */
-	@Override
-	public void onValueChange(ValueChangeEvent event) {
-		if (event.getValue().equals("registration")){
-			parent.centerPanel.clear();
-			parent.centerPanel.add(this);
-		}
-
-	}
+	
 	//---------------Metoder för validering---------------//
 	private void checkUrl(String url) {
 		//TODO

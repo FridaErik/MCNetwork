@@ -41,15 +41,16 @@ public class UploadServiceImpl extends HttpServlet {
     picture.setDescription(req.getParameter("descriptionTextBox"));
     picture.setTitle(req.getParameter("titleTextBox"));
     picture.setUserId(Long.parseLong(req.getParameter("idTextBox")));
+    //System.out.println("bilden registreras till id: "+Long.parseLong(req.getParameter("idTextBox")));
     //Map the ImageURL to the blobservice servlet, which will serve the image
-    System.out.println("/mcnetwork/blobservice?blob-key= + blobKey.getKeyString(): "+"/mcnetwork/blobservice?blob-key=" + blobKey.getKeyString());
+    //System.out.println("/mcnetwork/blobservice?blob-key= + blobKey.getKeyString(): "+"/mcnetwork/blobservice?blob-key=" + blobKey.getKeyString());
     picture.setImageUrl("/mcnetwork/blobservice?blob-key=" + blobKey.getKeyString());
 
     ofy.put(picture);
     TestServiceImpl.setUserPic(Long.parseLong(req.getParameter("idTextBox")), picture.id);
 
     //Redirect recursively to this servlet (calls doGet)
-    System.out.println("Resultatet av doPost i UploadServiceImpl: "+"/mcnetwork/uploadservice?id=" + picture.id);
+    //System.out.println("Resultatet av doPost i UploadServiceImpl: "+"/mcnetwork/uploadservice?id=" + picture.id);
     res.sendRedirect("/mcnetwork/uploadservice?id=" + picture.id);
     //res.getWriter().print(picture.id); 
   }

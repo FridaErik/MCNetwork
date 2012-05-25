@@ -226,16 +226,12 @@ date{
 	font-style: italic;
 	margin-left: 8px;
 }
-/*
-.topPanel {
-	border: 2px solid red;
+
+.editUserViewLeft	 {
+	padding-right: 100px;
+	border-right:  2px solid #5F8F82;
 }
-.bottomPanel {
-	border: 2px solid blue;
-}
-.rightPanel {
-	border: 2px solid green;
-}
-.leftPanel {
-	border: 2px solid pink;*/
+.editUserViewRight {
+	padding-left: 30px;
+	
 }
