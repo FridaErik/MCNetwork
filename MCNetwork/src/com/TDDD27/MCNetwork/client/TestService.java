@@ -44,6 +44,11 @@ public interface TestService extends RemoteService {
 	ArrayList<MCUser> getFriendsByID(ArrayList<Long> friendsID);
 
 
+	
+
+
+
+
 
 
 

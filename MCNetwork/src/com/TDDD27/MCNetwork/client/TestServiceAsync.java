@@ -45,4 +45,7 @@ public interface TestServiceAsync {
 	void getFriendsByID(ArrayList<Long> friendsID,
 			AsyncCallback<ArrayList<MCUser>> callback);
 
+	
+	
+
 }

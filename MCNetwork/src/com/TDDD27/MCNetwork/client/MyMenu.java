@@ -1,6 +1,11 @@
 package com.TDDD27.MCNetwork.client;
 
+import com.TDDD27.MCNetwork.shared.MCUser;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException;
+import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
@@ -59,10 +64,22 @@ public class MyMenu extends MenuBar {
 		@Override
 		public void execute()
 		{
+			TestServiceAsync testService = GWT.create(TestService.class);
+			final Long userid = myParent.getLoggedInUser().getId();
+			AsyncCallback<MCUser> callback = new AsyncCallback<MCUser>() {
+				@Override
+				public void onFailure(Throwable caught) {
+				}
+				@Override
+				public void onSuccess(MCUser result) {
+					myParent.setLoggedInUser(result);
+					UserView centerwidget = new UserView(myParent.getLoggedInUser(), myParent);
+					myParent.centerPanel.clear();
+					myParent.centerPanel.add(centerwidget);
+				}
+			};
+			testService.getUser(userid, callback);
 			
-			UserView centerwidget = new UserView(myParent.getLoggedInUser(), myParent);
-			myParent.centerPanel.clear();
-			myParent.centerPanel.add(centerwidget);
 		}
 	};
 	/**
@@ -86,9 +103,7 @@ public class MyMenu extends MenuBar {
 		@Override
 		public void execute()
 		{
-			VerticalPanel centerwidget = new VerticalPanel();
-			HTML starttext = new HTML("<H1>V&auml;lkommen till MC Network<H1/>", true);
-			centerwidget.add(starttext);
+			startView centerwidget = new startView(myParent, myParent.getLoginInfo() ,myParent.getLoggedInUser());
 			myParent.centerPanel.clear();
 			myParent.centerPanel.add(centerwidget);
 		}
@@ -130,6 +145,7 @@ public class MyMenu extends MenuBar {
 			myParent.centerPanel.add(centerwidget);
 		}
 	};
+
 
 
 

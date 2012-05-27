@@ -45,7 +45,10 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 	private HorizontalPanel bottomPanel = new HorizontalPanel();
 	private VerticalPanel rightPanel = new VerticalPanel();
 	//private VerticalPanel messagePanel = new VerticalPanel();
-	private HorizontalPanel leftPanel = new HorizontalPanel();
+	private HorizontalPanel leftUpperPanel = new HorizontalPanel();
+	private HorizontalPanel leftLowerPanel = new HorizontalPanel();
+	private VerticalPanel leftPanel = new VerticalPanel();
+	
 	private FlexTable infoTable = new FlexTable();
 	private HTML title = new HTML("", true);
 	private MCUser viewUser;
@@ -122,7 +125,7 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 	private void SetUpGUI() {
 		//Rensning
 		this.clear();
-		leftPanel.clear();
+		leftUpperPanel.clear();
 		btnPanel.clear();
 		topPanel.clear();
 		msgPanel.clear();
@@ -137,11 +140,11 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 
 		//Image img = new Image("images/question-mark-icon_21147438.jpg");
 		img = new Image("");
-		leftPanel.add(img);
-		topPanel.add(leftPanel);
+		leftUpperPanel.add(img);
+		topPanel.add(leftUpperPanel);
 		setUserInfo(viewUser);
 		setMCInfo(viewUser);
-		leftPanel.add(infoTable);
+		leftUpperPanel.add(infoTable);
 		//Skapa knapparna
 		if(myself!=null){
 			this.add(btnPanel);
@@ -181,8 +184,8 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 			Boolean friends=false;
 			for( Long a : myself.getFriendsList()){
 				System.out.println("myself.getFriendlist.length : "+ myself.getFriendsList().size());
-				if(viewUser.getId()==a){
-					System.out.println("Friendloop id: "+a);
+				if(viewUser.getId().equals(a)){
+					System.out.println("Friends: id: "+a);
 					friends=true;
 				}
 			}
@@ -221,7 +224,7 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 			}
 			else if(viewUser.getId()==parent.getLoggedInUser().getId()){
 				btn3 = new SimplePanel();
-				HTML removeFriendBtn = new HTML("Uppdatera uppgifter", true);
+				HTML updateBtn = new HTML("Uppdatera uppgifter", true);
 				ClickHandler updateClickHandler = new ClickHandler() {
 					@Override
 					public void onClick(ClickEvent event) {
@@ -229,8 +232,8 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 						parent.centerPanel.add(new EditUserView(parent));
 					}
 				};
-				removeFriendBtn.addClickHandler(updateClickHandler);
-				btn3.add(removeFriendBtn);
+				updateBtn.addClickHandler(updateClickHandler);
+				btn3.add(updateBtn);
 				btn3.setWidth("120px");
 				btn3.addStyleName("GreenBtn");
 				btn3.setHeight("20px");
@@ -251,14 +254,17 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 		msgPanel.setStyleName("UserViewMsgPanel");		
 		scrollPnl.add(msgPanel);
 		rightPanel.add(scrollPnl);
-
+		topPanel.add(leftPanel);
 		topPanel.add(rightPanel);
 		this.add(topPanel);
 		this.add(bottomPanel);
-		this.add(MCTable);
+		leftLowerPanel.add(MCTable);
+		leftPanel.add(leftUpperPanel);
+		leftPanel.add(leftLowerPanel);
+		
 		topPanel.addStyleName("topPanel");
 		bottomPanel.addStyleName("bottomPanel");
-		leftPanel.addStyleName("leftPanel");
+		leftUpperPanel.addStyleName("leftPanel");
 		rightPanel.addStyleName("rightPanel");
 
 		//HISTORY
@@ -425,8 +431,7 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 			public void onSuccess(MCUser result) {
 				System.out.println("succes in get user");
 				if(!(result.getFirstName()==null)){
-					System.out.println(result.getFirstName());
-
+					System.out.println("McList: "+result.getMcList().size());
 					viewUser=result;
 				}
 				else{
@@ -484,7 +489,8 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 
 				@Override
 				public void onSuccess(Picture result) {
-
+					
+					System.out.println("result.getImageUrl(): "+result.getImageUrl());
 					img.setUrl(result.getImageUrl());
 					img.setHeight("100px");
 

@@ -19,7 +19,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class MCNetwork implements EntryPoint, ValueChangeHandler {
+public class MCNetwork implements EntryPoint {
 	/**
 	 * The message displayed to the user when the server cannot be reached or
 	 * returns an error.
@@ -31,17 +31,11 @@ public class MCNetwork implements EntryPoint, ValueChangeHandler {
 
 
 	private static TestServiceAsync testService = GWT.create(TestService.class);
-
+	private startView start = new startView();
 	public DockPanel structurePanel;
 	public VerticalPanel centerPanel;
-	public VerticalPanel centerwidget = new VerticalPanel();
 	private MyMenu menuBar;
-
-
 	private LoginInfo loginInfo = null;
-	private VerticalPanel loginPanel = new VerticalPanel();
-	private HTML loginLabel = new HTML("Please sign in to your Google Account to access the StockWatcher application.", true);
-	private Anchor signInLink = new Anchor("Sign In");
 	private Anchor signOutLink = new Anchor("Sign Out");
 	
 	private MCUser loggedInUser=null;
@@ -54,6 +48,7 @@ public class MCNetwork implements EntryPoint, ValueChangeHandler {
 	 */
 	@Override
 	public void onModuleLoad() {
+		RootPanel.get().clear();
 		// Gör först en loginkontroll innan det grafiska laddas.
 		LoginServiceAsync loginService = GWT.create(LoginService.class);
 		loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
@@ -100,14 +95,16 @@ public class MCNetwork implements EntryPoint, ValueChangeHandler {
 	 * ram för övriga grafiska klasser i projektet.
 	 */
 	private void loadMCNetwork() {
-
+		
+		
+		
 		VerticalPanel northPanel = new VerticalPanel();
 		HorizontalPanel topNorth = new HorizontalPanel();
 		HTML northwidget1 = new HTML("<MainTitle> MC Network</MainTitle>", true);
 		SearchPanel searchpanel = new SearchPanel();
 		searchpanel.addStyleName("searchPanel");
 		topNorth.add(northwidget1);
-		topNorth.add(searchpanel);
+		//topNorth.add(searchpanel);
 		if(loginInfo.isLoggedIn()){
 			signOutLink.setHref(loginInfo.getLogoutUrl());
 			northPanel.add(signOutLink);	
@@ -118,19 +115,10 @@ public class MCNetwork implements EntryPoint, ValueChangeHandler {
 		centerPanel.addStyleName("centerPanel");
 		centerPanel.setWidth("900px");
 		centerPanel.setHeight("400px");
-		HTML starttext = new HTML("<H1>V&auml;lkommen till MC Network <H1/>", true);
-		HTML infotext = new HTML("<p>Detta &auml;r ett socialt n&auml;tverk f&ouml;r personer i Sverige som &auml;ger eller &auml;r intresserad av motorcyklar." +
-				" Syftet med n&auml;tverket &auml;r att du skall f&aring; kontakt med andra som delar ditt intresse s&aring; ni kan utbyta erfarenheter och tips.</p>", true);
-		centerwidget.add(starttext);
-		centerwidget.add(infotext);
-		if(!loginInfo.isLoggedIn()){
-			signInLink.setHref(loginInfo.getLoginUrl());
-			loginPanel.add(loginLabel);
-			loginPanel.add(signInLink);
-			centerwidget.add(loginPanel);
-		}
 		centerPanel.clear();
-		centerPanel.add(centerwidget);
+		start= new startView(this, loginInfo, loggedInUser);
+		//TODO
+		centerPanel.add(start);
 		structurePanel=new DockPanel();
 		structurePanel.addStyleName("structurePanel");
 		menuBar=new MyMenu(this, loginInfo.isLoggedIn());
@@ -145,29 +133,20 @@ public class MCNetwork implements EntryPoint, ValueChangeHandler {
 		southwidget.add(bottomtext);
 		structurePanel.add(southwidget, DockPanel.SOUTH);
 		RootPanel.get().add(structurePanel);
-		History.addValueChangeHandler(this);
-		String initToken = History.getToken();
-		if(initToken.length()==0){
-			History.newItem("start");
-		}
-		History.fireCurrentHistoryState();
+		
 
+	}
+	public LoginInfo getLoginInfo() {
+		return loginInfo;
+	}
+	public void setLoggedInUser(MCUser result) {
+		loggedInUser=result;
+		
 	}
 
 
 	
-	@Override
-	/**
-	 * Hanterar Historiken
-	 */
-	public void onValueChange(ValueChangeEvent event) {
-		System.out.println("Current State : " + event.getValue());
-
-		if (event.getValue().equals("start")){
-			centerPanel.clear();
-			centerPanel.add(centerwidget);
-		}
-	}
+	
 
 
 

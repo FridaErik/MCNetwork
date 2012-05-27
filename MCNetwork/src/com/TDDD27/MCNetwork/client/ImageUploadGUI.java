@@ -27,10 +27,10 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @author Frida
  *
  */
-public class ImageUploadGUI extends VerticalPanel {
+public class ImageUploadGUI extends FormPanel {
 
 
-	final FormPanel uploadForm = new FormPanel();
+	//final FormPanel uploadForm = new FormPanel();
 
 	// Use an RPC call to the Blob Service to get the blobstore upload url
 	BlobServiceAsync blobService = GWT.create(BlobService.class);
@@ -45,11 +45,13 @@ public class ImageUploadGUI extends VerticalPanel {
 	TextBox descriptionTextBox = new TextBox();
 	FileUpload upload = new FileUpload();
 	Long userId;
+	ImageUploadGUI itself;
 
 	/**
 	 * 
 	 */
 	public ImageUploadGUI(Long userid) {
+		itself=this;
 		System.out.println("userid för image: "+userid);
 		userId=userid;
 		idLabel.setVisible(false);
@@ -71,17 +73,18 @@ public class ImageUploadGUI extends VerticalPanel {
 		ClickHandler updateClickHandler = new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
+				
 				blobService.getBlobStoreUploadUrl(new AsyncCallback<String>() {
 
 					@Override
 					public void onSuccess(String result) {
 						// Set the form action to the newly created
 						// blobstore upload URL
-						uploadForm.setAction(result.toString());
+						itself.setAction(result.toString());
 						// Submit the form to complete the upload
-						uploadForm.submit();
-						uploadForm.reset();
-
+						
+						itself.submit();
+						itself.reset();
 					}
 
 					@Override
@@ -96,17 +99,14 @@ public class ImageUploadGUI extends VerticalPanel {
 		submit.setWidth("120px");
 		submit.addStyleName("GreenBtn");
 		submit.setHeight("20px");
-		
 		mainVerticalPanel.add(submit);
 
-		uploadForm.setWidget(mainVerticalPanel);
-		
-
+		this.setWidget(mainVerticalPanel);
 
 		// The upload form, when submitted, will trigger an HTTP call to the
 		// servlet.  The following parameters must be set
-		uploadForm.setEncoding(FormPanel.ENCODING_MULTIPART);
-		uploadForm.setMethod(FormPanel.METHOD_POST);
+		this.setEncoding(FormPanel.ENCODING_MULTIPART);
+		this.setMethod(FormPanel.METHOD_POST);
 
 		// Set Names for the text boxes so that they can be retrieved from the
 		// HTTP call as parameters
@@ -115,55 +115,17 @@ public class ImageUploadGUI extends VerticalPanel {
 		idTextBox.setName("idTextBox");
 		upload.setName("upload");
 
+		//this.add(uploadForm);
 
-
-		this.add(uploadForm);
-
-		/*submitButton.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-
-				blobService.getBlobStoreUploadUrl(new AsyncCallback<String>() {
-
-					@Override
-					public void onSuccess(String result) {
-						// Set the form action to the newly created
-						// blobstore upload URL
-						uploadForm.setAction(result.toString());
-						// Submit the form to complete the upload
-						uploadForm.submit();
-						uploadForm.reset();
-
-					}
-
-					@Override
-					public void onFailure(Throwable caught) {
-						caught.printStackTrace();
-					}
-				});
-
-			}
-		});*/
-
-		uploadForm.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
+		this.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
 			@Override
 			public void onSubmitComplete(SubmitCompleteEvent event) {
+				System.out.println("event.getResults(): "+event.getResults());
 				HTML notification = new HTML("Din bild &auml;r uppdaterad</br> Det kan ta en stund innan bilden syns p&aring; din sida.", true);
 				mainVerticalPanel.add(notification);
 			}
-
-
-
-
 		});
-
-	
-
-
-	}
-	
-
-
+	}	
 }
 
 

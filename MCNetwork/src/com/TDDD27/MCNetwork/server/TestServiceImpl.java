@@ -13,11 +13,17 @@ import com.TDDD27.MCNetwork.client.TestService;
 import com.TDDD27.MCNetwork.shared.MC;
 import com.TDDD27.MCNetwork.shared.MCUser;
 import com.TDDD27.MCNetwork.shared.Message;
+import com.TDDD27.MCNetwork.shared.Picture;
+import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.blobstore.BlobstoreService;
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.googlecode.objectify.Objectify;
+import com.googlecode.objectify.ObjectifyService;
 
 public class TestServiceImpl extends RemoteServiceServlet implements TestService {
 	/**
@@ -648,7 +654,8 @@ public class TestServiceImpl extends RemoteServiceServlet implements TestService
 			final Long thisFriendID = friendsID.get(i); 
 			MCUser thisFriend = pm.getObjectById(MCUser.class, thisFriendID); 
 			detachedUser = pm.detachCopy(thisFriend);
-			System.out.println("Namn: " +detachedUser.getFirstName());
+			java.util.ArrayList<MC> templist = new ArrayList<MC>(thisFriend.getMcList());
+			detachedUser.setMcList(templist);
 			result.add(detachedUser);
 		}
 		pm.close();
@@ -779,7 +786,44 @@ public class TestServiceImpl extends RemoteServiceServlet implements TestService
 		} finally {
 			pm.close();
 		}
-		
+
 	}
+	
+	public static ArrayList<String> deleteUserPicKey(long id) {
+		PersistenceManager pm0 = PMF.get().getPersistenceManager();
+		MCUser theUser = pm0.getObjectById(MCUser.class, id); 
+		//Ta bort kopplingen till Picture i user
+		theUser.setUserPicId(null);
+		pm0.close();
+		//Start Blobstore
+		BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		ArrayList<String> result = new ArrayList<String>();
+		Query q = pm.newQuery(Picture.class);
+		q.setFilter("userId == "+ id);
+		System.out.println(q.toString());
+		try {
+			@SuppressWarnings("unchecked")
+			List<Picture> results = (List<Picture>) q.execute();
+			if(results.size()==0){
+				return null;
+			}else{
+				Objectify ofy = ObjectifyService.begin();
+				for(Picture a : results){
+					int startindex = a.imageUrl.indexOf('=');
+					//Delete Blob
+					blobstoreService.delete(new BlobKey(a.getImageUrl().substring(startindex+1)));
+					//Delete Picture
+					ofy.delete(a);
+				}	
+			}
+		} finally {
+			q.closeAll();
+		}
+		pm.close();
+
+		return result;
+	}
+
 
 }
