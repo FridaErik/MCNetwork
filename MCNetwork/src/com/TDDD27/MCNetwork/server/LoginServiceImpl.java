@@ -6,7 +6,13 @@ import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-
+/**
+ * Serverklass för all inloggningsfunktionalitet
+ * Hämtar LoginInfo när användare loggar in
+ * via sitt google-konto
+ * @author Frida&Erik
+ *
+ */
 public class LoginServiceImpl extends RemoteServiceServlet implements LoginService {
 
 	@Override

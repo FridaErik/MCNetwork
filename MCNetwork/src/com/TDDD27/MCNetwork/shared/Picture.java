@@ -9,7 +9,12 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 import javax.persistence.Id;
-
+/**
+ * Representerar en bild, innehåller
+ * info så som URL till bilden i blobstore m.m.
+ * @author Frida&Erik
+ *
+ */
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 @SuppressWarnings("serial")
 public class Picture implements Serializable {

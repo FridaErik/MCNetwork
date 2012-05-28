@@ -25,7 +25,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @author Frida&Erik
  */
 public class MessageForm extends FormPanel implements ValueChangeHandler {
-	private static TestServiceAsync testService = GWT.create(TestService.class);
+	private static DatabaseServiceAsync testService = GWT.create(DatabaseService.class);
 
 	private MCNetwork parent;
 	private MCUser loggedInUser=null;
@@ -190,7 +190,7 @@ public class MessageForm extends FormPanel implements ValueChangeHandler {
 				System.out.println(msgString);
 
 				if (testService == null) {
-					testService = GWT.create(TestService.class);
+					testService = GWT.create(DatabaseService.class);
 				}
 				// Set up the callback object.
 				AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {

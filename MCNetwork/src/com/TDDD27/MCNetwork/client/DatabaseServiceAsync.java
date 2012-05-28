@@ -7,7 +7,7 @@ import com.TDDD27.MCNetwork.shared.MCUser;
 import com.TDDD27.MCNetwork.shared.Message;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-public interface TestServiceAsync {
+public interface DatabaseServiceAsync {
 
 	void storeUser(MCUser tester, AsyncCallback<Long> asyncCallback);
 
@@ -15,7 +15,7 @@ public interface TestServiceAsync {
 
 	void storeMC(MC mc, MCUser loggedInUser, AsyncCallback<Boolean> callback);
 
-	void storeUserMC(MCUser mcuser, MC mc, AsyncCallback<Long> callback);
+	
 
 	void searchUsers(int yearup, int yeardown, int milesup, int milesdown,
 			String lan, String city, String fname, String lname,

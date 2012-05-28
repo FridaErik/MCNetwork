@@ -24,7 +24,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  *
  */
 public class FriendsView extends VerticalPanel implements ValueChangeHandler{
-	private static TestServiceAsync testService = GWT.create(TestService.class);
+	private static DatabaseServiceAsync testService = GWT.create(DatabaseService.class);
 
 	private MCNetwork parent;
 	private MCUser loggedInUser=null;
@@ -66,7 +66,7 @@ public class FriendsView extends VerticalPanel implements ValueChangeHandler{
 	@SuppressWarnings("unchecked")
 	private MCUser getDBUser(String userID) {
 		if (testService == null) {
-			testService = GWT.create(TestService.class);
+			testService = GWT.create(DatabaseService.class);
 		}
 		// Set up the callback object.
 		AsyncCallback<MCUser> callback = new AsyncCallback<MCUser>() {
@@ -185,7 +185,7 @@ public class FriendsView extends VerticalPanel implements ValueChangeHandler{
 	 */
 	protected void deleteFriend(MCUser friend, MCUser loggedinuser) {
 		if (testService == null) {
-			testService = GWT.create(TestService.class);
+			testService = GWT.create(DatabaseService.class);
 		}
 		// Set up the callback object.
 		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
@@ -210,7 +210,7 @@ public class FriendsView extends VerticalPanel implements ValueChangeHandler{
 	 */
 	protected ArrayList<MCUser> getFriendsByID(ArrayList<Long> FriendsID) {
 		if (testService == null) {
-			testService = GWT.create(TestService.class);
+			testService = GWT.create(DatabaseService.class);
 		}
 		// Set up the callback object.
 		AsyncCallback<ArrayList<MCUser>> callback = new AsyncCallback<ArrayList<MCUser>>() {

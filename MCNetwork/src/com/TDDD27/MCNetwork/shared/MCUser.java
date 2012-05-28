@@ -14,8 +14,10 @@ import javax.jdo.annotations.PrimaryKey;
 
 
 
-/**
- * @author Frida
+/**Representerar en användare
+ * Innehåller information om en användare så som namn, mail
+ * samt kopplingar till vänner och motorcyklar.
+ * @author Frida&Erik
  *
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION)

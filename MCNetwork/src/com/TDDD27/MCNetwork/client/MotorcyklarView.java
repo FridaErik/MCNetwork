@@ -24,7 +24,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  *
  */
 public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler{
-	private static TestServiceAsync testService = GWT.create(TestService.class);
+	private static DatabaseServiceAsync testService = GWT.create(DatabaseService.class);
 
 	private MCNetwork parent;
 	private MCUser loggedInUser=null;
@@ -68,7 +68,7 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 	@SuppressWarnings("unchecked")
 	private MCUser getDBUser(String userID) {
 		if (testService == null) {
-			testService = GWT.create(TestService.class);
+			testService = GWT.create(DatabaseService.class);
 		}
 		// Set up the callback object.
 		AsyncCallback<MCUser> callback = new AsyncCallback<MCUser>() {
@@ -197,7 +197,7 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 	 */
 	private void deleteMC(MC mc, MCUser user) {
 		if (testService == null) {
-			testService = GWT.create(TestService.class);
+			testService = GWT.create(DatabaseService.class);
 		}
 		// Set up the callback object.
 		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {

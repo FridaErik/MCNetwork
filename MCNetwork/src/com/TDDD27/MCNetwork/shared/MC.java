@@ -10,7 +10,13 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 
-
+/**
+ * Representerar en motorcykel
+ * innehåller information om en motorcykel så som Märke
+ * och modell
+ * @author Frida&Erik
+ *
+ */
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "true")
 public class MC implements Serializable{
 

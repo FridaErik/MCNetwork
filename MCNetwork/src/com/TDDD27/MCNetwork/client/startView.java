@@ -9,6 +9,12 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+/**
+ * Startsidan, det första som 
+ * syns när man kommer in.
+ * @author Frida&Erik
+ *
+ */
 public class startView extends VerticalPanel implements ValueChangeHandler{
 	
 
@@ -18,6 +24,12 @@ public class startView extends VerticalPanel implements ValueChangeHandler{
 	private Anchor signInLink = new Anchor("Sign In");
 	private MCNetwork parent;
 
+	/**
+	 * Kontsruktor
+	 * @param parent MCNetwork huvudfilen
+	 * @param info Info om någon är inloggad eller ej
+	 * @param loggedInUser Personen som är inloggad, null om ingen är det
+	 */
 	public startView(MCNetwork parent, LoginInfo info, MCUser loggedInUser) {
 		this.parent=parent;
 		HTML starttext = new HTML("<H1>V&auml;lkommen till MC Network <H1/>", true);
@@ -54,14 +66,17 @@ public class startView extends VerticalPanel implements ValueChangeHandler{
 		//HISTORY*/
 	}
 	
+	/**
+	 * Tom konstruktor
+	 */
 	public startView(){
 		
 	}
 
-	@Override
 	/**
 	 * Hanterar Historiken
 	 */
+	@Override
 	public void onValueChange(ValueChangeEvent event) {
 		System.out.println("Current State : " + event.getValue());
 

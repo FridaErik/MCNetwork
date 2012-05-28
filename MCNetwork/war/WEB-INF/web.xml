@@ -8,7 +8,7 @@
   <!-- Servlets -->
   <servlet>
     <servlet-name>networkServlet</servlet-name>
-    <servlet-class>com.TDDD27.MCNetwork.server.TestServiceImpl</servlet-class>
+    <servlet-class>com.TDDD27.MCNetwork.server.DatabaseServiceImpl</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>networkServlet</servlet-name>

@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServlet;
 
 import org.apache.naming.java.javaURLContextFactory;
 
-import com.TDDD27.MCNetwork.client.TestService;
+import com.TDDD27.MCNetwork.client.DatabaseService;
 import com.TDDD27.MCNetwork.shared.MC;
 import com.TDDD27.MCNetwork.shared.MCUser;
 import com.TDDD27.MCNetwork.shared.Message;
@@ -24,13 +24,21 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
-
-public class TestServiceImpl extends RemoteServiceServlet implements TestService {
+/**
+ * Serverklass för alla databashantering
+ * @author Frida&Erik
+ *
+ */
+public class DatabaseServiceImpl extends RemoteServiceServlet implements DatabaseService {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
+	
+	/**
+	 * Metod för att lagra användare
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public Long storeUser(MCUser mcuser) {
@@ -41,7 +49,10 @@ public class TestServiceImpl extends RemoteServiceServlet implements TestService
 		tempUser=storedUser;
 		return tempUser.getId();//Test
 	}
-	//TODO
+	/**
+	 * Metod för att hämta en användare baserat på
+	 * ett id
+	 */
 	@Override
 	public MCUser getUser(Long id) {
 		MCUser detachedUser=null;
@@ -56,6 +67,9 @@ public class TestServiceImpl extends RemoteServiceServlet implements TestService
 		return detachedUser;
 	}
 
+	/**
+	 * Metod för att lagra en MC
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public Boolean storeMC(MC mc, MCUser user) {
@@ -78,6 +92,9 @@ public class TestServiceImpl extends RemoteServiceServlet implements TestService
 
 
 	}
+	/**
+	 * Metod för att uppdatera användare
+	 */
 	public boolean updateMC(MC mc, MCUser user) {
 		PersistenceManager pm1 = PMF.get().getPersistenceManager();
 
@@ -95,6 +112,9 @@ public class TestServiceImpl extends RemoteServiceServlet implements TestService
 
 		return true;
 	}
+	/**
+	 * Metod för att radera MC
+	 */
 	public boolean deleteMC(MC mc, MCUser user) {
 		PersistenceManager pm1 = PMF.get().getPersistenceManager();
 
@@ -113,18 +133,12 @@ public class TestServiceImpl extends RemoteServiceServlet implements TestService
 	}
 
 
-	@Override
-	public Long storeUserMC(MCUser mcuser, MC mc) {
-		PersistenceManager pm = PMF.get().getPersistenceManager();
-		MCUser storedUser = pm.makePersistent(mcuser);
-		mc.setOwner(storedUser);
-		MC storedMC = pm.makePersistent(mc);
-		MCUser tempUser= new MCUser();
-		tempUser=storedUser;
-
-		return tempUser.getId();//Test
-	}
-
+	/**
+	 * Filtermetoden som alltid kör två querys och slår ihop dem, 
+	 * en intervall för birthyear och om det finns ett fast värde angivet för
+	 * namn, län, stad osv. Och en med intervall för milesDriven
+	 * Returnerar användare som uppfyller filterparametrarna
+	 */
 	@Override
 	public ArrayList<MCUser> searchUsers(int yearup, int yeardown, int milesup,
 			int milesdown, String lan, String city, String fname, String lname) {
@@ -614,7 +628,10 @@ public class TestServiceImpl extends RemoteServiceServlet implements TestService
 
 		return null;
 	}
-
+	
+	/**
+	 * Metod som hämtar en användare med hjälp av ett Google ID
+	 */
 	@Override
 	public MCUser getUserByID(String userID) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -644,6 +661,9 @@ public class TestServiceImpl extends RemoteServiceServlet implements TestService
 
 		return detachedUser;
 	}
+	/**
+	 * Metod som hämtar en lisa med MCUSers baserat på en lista med Userid
+	 */
 	@Override
 	public ArrayList<MCUser> getFriendsByID(ArrayList<Long> friendsID) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -661,7 +681,9 @@ public class TestServiceImpl extends RemoteServiceServlet implements TestService
 		pm.close();
 		return result;
 	}
-
+	/**
+	 * Metod som uppdaterar en användare
+	 */
 	@Override
 	public long updateUser(MCUser mcuser) {
 		System.out.println("Försöker göra en update, id är :"+mcuser.getId());
@@ -683,6 +705,9 @@ public class TestServiceImpl extends RemoteServiceServlet implements TestService
 		}
 		return mcuser.getId();
 	}
+	/**
+	 * Metod som lagrar ett meddelande
+	 */
 	@Override
 	public boolean storeMsg(Message msg) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -690,6 +715,10 @@ public class TestServiceImpl extends RemoteServiceServlet implements TestService
 		System.out.println("MSG stored");
 		return true;
 	}
+	/**
+	 * Metod som hämtare en lista med privata meddelande som har ett
+	 * specifikt motagar id
+	 */
 	@Override
 	public ArrayList<Message> getRecievedMessage(Long id, Boolean priv) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -714,6 +743,9 @@ public class TestServiceImpl extends RemoteServiceServlet implements TestService
 		}
 		return result;
 	}
+	/**
+	 * Metod för att radera meddelande
+	 */
 	@Override
 	public boolean deleteMsg(String id) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -728,6 +760,9 @@ public class TestServiceImpl extends RemoteServiceServlet implements TestService
 		pm.close();
 		return true;
 	}
+	/**
+	 * Metod för att skapa en koppling (vänskap) mellan två användare
+	 */
 	@Override
 	public boolean createFriendship(MCUser viewUser, MCUser myself) {
 		if( viewUser!=null && myself!=null){
@@ -755,6 +790,9 @@ public class TestServiceImpl extends RemoteServiceServlet implements TestService
 		return false;
 
 	}
+	/**
+	 * Metod för att ta bort en koppling (vänskap) mellan två användare
+	 */
 	@Override
 	public boolean removeFriendship(MCUser viewUser, MCUser myself) {
 		if( viewUser!=null && myself!=null){
@@ -778,6 +816,11 @@ public class TestServiceImpl extends RemoteServiceServlet implements TestService
 		System.out.println("Försöker skapa vänner men en av dem är null");
 		return false;
 	}
+	/**
+	 * Metod för att lagra en användares bild
+	 * @param mcuserid
+	 * @param picid
+	 */
 	public static void setUserPic(long mcuserid, long picid) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try {
@@ -788,7 +831,11 @@ public class TestServiceImpl extends RemoteServiceServlet implements TestService
 		}
 
 	}
-	
+	/**
+	 * Tar bort alla bilder som är kopplad till en specifik användare (id)
+	 * @param id
+	 * @return lista med bilder som togs bort
+	 */
 	public static ArrayList<String> deleteUserPicKey(long id) {
 		PersistenceManager pm0 = PMF.get().getPersistenceManager();
 		MCUser theUser = pm0.getObjectById(MCUser.class, id); 

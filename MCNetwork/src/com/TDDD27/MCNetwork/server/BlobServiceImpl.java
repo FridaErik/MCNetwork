@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServletResponse;
 
 
 import com.TDDD27.MCNetwork.client.BlobService;
-import com.TDDD27.MCNetwork.client.TestService;
-import com.TDDD27.MCNetwork.client.TestServiceAsync;
+import com.TDDD27.MCNetwork.client.DatabaseService;
+import com.TDDD27.MCNetwork.client.DatabaseServiceAsync;
 import com.TDDD27.MCNetwork.shared.Picture;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
@@ -19,6 +19,11 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 
+/**Används för uppladdning av bilder
+ * Baseras på http://www.fishbonecloud.com/2010/12/tutorial-gwt-application-for-storing.html
+ * @author Frida&Erik
+ *
+ */
 @SuppressWarnings("serial")
 public class BlobServiceImpl extends RemoteServiceServlet implements
 BlobService {
@@ -37,7 +42,9 @@ BlobService {
 		ObjectifyService.register(Picture.class);
 	}
 
-	//Generate a Blobstore Upload URL from the GAE BlobstoreService
+	/**
+	 * Generate a Blobstore Upload URL from the GAE BlobstoreService
+	 */
 	@Override
 	public String getBlobStoreUploadUrl() {
 
@@ -47,7 +54,9 @@ BlobService {
 		return blobstoreService.createUploadUrl("/mcnetwork/uploadservice");
 	}
 
-	//Retrieve the Blob's meta-data from the Datastore using Objectify
+	/**
+	 * Retrieve the Blob's meta-data from the Datastore using Objectify
+	 */
 	@Override
 	public Picture getPicture(Long id) {
 
@@ -58,8 +67,10 @@ BlobService {
 	}
 
 
-	//Override doGet to serve blobs.  This will be called automatically by the Image Widget
-	//in the client
+	/**
+	 * Override doGet to serve blobs.  This will be called automatically by the Image Widget
+	 * in the client
+	 */
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {

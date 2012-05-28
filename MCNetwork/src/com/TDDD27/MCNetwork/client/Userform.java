@@ -27,13 +27,13 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 
 /** Formluär för att lägga
- * till ny användare, länkas med
- * Google-konto
- * @author Frida
+ * till ny användare eller uppdatera befintlig, 
+ * länkas med Google-konto
+ * @author Frida&Erik
  *
  */
 public class Userform extends FormPanel {
-	private static TestServiceAsync testService = GWT.create(TestService.class);
+	private static DatabaseServiceAsync testService = GWT.create(DatabaseService.class);
 
 	private MCNetwork parent;
 	private MCUser loggedInUser=null;
@@ -73,7 +73,10 @@ public class Userform extends FormPanel {
 	//private Button submit = new Button("Submit");
 	private LoginInfo loginInfo = null;
 
-
+	/**
+	 * Kontruktor som kollar om en användare är inloggad
+	 * @param theparent
+	 */
 	@SuppressWarnings("unchecked")
 	public Userform(MCNetwork theparent) {
 		super();
@@ -102,7 +105,7 @@ public class Userform extends FormPanel {
 	 */
 	private void getDBUser(String userID) {
 		if (testService == null) {
-			testService = GWT.create(TestService.class);
+			testService = GWT.create(DatabaseService.class);
 		}
 		// Set up the callback object.
 		AsyncCallback<MCUser> callback = new AsyncCallback<MCUser>() {
@@ -299,18 +302,7 @@ public class Userform extends FormPanel {
 		yearList.setSelectedIndex(index2);
 		textBoxMiles.setText(Integer.toString(currentUser.getMilesDriven()));
 	}
-	/**
-	 * Tömmer formuläret på information
-	 */
-	protected void clearUserForm() {
-		/*textBoxFnamn.setText("");
-		textBoxLnamn.setText("");
-		textBoxEmail.setText("");
-		textBoxCity.setText("");
-		textBoxFnamn.setText("");
-		textBoxMiles.setText("");*/
-		//this.clear();
-	}
+	
 	/**
 	 * Metod för att skriva ut ett meddelande
 	 * @param text
@@ -326,7 +318,7 @@ public class Userform extends FormPanel {
 	private void addUser(final MCUser mcuser) {
 		MCUser returnUser = null;
 		if (testService == null) {
-			testService = GWT.create(TestService.class);
+			testService = GWT.create(DatabaseService.class);
 		}
 
 		// Set up the callback object.
@@ -345,16 +337,13 @@ public class Userform extends FormPanel {
 		testService.storeUser(mcuser, callback);
 
 	}
-
-	
-	
 	/**
 	 * Metod för att uppdatera en användare som redan existerar
 	 * @param mcuser
 	 */
 	protected void updateUser(final MCUser mcuser) {
 		if (testService == null) {
-			testService = GWT.create(TestService.class);
+			testService = GWT.create(DatabaseService.class);
 		}
 
 		// Set up the callback object.
@@ -488,9 +477,7 @@ public class Userform extends FormPanel {
 		widget.setVisibleItemCount(1);
 		return widget;
 	}
-	/**
-	 * Hanterar historiken
-	 */
+
 	
 	//---------------Metoder för validering---------------//
 	private void checkUrl(String url) {

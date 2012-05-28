@@ -36,7 +36,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  */
 public class UserView extends VerticalPanel implements ValueChangeHandler{
 	private MCNetwork parent;
-	private static TestServiceAsync testService = GWT.create(TestService.class);
+	private static DatabaseServiceAsync testService = GWT.create(DatabaseService.class);
 	// Use an RPC call to the Blob Service to get the blobstore upload url
 	BlobServiceAsync blobService = GWT.create(BlobService.class);
 
@@ -59,6 +59,11 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 	private Image img;
 	private FlexTable MCTable = new FlexTable();
 
+	/**
+	 * Kontruktor som hämtar User med id
+	 * @param id
+	 * @param myparent
+	 */
 	public UserView(Long id, MCNetwork myparent) {
 		parent=myparent;
 		this.add(title);
@@ -68,6 +73,11 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 
 	}
 
+	/**
+	 * Kontruktor om man har tillgång till användaren i fråga
+	 * @param mcuser
+	 * @param myparent
+	 */
 	@SuppressWarnings("unchecked")
 	public UserView(MCUser mcuser, final MCNetwork myparent) {
 		viewUser=mcuser;
@@ -76,7 +86,7 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 	}
 
 	/**
-	 * 
+	 * Fastställer vilken användare som är inloggad (om någon)
 	 */
 	protected void setMyself() {
 		System.out.println("SetMyself");
@@ -102,7 +112,7 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 			private void getDBuser(String userID) {
 				System.out.println("SetMyself-->GetDBUser");
 				if (testService == null) {
-					testService = GWT.create(TestService.class);
+					testService = GWT.create(DatabaseService.class);
 				}
 				// Set up the callback object.
 				AsyncCallback<MCUser> callback = new AsyncCallback<MCUser>() {
@@ -122,6 +132,9 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 			}
 		});
 	}
+	/**
+	 * Skapar den grafiska representationen av en MCUser
+	 */
 	private void SetUpGUI() {
 		//Rensning
 		this.clear();
@@ -135,11 +148,19 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 		//Från scratch
 		this.add(title);
 		//Lagra info om user i infoTable som läggs i leftPanel
-		//Lägger till bild i leftPanel TODO
-		getPicture(viewUser.getUserPicId());
-
-		//Image img = new Image("images/question-mark-icon_21147438.jpg");
-		img = new Image("");
+		//Lägger till bild i leftPanel
+		
+		if(viewUser.getUserPicId()!=null){
+			System.out.println("PicId IS NOT NULL: "+viewUser.getUserPicId());
+			getPicture(viewUser.getUserPicId());
+		}else{
+			System.out.println("PicId IS NULL");
+			img = new Image("images/question-mark-icon_21147438.jpg");
+			img.setHeight("100px");
+		}
+		
+		
+		
 		leftUpperPanel.add(img);
 		topPanel.add(leftUpperPanel);
 		setUserInfo(viewUser);
@@ -243,9 +264,6 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 			btnPanel.addStyleName("btnPanel");
 		}
 
-
-
-
 		//Ladda meddelande i srollPanel i RightPanel
 		HTML msgTitle = new HTML("<h2>Meddelande: </h2>", true);
 		msgPanel.add(msgTitle);
@@ -287,7 +305,7 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 	 */
 	private void setMsgPanel() {
 		if (testService == null) {
-			testService = GWT.create(TestService.class);
+			testService = GWT.create(DatabaseService.class);
 		}
 		// Set up the callback object.
 		AsyncCallback<ArrayList<Message>> callback = new AsyncCallback<ArrayList<Message>>() {
@@ -348,7 +366,7 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 			 */
 			private void getDBUser(String userID, final Boolean priv) {
 				if (testService == null) {
-					testService = GWT.create(TestService.class);
+					testService = GWT.create(DatabaseService.class);
 				}
 				// Set up the callback object.
 				AsyncCallback<MCUser> callback = new AsyncCallback<MCUser>() {
@@ -370,8 +388,9 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 
 	}
 
-	/*
+	/**
 	 * Metoden skriver info om en MCUser till infoTable
+	 * @param mcuser
 	 */
 	protected void setUserInfo(MCUser mcuser) {
 		viewUser=mcuser;
@@ -382,6 +401,10 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 		infoTable.setWidget(4, 1, new HTML("<bold>Antal k&ouml;rda mil: </bold>"+Integer.toString(mcuser.getMilesDriven()), true));	
 	}
 
+	/**
+	 * Metoden skriver info om en MC till MCTable
+	 * @param mcuser
+	 */
 	protected void setMCInfo(MCUser theUser) {
 		ArrayList<MC> MCList = theUser.getMcList();
 		System.out.println("theUser.getId(): "+theUser.getId()+" MCLIST.size()"+theUser.getMcList().size());
@@ -445,9 +468,14 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 		testService.getUser(id, callback);
 	}
 
-	protected void addFriend(MCUser myself1, MCUser viewUser1) {
+	/**
+	 * Metod för att lägga till en vän 
+	 * @param myself
+	 * @param viewUser
+	 */
+	protected void addFriend(MCUser myself, final MCUser viewUser) {
 		if (testService == null) {
-			testService = GWT.create(TestService.class);
+			testService = GWT.create(DatabaseService.class);
 		}
 		// Set up the callback object.
 		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
@@ -464,9 +492,14 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 		testService.createFriendship(viewUser, myself, callback);
 
 	}
-	protected void removeFriend(MCUser myself2, MCUser viewUser2) {
+	/**
+	 * Metod för att ta bort en vän
+	 * @param myself
+	 * @param viewUser
+	 */
+	protected void removeFriend(MCUser myself, final MCUser viewUser) {
 		if (testService == null) {
-			testService = GWT.create(TestService.class);
+			testService = GWT.create(DatabaseService.class);
 		}
 		// Set up the callback object.
 		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
@@ -483,7 +516,11 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 		testService.removeFriendship(viewUser, myself, callback);
 
 	}
-
+	
+	/**
+	 * Metod för att hämta användarens bild om den har nån.
+	 * @param id
+	 */
 	public void getPicture(Long id) {
 
 		if(id!=null){
@@ -492,11 +529,15 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 
 				@Override
 				public void onSuccess(Picture result) {
-					
-					System.out.println("result.getImageUrl(): "+result.getImageUrl());
-					img.setUrl(result.getImageUrl());
-					img.setHeight("100px");
-
+					if(result!=null){
+						System.out.println("IMAGE URL IS NOT NULL: "+result.getImageUrl());
+						img.setUrl(result.getImageUrl());
+						img.setHeight("100px");
+					}else{
+						System.out.println("IMAGE URL IS NULL");
+						img.setUrl("/MCNetwork/war/images/question-mark-icon_21147438.jpg");
+						img.setHeight("100px");
+					}
 				}
 				@Override
 				public void onFailure(Throwable caught) {

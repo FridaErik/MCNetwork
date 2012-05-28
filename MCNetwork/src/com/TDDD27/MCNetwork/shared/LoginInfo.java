@@ -1,6 +1,12 @@
 package com.TDDD27.MCNetwork.shared;
 import java.io.Serializable;
 
+/**
+ * Innehåller den info Google ger oss om
+ * den inloggade användaren
+ * @author Frida&Erik
+ *
+ */
 public class LoginInfo implements Serializable {
 
   private boolean loggedIn = false;

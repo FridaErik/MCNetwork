@@ -31,7 +31,7 @@ public class MCNetwork implements EntryPoint {
 
 
 
-	private static TestServiceAsync testService = GWT.create(TestService.class);
+	private static DatabaseServiceAsync testService = GWT.create(DatabaseService.class);
 	private startView start = new startView();
 	public DockPanel structurePanel;
 	public VerticalPanel centerPanel;
@@ -71,7 +71,7 @@ public class MCNetwork implements EntryPoint {
 	 */
 	private void getDBUser(LoginInfo info) {
 		if (testService == null) {
-			testService = GWT.create(TestService.class);
+			testService = GWT.create(DatabaseService.class);
 		}
 		// Set up the callback object.
 		AsyncCallback<MCUser> callback = new AsyncCallback<MCUser>() {

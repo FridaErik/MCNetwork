@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.TDDD27.MCNetwork.client.TestService;
-import com.TDDD27.MCNetwork.client.TestServiceAsync;
+import com.TDDD27.MCNetwork.client.DatabaseService;
+import com.TDDD27.MCNetwork.client.DatabaseServiceAsync;
 import com.TDDD27.MCNetwork.shared.Picture;
 import com.google.appengine.api.blobstore.BlobInfo;
 import com.google.appengine.api.blobstore.BlobKey;
@@ -44,7 +44,7 @@ public class UploadServiceImpl extends HttpServlet {
 		BlobKey blobKey = blobs.get("upload");	
 
 		//Ta bort Blobs och Pictures innan ny lagras
-		ArrayList<String> result=TestServiceImpl.deleteUserPicKey(Long.parseLong(req.getParameter("idTextBox")));
+		ArrayList<String> result=DatabaseServiceImpl.deleteUserPicKey(Long.parseLong(req.getParameter("idTextBox")));
 		
 		//Get the parameters from the request to populate the Picture object
 		Picture picture = new Picture();
@@ -55,7 +55,7 @@ public class UploadServiceImpl extends HttpServlet {
 		picture.setImageUrl("/mcnetwork/blobservice?blob-key=" + blobKey.getKeyString());
 		
 		ofy.put(picture);
-		TestServiceImpl.setUserPic(Long.parseLong(req.getParameter("idTextBox")), picture.id);
+		DatabaseServiceImpl.setUserPic(Long.parseLong(req.getParameter("idTextBox")), picture.id);
 
 		//Redirect recursively to this servlet (calls doGet)
 		res.sendRedirect("/mcnetwork/uploadservice?id=" + picture.id);

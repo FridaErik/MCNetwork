@@ -28,7 +28,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  *
  */
 public class PrivateMessageView extends HorizontalPanel implements ValueChangeHandler{
-	private static TestServiceAsync testService = GWT.create(TestService.class);
+	private static DatabaseServiceAsync testService = GWT.create(DatabaseService.class);
 	private VerticalPanel msgPanel = new VerticalPanel();
 	private ScrollPanel scrollPnl = new ScrollPanel();
 	private MCUser loggedInUser=null;
@@ -96,7 +96,7 @@ public class PrivateMessageView extends HorizontalPanel implements ValueChangeHa
 	 */
 	private void getDBUser(String userID) {
 		if (testService == null) {
-			testService = GWT.create(TestService.class);
+			testService = GWT.create(DatabaseService.class);
 		}
 		// Set up the callback object.
 		AsyncCallback<MCUser> callback = new AsyncCallback<MCUser>() {
@@ -121,7 +121,7 @@ public class PrivateMessageView extends HorizontalPanel implements ValueChangeHa
 	 */
 	private void setMsgPanel() {
 		if (testService == null) {
-			testService = GWT.create(TestService.class);
+			testService = GWT.create(DatabaseService.class);
 		}
 		// Set up the callback object.
 		AsyncCallback<ArrayList<Message>> callback = new AsyncCallback<ArrayList<Message>>() {

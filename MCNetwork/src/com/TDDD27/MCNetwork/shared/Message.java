@@ -12,7 +12,12 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
-
+/**
+ * Klass som representerar ett meddelande
+ * Innehåller mottagare, sändare, meddelandet osv.
+ * @author Frida&Erik
+ *
+ */
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class Message implements Serializable{
 	

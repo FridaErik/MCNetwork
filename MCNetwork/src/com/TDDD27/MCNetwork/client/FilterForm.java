@@ -32,7 +32,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  *
  */
 public class FilterForm extends FormPanel implements ValueChangeHandler{
-	private static TestServiceAsync testService = GWT.create(TestService.class);
+	private static DatabaseServiceAsync testService = GWT.create(DatabaseService.class);
 	private MCNetwork parent;
 	private VerticalPanel formframe = new VerticalPanel();
 	private ScrollPanel resultframe = new ScrollPanel();
@@ -213,7 +213,7 @@ public class FilterForm extends FormPanel implements ValueChangeHandler{
 			int milesdown, String lan, String city, String lname, String fname) {
 		System.out.println("So far so good");
 		if (testService == null) {
-			testService = GWT.create(TestService.class);
+			testService = GWT.create(DatabaseService.class);
 		}
 
 		// Set up the callback object.

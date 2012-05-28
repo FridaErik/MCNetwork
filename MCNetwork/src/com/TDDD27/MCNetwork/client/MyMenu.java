@@ -69,7 +69,7 @@ public class MyMenu extends MenuBar {
 		@Override
 		public void execute()
 		{
-			TestServiceAsync testService = GWT.create(TestService.class);
+			DatabaseServiceAsync testService = GWT.create(DatabaseService.class);
 			final Long userid = myParent.getLoggedInUser().getId();
 			AsyncCallback<MCUser> callback = new AsyncCallback<MCUser>() {
 				@Override

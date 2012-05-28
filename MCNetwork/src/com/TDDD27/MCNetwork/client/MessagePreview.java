@@ -20,7 +20,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  *
  */
 public class MessagePreview extends VerticalPanel {
-	private static TestServiceAsync testService = GWT.create(TestService.class);
+	private static DatabaseServiceAsync testService = GWT.create(DatabaseService.class);
 	private HTML sender= new HTML("", true);
 	private HTML resiver= new HTML("", true);
 	private HorizontalPanel senderResiever = new HorizontalPanel();
@@ -92,7 +92,7 @@ public class MessagePreview extends VerticalPanel {
 	 */
 	protected void deleteMsg(Message msg) {
 		if (testService == null) {
-			testService = GWT.create(TestService.class);
+			testService = GWT.create(DatabaseService.class);
 		}
 		// Set up the callback object.
 		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
@@ -119,7 +119,7 @@ public class MessagePreview extends VerticalPanel {
 	private void setReciever(Long resieverid) {
 
 		if (testService == null) {
-			testService = GWT.create(TestService.class);
+			testService = GWT.create(DatabaseService.class);
 		}
 		// Set up the callback object.
 		AsyncCallback<MCUser> callback = new AsyncCallback<MCUser>() {
@@ -149,7 +149,7 @@ public class MessagePreview extends VerticalPanel {
 	 */
 	private void setSender(Long senderid) {
 		if (testService == null) {
-			testService = GWT.create(TestService.class);
+			testService = GWT.create(DatabaseService.class);
 		}
 		// Set up the callback object.
 		AsyncCallback<MCUser> callback = new AsyncCallback<MCUser>() {

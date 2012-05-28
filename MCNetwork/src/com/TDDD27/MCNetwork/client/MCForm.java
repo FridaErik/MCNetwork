@@ -21,7 +21,7 @@ import com.google.gwt.user.client.ui.TextBox;
  *
  */
 public class MCForm extends FormPanel implements ValueChangeHandler{
-	private static TestServiceAsync testService = GWT.create(TestService.class);
+	private static DatabaseServiceAsync testService = GWT.create(DatabaseService.class);
 
 	private Grid grid = new Grid(6, 3);
 	//private FileUpload upload = new FileUpload();
@@ -152,7 +152,7 @@ public class MCForm extends FormPanel implements ValueChangeHandler{
 	 */
 	private void storeMC(MC mc,	MCUser loggedInUser) {
 		if (testService == null) {
-			testService = GWT.create(TestService.class);
+			testService = GWT.create(DatabaseService.class);
 		}
 
 		// Set up the callback object.
@@ -178,7 +178,7 @@ public class MCForm extends FormPanel implements ValueChangeHandler{
 	 */
 	private void updateMC(MC mc, MCUser loggedInUser) {
 		if (testService == null) {
-			testService = GWT.create(TestService.class);
+			testService = GWT.create(DatabaseService.class);
 		}
 		// Set up the callback object.
 		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {

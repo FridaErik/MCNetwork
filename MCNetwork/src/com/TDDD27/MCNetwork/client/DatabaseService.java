@@ -10,7 +10,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 
 @RemoteServiceRelativePath("network")
-public interface TestService extends RemoteService {
+public interface DatabaseService extends RemoteService {
 
 	Long storeUser(MCUser tester);
 
@@ -18,7 +18,6 @@ public interface TestService extends RemoteService {
 
 	Boolean storeMC(MC mc, MCUser loggedInUser);
 
-	Long storeUserMC(MCUser mcuser, MC mc);
 
 	ArrayList<MCUser> searchUsers(int yearup, int yeardown, int milesup,
 			int milesdown, String lan, String city, String fname, String lname);
