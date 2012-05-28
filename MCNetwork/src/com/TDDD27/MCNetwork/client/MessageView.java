@@ -28,7 +28,8 @@ public class MessageView extends VerticalPanel {
 	private MCNetwork parent;
 	
 	/**
-	 * 
+	 * Konstruktur som skriver ut meddelande, sändare, mottagare 
+	 * Har även radera funktionalitet
 	 */
 	public MessageView(final Message msg, final MCNetwork parent) {
 		this.parent=parent;
@@ -37,7 +38,8 @@ public class MessageView extends VerticalPanel {
 		setReciever(msg.getresieverid());
 		senderResiever.add(resiver);
 		this.add(senderResiever);
-		if(msg.getPriv()){
+		//Kontroll så att en användare bara kan radera sina meddelande som de fått eller skickat
+		if(parent.getLoggedInUser().getId()==msg.getresieverid() || parent.getLoggedInUser().getId()==msg.getsenderid()){
 			HTML deleteHTML = new HTML("  Radera", true);
 		deleteHTML.addStyleName("MsgPreview_Clickable");
 		ClickHandler deleteClickHandler = new ClickHandler() {
@@ -48,7 +50,7 @@ public class MessageView extends VerticalPanel {
 			}
 		};
 		deleteHTML.addClickHandler(deleteClickHandler);
-		senderResiever.add(deleteHTML);
+		this.add(deleteHTML);
 		}
 		msgArea.setHTML(msg.getMessage());
 		msgArea.setStyleName("msgtext");
@@ -63,6 +65,7 @@ public class MessageView extends VerticalPanel {
 		
 		
 	}
+	
 	/**
 	 * Hämtar en användare med ett userid och sätter 
 	 * Mottagaren för meddelandet.
@@ -143,7 +146,7 @@ public class MessageView extends VerticalPanel {
 	 * Metod för att radera ett meddelande ut databasen
 	 * @param msg
 	 */
-	protected void deleteMsg(Message msg) {
+	protected void deleteMsg(final Message msg) {
 		if (testService == null) {
 			testService = GWT.create(TestService.class);
 		}
@@ -156,9 +159,17 @@ public class MessageView extends VerticalPanel {
 			@Override
 			public void onSuccess(Boolean result) {
 				if(result){
-					PrivateMessageView centerwidget = new PrivateMessageView(parent);
-					parent.centerPanel.clear();
-					parent.centerPanel.add(centerwidget);
+					if(msg.getPriv()==true){
+						PrivateMessageView centerwidget = new PrivateMessageView(parent);
+						parent.centerPanel.clear();
+						parent.centerPanel.add(centerwidget);
+					}
+					else{
+						UserView centerwidget = new UserView(msg.getresieverid(), parent);
+						parent.centerPanel.clear();
+						parent.centerPanel.add(centerwidget);
+					}
+					
 				}
 
 			}

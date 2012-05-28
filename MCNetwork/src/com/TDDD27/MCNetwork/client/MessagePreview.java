@@ -13,8 +13,10 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-/**
- * @author Frida
+/**Klass som visar en "preview" av ett meddelande
+ * Dvs sändare, mottagare, tidpunkt och början på meddelandet
+ * Har även en radera funktionalitet.
+ * @author Frida&Erik
  *
  */
 public class MessagePreview extends VerticalPanel {
@@ -26,7 +28,7 @@ public class MessagePreview extends VerticalPanel {
 	private Message message;
 	private MCNetwork parent;
 	
-	/**
+	/**Konstruktor
 	 * Klass för en preview av ett meddelande som visar grundinfo 
 	 * om ett Message, avsändare, mottagare, tidpunkt, 
 	 * början på meddelandet och möjligheten att radera meddelandet.

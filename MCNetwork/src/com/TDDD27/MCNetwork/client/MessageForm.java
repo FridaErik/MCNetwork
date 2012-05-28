@@ -22,8 +22,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 /**
  * Klass för att skriva och skicka meddelande
  * Används av andra klasser och fristående.
- * @author Frida
- *
+ * @author Frida&Erik
  */
 public class MessageForm extends FormPanel implements ValueChangeHandler {
 	private static TestServiceAsync testService = GWT.create(TestService.class);
@@ -256,8 +255,9 @@ public class MessageForm extends FormPanel implements ValueChangeHandler {
 	}
 
 
-
-
+	/**
+	 * Hanterar historiken
+	 */
 	@Override
 	public void onValueChange(ValueChangeEvent event) {
 		if (event.getValue().equals("messageform")){

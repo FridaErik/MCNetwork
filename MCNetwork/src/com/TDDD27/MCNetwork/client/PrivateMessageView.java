@@ -38,7 +38,8 @@ public class PrivateMessageView extends HorizontalPanel implements ValueChangeHa
 	private VerticalPanel rightpanel = new VerticalPanel();
 	private PrivateMessageView privmsgview;
 
-	/**
+	/**Kontruktor
+	 * Skapar GUI så användare kan läsa sin privata meddelande
 	 * @param myParent 
 	 * 
 	 */
@@ -179,6 +180,8 @@ public class PrivateMessageView extends HorizontalPanel implements ValueChangeHa
 		}
 
 	}
+	
+	//Getter & Setter
 	public VerticalPanel getRightpanel() {
 		return rightpanel;
 	}

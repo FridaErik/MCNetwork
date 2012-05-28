@@ -45,6 +45,11 @@ public class MyMenu extends MenuBar {
 		this.addItem(filterMI);
 		
 	}
+	/**
+	 * Metod för att skapa en EditUserView
+	 * Så anvädnare kan registrera sina användareuppgifter
+	 * när de första gången loggar in.
+	 */
 	static Command registerCmd = new Command()
 	{
 		@Override

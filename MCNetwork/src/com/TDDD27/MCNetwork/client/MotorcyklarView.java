@@ -33,7 +33,11 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 	private FlexTable MCTable = new FlexTable();
 	private Boolean editBoolean = false;
 
-
+	/**
+	 * Kontruktor som laddar GUI så användare
+	 * kan se och hantera sina motorcyklar
+	 * @param myParent
+	 */
 	public MotorcyklarView(MCNetwork myParent) {
 		super();
 		System.out.println("Skapar ny MotorcyklarView");
@@ -185,7 +189,13 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 		parent.centerPanel.add(centerwidget);
 	}
 
-	private void deleteMC(MC mc, MCUser loggedInUser) {
+	/**
+	 * Metod för att radera MC från databasen och
+	 * användarens lista
+	 * @param mc MC som ska tas bort
+	 * @param user Ägare vars lista ska ändras
+	 */
+	private void deleteMC(MC mc, MCUser user) {
 		if (testService == null) {
 			testService = GWT.create(TestService.class);
 		}
@@ -202,7 +212,7 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 			}
 		};
 
-		testService.deleteMC(mc, loggedInUser, callback);
+		testService.deleteMC(mc, user, callback);
 	}
 
 	/**Hanterar historiken

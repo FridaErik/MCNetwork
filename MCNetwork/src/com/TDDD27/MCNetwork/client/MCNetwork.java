@@ -41,9 +41,7 @@ public class MCNetwork implements EntryPoint {
 	
 	private MCUser loggedInUser=null;
 
-	public MCUser getLoggedInUser() {
-		return loggedInUser;
-	}
+	
 	/**
 	 * This is the entry point method.
 	 */
@@ -102,10 +100,7 @@ public class MCNetwork implements EntryPoint {
 		VerticalPanel northPanel = new VerticalPanel();
 		HorizontalPanel topNorth = new HorizontalPanel();
 		HTML northwidget1 = new HTML("<MainTitle> MC Network</MainTitle>", true);
-		SearchPanel searchpanel = new SearchPanel();
-		searchpanel.addStyleName("searchPanel");
 		topNorth.add(northwidget1);
-		//topNorth.add(searchpanel);
 		if(loginInfo.isLoggedIn()){
 			signOutLink.setHref(loginInfo.getLogoutUrl());
 			northPanel.add(signOutLink);	
@@ -146,15 +141,9 @@ public class MCNetwork implements EntryPoint {
 		loggedInUser=result;
 		
 	}
-
-
-	
-	
-
-
-
-
-
+	public MCUser getLoggedInUser() {
+		return loggedInUser;
+	}
 
 
 }
