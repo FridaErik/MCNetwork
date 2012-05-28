@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.HTMLTable.Cell;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ListBox;
@@ -99,8 +100,21 @@ public class FilterForm extends FormPanel implements ValueChangeHandler{
 		grid.setWidget(9, 0, textHTMLMilesDown);
 		grid.setWidget(10, 1, milesUpBox);
 		grid.setWidget(10, 0, milesDownBox);
-		Button submit = new Button("Hitta nya personer >>");
+		SimplePanel submit = new SimplePanel();
+		HTML submitBtn = new HTML("S&ouml;k", true);
+		ClickHandler submitClickHandler = new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				submit();	
+			}
+		};
+		submitBtn.addClickHandler(submitClickHandler);
+		submit.add(submitBtn);
+		submit.setWidth("90px");
+		submit.addStyleName("GreenBtn");
+		submit.setHeight("20px");
 		grid.setWidget(11, 0, submit);
+		
 
 		setEncoding(FormPanel.ENCODING_MULTIPART);
 		setMethod(FormPanel.METHOD_POST);
@@ -121,13 +135,7 @@ public class FilterForm extends FormPanel implements ValueChangeHandler{
 		History.fireCurrentHistoryState();	
 		//HISTORY
 
-		submit.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				submit();	
-			}
-		});
+		
 		/*
 		 * Läser av filtret när användaren klickar på submit
 		 * Om övre och undre gräns för "miles driven" (körda mil)

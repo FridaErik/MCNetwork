@@ -10,7 +10,12 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 
-
+/**
+ * Klass som innehåller en UserForm och en ImageUploader
+ * Med denna klass kan användaren redigera sin info.
+ * @author Frida&Erik
+ *
+ */
 public class EditUserView extends HorizontalPanel implements ValueChangeHandler{
 
 	private VerticalPanel leftPanel=new VerticalPanel();
@@ -45,6 +50,9 @@ public class EditUserView extends HorizontalPanel implements ValueChangeHandler{
 		History.fireCurrentHistoryState();		
 		//HISTORY
 	}
+	/**
+	 * Hanterar historiken
+	 */
 	@Override
 	public void onValueChange(ValueChangeEvent event) {
 		if (event.getValue().equals("registration")){

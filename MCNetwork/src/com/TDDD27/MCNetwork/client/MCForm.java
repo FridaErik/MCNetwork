@@ -27,22 +27,28 @@ public class MCForm extends FormPanel implements ValueChangeHandler{
 	//private FileUpload upload = new FileUpload();
 	private TextBox textBoxBrand = new TextBox();
 	private HTML textLabelBrand = new HTML("M&auml;rke", true);
-	private Label errorBrand = new Label("");
+	private HTML errorBrand = new HTML("", true);
 	private TextBox textBoxModel = new TextBox();
 	private HTML textLabelModel = new HTML("Model	", true);
-	private Label errorModel = new Label("");
+	private HTML errorModel = new HTML("", true);
 	private TextBox textBoxYear = new TextBox();
 	private HTML textLabelYear = new HTML("&Aring;r", true);
-	private Label errorYear = new Label("");
+	private HTML errorYear = new HTML("", true);
 	private TextBox textBoxUrl = new TextBox();
 	private HTML textLabelUrl = new HTML("L&auml;nk f&ouml;r info om modellen", true);
-	private Label errorUrl = new Label("");
+	private HTML errorUrl = new HTML("", true);
 	private Button submit = new Button("Submit");
 	private Boolean submitOK = true;
 	private HTML response = new HTML("", true);
 
 	private MCNetwork parent;
-
+	/**
+	 * Kontsruktor för MCForm
+	 * @param MC innehåller info om den MC som skall redigeras, om null så ska en nya skapas
+	 * @param loggedInUser Personen som äger motorcykeln
+	 * @param parent MCNetwork
+	 * @param edit true=MC ska redigeras, false=MC är null och en nya ska skapas
+	 */
 	public MCForm(final MC MC, final MCUser loggedInUser, MCNetwork parent, final Boolean edit) {
 		super();
 		this.parent=parent;
@@ -51,7 +57,6 @@ public class MCForm extends FormPanel implements ValueChangeHandler{
 		textBoxYear.setName("textBoxYear");
 		textBoxUrl.setName("textBoxUrl");
 		if(MC!=null){
-			
 			textBoxBrand.setText(MC.getBrand());
 			textBoxModel.setText(MC.getModel());
 			textBoxYear.setText(Integer.toString(MC.getYear()));
@@ -73,7 +78,6 @@ public class MCForm extends FormPanel implements ValueChangeHandler{
 
 		setEncoding(FormPanel.ENCODING_MULTIPART);
 		setMethod(FormPanel.METHOD_POST);
-		//setWidget(grid);
 		setStyleName("formPanel");
 		submit.addClickHandler(new ClickHandler() {
 
@@ -98,7 +102,6 @@ public class MCForm extends FormPanel implements ValueChangeHandler{
 		//HISTORY
 		//this.add(submit);
 
-		//Testar en grej
 		addSubmitHandler(new SubmitHandler() {
 			/**
 			 * Hämtar text och validerar innan det skickas till servern
@@ -142,6 +145,11 @@ public class MCForm extends FormPanel implements ValueChangeHandler{
 		});
 	}
 	
+	/**
+	 * Metod som lagrar en ny MC i databasen
+	 * @param mc MC som ska lagras
+	 * @param loggedInUser MCUsern som äger motorcykeln
+	 */
 	private void storeMC(MC mc,	MCUser loggedInUser) {
 		if (testService == null) {
 			testService = GWT.create(TestService.class);
@@ -162,6 +170,12 @@ public class MCForm extends FormPanel implements ValueChangeHandler{
 		testService.storeMC(mc, loggedInUser, callback);
 
 	}
+	
+	/**
+	 * Metod som uppdaterar befintlig motorcykel
+	 * @param mc MC som ska uppdateras
+	 * @param loggedInUser MCUsern som äger MC'n
+	 */
 	private void updateMC(MC mc, MCUser loggedInUser) {
 		if (testService == null) {
 			testService = GWT.create(TestService.class);
@@ -187,9 +201,9 @@ public class MCForm extends FormPanel implements ValueChangeHandler{
 	 * @param brand
 	 */
 	private void checkBrand(String brand) {
-		boolean valid = brand.matches("[a-öA-Ö]*");	
+		boolean valid = brand.matches("[a-öA-Ö0-9-/' ']*");	
 		if(!valid){
-			errorBrand.setText("Ogiltigt m&auml;rke");
+			errorBrand.setHTML("Ogiltigt m&auml;rke");
 			submitOK=false;
 		}
 	}
@@ -198,12 +212,15 @@ public class MCForm extends FormPanel implements ValueChangeHandler{
 	 * @param model
 	 */
 	private void checkModel(String model) {
-		boolean valid = model.matches("[a-öA-Ö0-9]*");	
+		boolean valid = model.matches("[a-öA-Ö0-9-/' ']*");	
 		if(!valid){
-			errorModel.setText("Ogiltigt modellnamn");
+			errorModel.setHTML("Ogiltigt modellnamn");
 			submitOK=false;
 		}
 	}
+	
+	
+	
 	//Getters och setters
 	public String getBrand() {
 		return textBoxBrand.getText();

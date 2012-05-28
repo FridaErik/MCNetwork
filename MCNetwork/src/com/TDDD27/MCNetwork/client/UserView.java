@@ -251,8 +251,11 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 		msgPanel.add(msgTitle);
 		msgPanel.setWidth("250px");
 		setMsgPanel();
-		msgPanel.setStyleName("UserViewMsgPanel");		
+		scrollPnl.setStyleName("UserViewScrollPnl");		
 		scrollPnl.add(msgPanel);
+		scrollPnl.setHeight("300px");
+		scrollPnl.setWidth("275px");
+		
 		rightPanel.add(scrollPnl);
 		topPanel.add(leftPanel);
 		topPanel.add(rightPanel);
@@ -392,7 +395,7 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 					MCTable.setWidget(2*i, 1, brandLink);
 				}
 				else{
-					HTML brandLink = new HTML("<a href="+'"'+myMC.getUrl()+'"'+"><H3>"+ myMC.getBrand() +" </H3></a>", true);
+					HTML brandLink = new HTML("<a href="+'"'+myMC.getUrl()+'"'+" target="+'"'+"_blank"+'"'+"><H3>"+ myMC.getBrand() +" </H3></a>", true);
 					MCTable.setWidget(2*i, 1, brandLink);
 				}
 				

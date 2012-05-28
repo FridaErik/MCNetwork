@@ -18,6 +18,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
+ * Huvudklassen som "håller" i alla andra klasser
  */
 public class MCNetwork implements EntryPoint {
 	/**
@@ -136,6 +137,8 @@ public class MCNetwork implements EntryPoint {
 		
 
 	}
+	
+	//Getter & Setter
 	public LoginInfo getLoginInfo() {
 		return loginInfo;
 	}

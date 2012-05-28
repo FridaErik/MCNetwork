@@ -49,7 +49,7 @@ public class MessagePreview extends VerticalPanel {
 		HorizontalPanel container1 = new HorizontalPanel();
 		HTML dateHTML = new HTML("<date>"+msg.getDatum().toString().substring(0, Cindex-1)+" </date>", true);
 		HTML deleteHTML = new HTML("  Radera", true);
-		deleteHTML.addStyleName("MsgPreview_Clickable");
+		deleteHTML.addStyleName("Clickable");
 		ClickHandler deleteClickHandler = new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -79,7 +79,7 @@ public class MessagePreview extends VerticalPanel {
 		};
 		msgArea.addClickHandler(resieverClickHandler);
 		msgArea.setStyleName("MessagePreview_msgtext");
-		msgArea.setWidth("230px");
+		msgArea.setWidth("250px");
 		this.add(msgArea);
 
 

@@ -24,7 +24,11 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
- * @author Frida
+ * Klass för att ladda upp en bild till användarens profilsida
+ * Använder sig av BlobService samt UploadService för att lagra en bild
+ * en blob och koppla bilden till en användare
+ * @author Frida&Erik
+ * Baserat på http://www.fishbonecloud.com/2010/12/tutorial-gwt-application-for-storing.html
  *
  */
 public class ImageUploadGUI extends FormPanel {
@@ -44,11 +48,13 @@ public class ImageUploadGUI extends FormPanel {
 	TextBox idTextBox = new TextBox();
 	TextBox descriptionTextBox = new TextBox();
 	FileUpload upload = new FileUpload();
+	HTML notification = new HTML("", true);
 	Long userId;
 	ImageUploadGUI itself;
 
 	/**
-	 * 
+	 * Konstruktor som får in id för den användare som är inloggad
+	 * och laddar upp bilden
 	 */
 	public ImageUploadGUI(Long userid) {
 		itself=this;
@@ -73,7 +79,9 @@ public class ImageUploadGUI extends FormPanel {
 		ClickHandler updateClickHandler = new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
+				notification.setHTML("<bold>V&auml;nta!</bold>");
 				
+				//Hämtar adressen som bloben lagras till
 				blobService.getBlobStoreUploadUrl(new AsyncCallback<String>() {
 
 					@Override
@@ -82,9 +90,8 @@ public class ImageUploadGUI extends FormPanel {
 						// blobstore upload URL
 						itself.setAction(result.toString());
 						// Submit the form to complete the upload
-						
 						itself.submit();
-						itself.reset();
+						//itself.reset();
 					}
 
 					@Override
@@ -101,6 +108,9 @@ public class ImageUploadGUI extends FormPanel {
 		submit.setHeight("20px");
 		mainVerticalPanel.add(submit);
 
+		
+		
+		mainVerticalPanel.add(notification);
 		this.setWidget(mainVerticalPanel);
 
 		// The upload form, when submitted, will trigger an HTTP call to the
@@ -115,14 +125,13 @@ public class ImageUploadGUI extends FormPanel {
 		idTextBox.setName("idTextBox");
 		upload.setName("upload");
 
-		//this.add(uploadForm);
 
 		this.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
 			@Override
 			public void onSubmitComplete(SubmitCompleteEvent event) {
 				System.out.println("event.getResults(): "+event.getResults());
-				HTML notification = new HTML("Din bild &auml;r uppdaterad</br> Det kan ta en stund innan bilden syns p&aring; din sida.", true);
-				mainVerticalPanel.add(notification);
+				notification.setHTML("Din bild &auml;r uppdaterad</br> Det kan ta en stund innan bilden syns p&aring; din sida.");
+				
 			}
 		});
 	}	

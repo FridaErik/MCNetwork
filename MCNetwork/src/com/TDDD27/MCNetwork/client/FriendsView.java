@@ -15,10 +15,11 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 /**
  * Klass för att visa en användares lista av 
- * vŠnner 
+ * vänner samt för att kunna ta bort vänner.
  * @author Frida
  *
  */
@@ -32,7 +33,11 @@ public class FriendsView extends VerticalPanel implements ValueChangeHandler{
 	private ArrayList<MCUser> myFriends = new ArrayList<MCUser>();
 	private ArrayList<Long> FriendsList = new ArrayList<Long>();
 
-
+	/**
+	 * Kontruktor som genrerar GUI'n, behöver myParent för att kunna 
+	 * ladda in nya sidor i huvudPanelen (MCNetwork)
+	 * @param myParent
+	 */
 	public FriendsView(MCNetwork myParent) {
 		super();
 		System.out.println("Skapar ny FriendsView");
@@ -120,14 +125,29 @@ public class FriendsView extends VerticalPanel implements ValueChangeHandler{
 		this.add(friendTable);
 	}
 
-	
+	/**
+	 * Skriver ut listan av vänner i en FlexTable
+	 * @param list
+	 */
 	protected void printList(ArrayList<MCUser> list){
 		HTML friends = new HTML("<H1>Dina kompisar</H1>", true);
 		friendTable.setWidget(0, 0, friends);
 		for(int i=1; i<=list.size(); i++){
 			final MCUser myFriend = list.get(i-1);
-			Button delete = new Button("Delete");
-			System.out.println(myFriend.getFirstName());
+			SimplePanel delete = new SimplePanel();
+			HTML deleteBtn = new HTML("Ta bort", true);
+			ClickHandler deleteClickHandler = new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					deleteFriend(myFriend, loggedInUser);
+				}
+			};
+			deleteBtn.addClickHandler(deleteClickHandler);
+			delete.add(deleteBtn);
+			delete.setWidth("60px");
+			delete.addStyleName("GreenBtn");
+			delete.setHeight("20px");
+			
 			HTML friendWidget = new HTML();
 			friendWidget.setHTML(myFriend.getFirstName()+" "+myFriend.getLastName());
 			friendWidget.setStyleName("Clickable");
@@ -141,19 +161,16 @@ public class FriendsView extends VerticalPanel implements ValueChangeHandler{
 
 			friendWidget.addClickHandler(resieverClickHandler);
 			friendTable.setWidget(i, 1, friendWidget);
-			delete.addClickHandler(new ClickHandler() {
-				@Override
-				public void onClick(ClickEvent event) {
-					deleteFriend(myFriend, loggedInUser);	
-				}
-			});
-
 			friendTable.setWidget(i, 2, delete);
 		}
 	}
 
 	
-	
+	/**
+	 * Metod som laddar in en användares sida i
+	 * huvudPanelen (MCNetwork)
+	 * @param mcuser
+	 */
 	protected void SendToUserPage(MCUser mcuser) {
 		UserView centerwidget = new UserView(mcuser, parent);
 		parent.centerPanel.clear();
@@ -161,8 +178,12 @@ public class FriendsView extends VerticalPanel implements ValueChangeHandler{
 	}
 
 	
-	
-	protected void deleteFriend(MCUser friend, MCUser loggedInUser2) {
+	/**
+	 * Raderar en användare från den inloggade personens vänlista
+	 * @param friend Den som tas bort
+	 * @param loggedInUser2 Personen som tar bort en vän
+	 */
+	protected void deleteFriend(MCUser friend, MCUser loggedinuser) {
 		if (testService == null) {
 			testService = GWT.create(TestService.class);
 		}
@@ -178,10 +199,15 @@ public class FriendsView extends VerticalPanel implements ValueChangeHandler{
 				parent.centerPanel.add(new FriendsView(parent));
 			}
 		};
-
-		testService.removeFriendship(friend, loggedInUser, callback);
+		testService.removeFriendship(friend, loggedinuser, callback);
 	}
 
+	/**
+	 * Hämtar en lista med MCUsers baserad på en lista av user-idn
+	 * som är den lista som varje användare har med sina vänner.
+	 * @param FriendsID Lista med id
+	 * @return Lista med Users
+	 */
 	protected ArrayList<MCUser> getFriendsByID(ArrayList<Long> FriendsID) {
 		if (testService == null) {
 			testService = GWT.create(TestService.class);
@@ -203,8 +229,6 @@ public class FriendsView extends VerticalPanel implements ValueChangeHandler{
 		testService.getFriendsByID(FriendsID, callback);
 		return myFriends;
 	}
-
-
 
 
 	/**Hanterar historiken
