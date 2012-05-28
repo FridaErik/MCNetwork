@@ -9,7 +9,7 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 
-@RemoteServiceRelativePath("network")
+@RemoteServiceRelativePath("database")
 public interface DatabaseService extends RemoteService {
 
 	Long storeUser(MCUser tester);
@@ -17,7 +17,6 @@ public interface DatabaseService extends RemoteService {
 	MCUser getUser(Long id);
 
 	Boolean storeMC(MC mc, MCUser loggedInUser);
-
 
 	ArrayList<MCUser> searchUsers(int yearup, int yeardown, int milesup,
 			int milesdown, String lan, String city, String fname, String lname);
@@ -41,14 +40,5 @@ public interface DatabaseService extends RemoteService {
 	boolean removeFriendship(MCUser viewUser, MCUser myself);
 
 	ArrayList<MCUser> getFriendsByID(ArrayList<Long> friendsID);
-
-
-	
-
-
-
-
-
-
 
 }

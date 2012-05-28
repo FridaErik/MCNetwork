@@ -15,8 +15,6 @@ public interface DatabaseServiceAsync {
 
 	void storeMC(MC mc, MCUser loggedInUser, AsyncCallback<Boolean> callback);
 
-	
-
 	void searchUsers(int yearup, int yeardown, int milesup, int milesdown,
 			String lan, String city, String fname, String lname,
 			AsyncCallback<ArrayList<MCUser>> callback);
@@ -45,7 +43,5 @@ public interface DatabaseServiceAsync {
 	void getFriendsByID(ArrayList<Long> friendsID,
 			AsyncCallback<ArrayList<MCUser>> callback);
 
-	
-	
 
 }

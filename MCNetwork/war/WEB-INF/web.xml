@@ -12,7 +12,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>networkServlet</servlet-name>
-    <url-pattern>/mcnetwork/network</url-pattern>
+    <url-pattern>/mcnetwork/database</url-pattern>
   </servlet-mapping>
   
     <servlet>
@@ -61,19 +61,7 @@
     <param-value>200</param-value>
   </context-param>
 
-  <servlet>
-    <servlet-name>SampleUploadServlet</servlet-name>
-    <!-- This is the default servlet, it puts files in session -->
-    <!-- <servlet-class>gwtupload.server.UploadServlet</servlet-class> -->
-    <!-- Specialanpassat servlet -->
-    <servlet-class>com.TDDD27.MCNetwork.server.SampleUploadServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>SampleUploadServlet</servlet-name>
-    <url-pattern>*.gupld</url-pattern>
-  </servlet-mapping>
-
-  
+ 
   <!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>MCNetwork.html</welcome-file>
