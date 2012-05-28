@@ -149,7 +149,7 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 		this.add(title);
 		//Lagra info om user i infoTable som läggs i leftPanel
 		//Lägger till bild i leftPanel
-		
+		img=new Image("");
 		if(viewUser.getUserPicId()!=null){
 			System.out.println("PicId IS NOT NULL: "+viewUser.getUserPicId());
 			getPicture(viewUser.getUserPicId());

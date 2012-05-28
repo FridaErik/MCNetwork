@@ -328,7 +328,7 @@ public class Userform extends FormPanel {
 			}
 			@Override
 			public void onSuccess(Long result) {
-				HTML notification = new HTML("Dina uppgifter &auml;r registrerade", true);
+				HTML notification = new HTML("Dina uppgifter &auml;r registrerade </br> Ladda om sidan om inte menyn uppdateras", true);
 				grid.setWidget(11, 1, notification);
 			}
 		};
