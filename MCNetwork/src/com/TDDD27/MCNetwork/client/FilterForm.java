@@ -39,7 +39,7 @@ public class FilterForm extends FormPanel implements ValueChangeHandler{
 	private HorizontalPanel mainframe = new HorizontalPanel();
 	
 	private Grid grid = new Grid(13, 3);
-	private final FlexTable resultTable = new FlexTable();
+	private FlexTable resultTable = new FlexTable();
 	private HTML textHTMLFname = new HTML("<filterH2>F&ouml;rnamn:</filterH2>", true);
 	private HTML textHTMLLname = new HTML("<filterH2>Efternamn:</filterH2>", true);
 	private TextBox fNameBox=new TextBox();
@@ -239,7 +239,7 @@ public class FilterForm extends FormPanel implements ValueChangeHandler{
 	 * @param result Lista med användare som ska skrivas ut.
 	 */
 	protected void addResult(final List<MCUser> result) {
-		
+		resultTable = new FlexTable();
 		ClickHandler userRowCheck = new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -284,6 +284,7 @@ public class FilterForm extends FormPanel implements ValueChangeHandler{
 			}
 		}
 		resultframe.addStyleName("ResultFrame");
+		resultframe.clear();
 		resultframe.add(resultTable);
 		resultframe.setSize("430px", "450px");
 		mainframe.add(resultframe);
@@ -350,7 +351,7 @@ public class FilterForm extends FormPanel implements ValueChangeHandler{
 		widget.addItem("Vasterbotten");
 		widget.addItem("Vasternorrland");
 		widget.addItem("Vastmanland");
-		widget.addItem("Vasta Gotaland");
+		widget.addItem("Vastra Gotaland");
 		widget.addItem("Orebro");
 		widget.addItem("Ostergotland");
 		widget.setVisibleItemCount(1);

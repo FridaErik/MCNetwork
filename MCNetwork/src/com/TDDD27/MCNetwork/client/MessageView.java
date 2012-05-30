@@ -39,7 +39,7 @@ public class MessageView extends VerticalPanel {
 		senderResiever.add(resiver);
 		this.add(senderResiever);
 		//Kontroll så att en användare bara kan radera sina meddelande som de fått eller skickat
-		if(parent.getLoggedInUser().getId()==msg.getresieverid() || parent.getLoggedInUser().getId()==msg.getsenderid()){
+		if(parent.getLoggedInUser().getId().equals(msg.getresieverid()) || parent.getLoggedInUser().getId().equals(msg.getsenderid())){
 			HTML deleteHTML = new HTML("  Radera", true);
 		deleteHTML.addStyleName("MsgPreview_Clickable");
 		ClickHandler deleteClickHandler = new ClickHandler() {

@@ -23,6 +23,8 @@ h3{
 }
 
 body {
+	margin: auto;
+	align:center;
 	width: 22em;
 	position: absolute;
 	padding: 4px;
@@ -53,14 +55,19 @@ error {
 	cursor: pointer;
 	background-color: #6CA394;
 }
-/*--------------------Sökpanel--------------------*/
-.searchPanel {
-	margin-left: 290px;
-	margin-top: 10px;
+/*--------------------START--------------------*/
+.startView{
+	margin: auto;
+	padding: auto;
 }
-
-searchp {
-	vertical-align: bottom;
+.start_img{
+	margin-left: 200px;
+	align:center;
+	border: 5px solid black;
+}
+.start_center{
+	text-align: center;
+	padding: auto;
 }
 /*--------------------FILTER--------------------*/
 filterH1 {

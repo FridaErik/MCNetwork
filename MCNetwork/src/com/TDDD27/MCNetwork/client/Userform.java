@@ -181,6 +181,7 @@ public class Userform extends FormPanel {
 		ClickHandler updateClickHandler = new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
+				resetLabels();
 				submit();	
 			}
 		};
@@ -237,7 +238,8 @@ public class Userform extends FormPanel {
 				try {
 					by = Integer.parseInt(yearList.getItemText(yearList.getSelectedIndex()));
 				} catch (NumberFormatException e) {
-					errorBYear.setText("Ogiltigt &aring;rtal");
+					errorBYear.setHTML("<error>Ogiltigt &aring;rtal</error>");
+					errorBYear.setVisible(true);
 					submitOK=false;
 				}
 				int m=0;
@@ -245,7 +247,8 @@ public class Userform extends FormPanel {
 					try {
 						m = Integer.parseInt(textBoxMiles.getValue());
 					} catch (NumberFormatException e) {
-						errorMiles.setText("Ogiltig input");
+						errorMiles.setHTML("<error>Ogiltig input</error>");
+						errorMiles.setVisible(true);
 						submitOK=false;
 					}
 
@@ -254,6 +257,7 @@ public class Userform extends FormPanel {
 				if(submitOK){
 					MCUser mcuser = new MCUser(fn, ln, by, em, c, r, g, m, loginInfo.getUserID());
 					if(loggedInUser==null){
+						
 						addUser(mcuser);
 					}
 					else{
@@ -266,6 +270,17 @@ public class Userform extends FormPanel {
 		});
 	}
 
+	protected void resetLabels() {
+		errorFnamn.setVisible(false);
+		errorLnamn.setVisible(false);
+		errorEmail.setVisible(false);
+		errorCity.setVisible(false);
+		errorRegion.setVisible(false);
+		errorGender.setVisible(false);
+		errorBYear.setVisible(false);
+		errorMiles.setVisible(false);
+		
+	}
 	/**
 	 * Fyller formuläret med information från
 	 * en användare (MCUser) som hämtats i databasen.
@@ -329,7 +344,7 @@ public class Userform extends FormPanel {
 			@Override
 			public void onSuccess(Long result) {
 				HTML notification = new HTML("Dina uppgifter &auml;r registrerade </br> Ladda om sidan om inte menyn uppdateras", true);
-				grid.setWidget(11, 1, notification);
+				grid.setWidget(10, 1, notification);
 			}
 		};
 
@@ -354,7 +369,7 @@ public class Userform extends FormPanel {
 			@Override
 			public void onSuccess(Long result) {
 				HTML notification = new HTML("Dina uppgifter &auml;r uppdaterad", true);
-				grid.setWidget(11, 1, notification);
+				grid.setWidget(10, 1, notification);
 				
 			}
 		};
@@ -487,6 +502,7 @@ public class Userform extends FormPanel {
 		boolean valid = city.matches("[a-öA-Ö]*");	
 		if(!valid){
 			errorCity.setText("Ogiltigt stadsnamn");
+			errorCity.setVisible(true);
 			submitOK=false;
 		}
 	}
@@ -496,22 +512,25 @@ public class Userform extends FormPanel {
 		if(tokens.length != 2 ||
 				tokens[0].isEmpty() || 
 				tokens[1].isEmpty() ){
-			errorEmail.setText("Ogiltig email");
+			errorEmail.setHTML("<error>Ogiltig email</error>");
+			errorEmail.setVisible(true);
 			submitOK=false;
 		}
 
 	}
 	protected void checkFName(String text) {
-		boolean valid = text.matches("[a-öA-Ö]*");	
+		boolean valid = text.matches("[a-öA-Ö-]*");	
 		if(!valid || text.equals("") || text.length()<2){
-			errorFnamn.setText("Ogiltigt namn");
+			errorFnamn.setHTML("<error>Ogiltigt namn</error>");
+			errorFnamn.setVisible(true);
 			submitOK=false;
 		}
 	}
 	protected void checkLName(String text) {
 		boolean valid = text.matches("[a-öA-Ö0-9-.,()]*");	
 		if(!valid || text.equals("") || text.length()<2){
-			errorLnamn.setText("Ogiltigt namn");
+			errorLnamn.setHTML("<error>Ogiltigt namn</error>");
+			errorLnamn.setVisible(true);
 			submitOK=false;
 		}
 	}

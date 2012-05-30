@@ -7,6 +7,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -31,10 +32,13 @@ public class startView extends VerticalPanel implements ValueChangeHandler{
 	 * @param loggedInUser Personen som är inloggad, null om ingen är det
 	 */
 	public startView(MCNetwork parent, LoginInfo info, MCUser loggedInUser) {
+		this.addStyleName("startView");
 		this.parent=parent;
 		HTML starttext = new HTML("<H1>V&auml;lkommen till MC Network <H1/>", true);
+		starttext.addStyleName("start_center");
 		HTML infotext = new HTML("<p>Detta &auml;r ett socialt n&auml;tverk f&ouml;r personer i Sverige som &auml;ger eller &auml;r intresserad av motorcyklar." +
 				" Syftet med n&auml;tverket &auml;r att du skall f&aring; kontakt med andra som delar ditt intresse s&aring; ni kan utbyta erfarenheter och tips.</p>", true);
+		infotext.addStyleName("start_center");
 		infotext.setWidth("700px");
 		this.add(starttext);
 		this.add(infotext);
@@ -44,6 +48,10 @@ public class startView extends VerticalPanel implements ValueChangeHandler{
 			loginPanel.add(signInLink);
 			this.add(loginPanel);
 		}
+		Image img = new Image("images/startbild-mc.jpg");
+		img.setStyleName("start_img");
+		img.setWidth("300px");
+		this.add(img);
 		
 		History.addValueChangeHandler(this);
 		String initToken = History.getToken();

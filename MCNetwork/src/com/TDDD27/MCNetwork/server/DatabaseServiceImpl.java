@@ -168,6 +168,7 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements Databas
 			return result;
 		}
 		else if(lan.equals("Alla") && city.equals("") && fname.equals("") && !lname.equals("")){
+			System.out.println("Lastname to query: "+lname);
 			//Sök med födelseår, miles och lname
 			result=new ArrayList<MCUser>();
 			Query q1 = pm.newQuery(MCUser.class);

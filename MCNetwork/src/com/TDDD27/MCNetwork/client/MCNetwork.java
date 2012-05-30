@@ -57,7 +57,10 @@ public class MCNetwork implements EntryPoint {
 
 			@Override
 			public void onSuccess(LoginInfo result) {
+				
 				loginInfo = result;
+				System.out.println("loginInfo.getLoginUrl(): "+ loginInfo.getLoginUrl()+" loginInfo.getLogoutUrl(): "+ loginInfo.getLogoutUrl());
+				System.out.println("GWT.getHostPageBaseURL(): "+GWT.getHostPageBaseURL());
 				getDBUser(result);
 				//loadMCNetwork();
 			}
