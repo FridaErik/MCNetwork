@@ -1,4 +1,96 @@
-<!-- Indices written at Sat, 12 May 2012 15:43:46 CEST -->
+<!-- Indices written at Wed, 30 May 2012 20:38:09 CEST -->
 
-<datastore-indexes/>
+<datastore-indexes>
 
+    <!-- Used 15 times in query history -->
+    <datastore-index kind="MC" ancestor="true" source="auto">
+        <property name="mcList_INTEGER_IDX" direction="asc"/>
+    </datastore-index>
+
+    <!-- Used 2 times in query history -->
+    <datastore-index kind="MCUser" ancestor="false" source="auto">
+        <property name="firstName" direction="asc"/>
+        <property name="birthYear" direction="asc"/>
+    </datastore-index>
+
+    <!-- Used 1 time in query history -->
+    <datastore-index kind="MCUser" ancestor="false" source="auto">
+        <property name="firstName" direction="asc"/>
+        <property name="lastName" direction="asc"/>
+        <property name="birthYear" direction="asc"/>
+    </datastore-index>
+
+    <!-- Used 1 time in query history -->
+    <datastore-index kind="MCUser" ancestor="false" source="auto">
+        <property name="city" direction="asc"/>
+        <property name="firstName" direction="asc"/>
+        <property name="birthYear" direction="asc"/>
+    </datastore-index>
+
+    <!-- Used 2 times in query history -->
+    <datastore-index kind="MCUser" ancestor="false" source="auto">
+        <property name="city" direction="asc"/>
+        <property name="firstName" direction="asc"/>
+        <property name="region" direction="asc"/>
+        <property name="birthYear" direction="asc"/>
+    </datastore-index>
+
+    <!-- Used 1 time in query history -->
+    <datastore-index kind="MCUser" ancestor="false" source="auto">
+        <property name="city" direction="asc"/>
+        <property name="firstName" direction="asc"/>
+        <property name="lastName" direction="asc"/>
+        <property name="region" direction="asc"/>
+        <property name="birthYear" direction="asc"/>
+    </datastore-index>
+
+    <!-- Used 1 time in query history -->
+    <datastore-index kind="MCUser" ancestor="false" source="auto">
+        <property name="city" direction="asc"/>
+        <property name="lastName" direction="asc"/>
+        <property name="region" direction="asc"/>
+        <property name="birthYear" direction="asc"/>
+    </datastore-index>
+
+    <!-- Used 1 time in query history -->
+    <datastore-index kind="MCUser" ancestor="false" source="auto">
+        <property name="city" direction="asc"/>
+        <property name="lastName" direction="asc"/>
+        <property name="birthYear" direction="asc"/>
+    </datastore-index>
+
+    <!-- Used 1 time in query history -->
+    <datastore-index kind="MCUser" ancestor="false" source="auto">
+        <property name="lastName" direction="asc"/>
+        <property name="birthYear" direction="asc"/>
+    </datastore-index>
+
+    <!-- Used 1 time in query history -->
+    <datastore-index kind="MCUser" ancestor="false" source="auto">
+        <property name="lastName" direction="asc"/>
+        <property name="region" direction="asc"/>
+        <property name="birthYear" direction="asc"/>
+    </datastore-index>
+
+    <!-- Used 1 time in query history -->
+    <datastore-index kind="MCUser" ancestor="false" source="auto">
+        <property name="firstName" direction="asc"/>
+        <property name="lastName" direction="asc"/>
+        <property name="region" direction="asc"/>
+        <property name="birthYear" direction="asc"/>
+    </datastore-index>
+
+    <!-- Used 1 time in query history -->
+    <datastore-index kind="MCUser" ancestor="false" source="auto">
+        <property name="region" direction="asc"/>
+        <property name="birthYear" direction="asc"/>
+    </datastore-index>
+
+    <!-- Used 2 times in query history -->
+    <datastore-index kind="MCUser" ancestor="false" source="auto">
+        <property name="city" direction="asc"/>
+        <property name="region" direction="asc"/>
+        <property name="birthYear" direction="asc"/>
+    </datastore-index>
+
+</datastore-indexes>

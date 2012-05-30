@@ -37,7 +37,7 @@ public class MCNetwork implements EntryPoint {
 	public VerticalPanel centerPanel;
 	private MyMenu menuBar;
 	private LoginInfo loginInfo = null;
-	private Anchor signOutLink = new Anchor("Sign Out");
+	private Anchor signOutLink = new Anchor("Logga ut");
 	
 	private MCUser loggedInUser=null;
 
@@ -59,8 +59,6 @@ public class MCNetwork implements EntryPoint {
 			public void onSuccess(LoginInfo result) {
 				
 				loginInfo = result;
-				System.out.println("loginInfo.getLoginUrl(): "+ loginInfo.getLoginUrl()+" loginInfo.getLogoutUrl(): "+ loginInfo.getLogoutUrl());
-				System.out.println("GWT.getHostPageBaseURL(): "+GWT.getHostPageBaseURL());
 				getDBUser(result);
 				//loadMCNetwork();
 			}

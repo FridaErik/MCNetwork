@@ -7,6 +7,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -20,9 +21,9 @@ public class startView extends VerticalPanel implements ValueChangeHandler{
 	
 
 	
-	private VerticalPanel loginPanel = new VerticalPanel();
-	private HTML loginLabel = new HTML("Please sign in to your Google Account to access the StockWatcher application.", true);
-	private Anchor signInLink = new Anchor("Sign In");
+	private HorizontalPanel loginPanel = new HorizontalPanel();
+	private HTML loginLabel = new HTML("F&oumlr att f&aring; tillg&aring;ng till sidan m&aring;ste du logga in med ett Google-konto h&auml;r: ", true);
+	private Anchor signInLink = new Anchor("Logga in");
 	private MCNetwork parent;
 
 	/**
@@ -42,16 +43,19 @@ public class startView extends VerticalPanel implements ValueChangeHandler{
 		infotext.setWidth("700px");
 		this.add(starttext);
 		this.add(infotext);
-		if(!info.isLoggedIn()){
-			signInLink.setHref(info.getLoginUrl());
-			loginPanel.add(loginLabel);
-			loginPanel.add(signInLink);
-			this.add(loginPanel);
-		}
 		Image img = new Image("images/startbild-mc.jpg");
 		img.setStyleName("start_img");
 		img.setWidth("300px");
 		this.add(img);
+		if(!info.isLoggedIn()){
+			signInLink.setHref(info.getLoginUrl());
+			loginPanel.addStyleName("start_loginPanel");
+			loginPanel.add(loginLabel);
+			loginPanel.add(signInLink);
+			signInLink.setWidth("120px");
+			this.add(loginPanel);
+		}
+		
 		
 		History.addValueChangeHandler(this);
 		String initToken = History.getToken();

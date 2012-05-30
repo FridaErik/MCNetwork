@@ -62,12 +62,14 @@ error {
 }
 .start_img{
 	margin-left: 200px;
-	align:center;
 	border: 5px solid black;
 }
 .start_center{
 	text-align: center;
 	padding: auto;
+}
+.start_loginPanel{
+	margin:50px 0px 20px 100px;
 }
 /*--------------------FILTER--------------------*/
 filterH1 {

@@ -60,10 +60,7 @@ public class MessageView extends VerticalPanel {
 		else{
 			msgArea.setWidth("245px");
 		}
-		
 		this.add(msgArea);
-		
-		
 	}
 	
 	/**
@@ -72,7 +69,6 @@ public class MessageView extends VerticalPanel {
 	 * @param resieverid
 	 */
 	private void setReciever(Long resieverid) {
-		
 		if (testService == null) {
 			testService = GWT.create(DatabaseService.class);
 		}
@@ -96,7 +92,6 @@ public class MessageView extends VerticalPanel {
 			}
 		};
 		testService.getUser(resieverid, callback);
-		
 	}
 	/**
 	 * Hämtar en användare med ett userid och sätter 
@@ -169,14 +164,9 @@ public class MessageView extends VerticalPanel {
 						parent.centerPanel.clear();
 						parent.centerPanel.add(centerwidget);
 					}
-					
 				}
-
 			}
-
 		};
 		testService.deleteMsg(msg.getId(), callback);
-
 	}
-
 }
