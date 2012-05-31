@@ -143,6 +143,8 @@ public class FriendsView extends VerticalPanel implements ValueChangeHandler{
 				}
 			};
 			deleteBtn.addClickHandler(deleteClickHandler);
+			deleteBtn.setWidth("58px");
+			deleteBtn.setHeight("18px");
 			delete.add(deleteBtn);
 			delete.setWidth("60px");
 			delete.addStyleName("GreenBtn");

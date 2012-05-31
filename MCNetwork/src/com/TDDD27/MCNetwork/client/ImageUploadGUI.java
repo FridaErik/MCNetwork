@@ -26,10 +26,12 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 /**
  * Klass för att ladda upp en bild till användarens profilsida
  * Använder sig av BlobService samt UploadService för att lagra en bild
- * en blob och koppla bilden till en användare
+ * en blob och koppla bilden till en användare.
+ * 
  * @author Frida&Erik
  * Baserat på http://www.fishbonecloud.com/2010/12/tutorial-gwt-application-for-storing.html
- *
+ * Vi valde denna tutorial för att få testa på att använda oss av Blobstore eftersom bilder 
+ * inte kan laddas till Datastore.
  */
 public class ImageUploadGUI extends FormPanel {
 
@@ -61,7 +63,7 @@ public class ImageUploadGUI extends FormPanel {
 		System.out.println("userid för image: "+userid);
 		userId=userid;
 		idLabel.setVisible(false);
-		//"Påhittig" lösning för att få över Id't till uploadService
+		//"Kreativ" lösning för att få över Id't till uploadService
 		idTextBox.setText(userid.toString());
 		idTextBox.setVisible(false);
 		
@@ -102,13 +104,13 @@ public class ImageUploadGUI extends FormPanel {
 			}
 		};
 		submitBtn.addClickHandler(updateClickHandler);
+		submitBtn.setWidth("118px");
+		submitBtn.setHeight("18px");
 		submit.add(submitBtn);
 		submit.setWidth("120px");
 		submit.addStyleName("GreenBtn");
 		submit.setHeight("20px");
 		mainVerticalPanel.add(submit);
-
-		
 		
 		mainVerticalPanel.add(notification);
 		this.setWidget(mainVerticalPanel);

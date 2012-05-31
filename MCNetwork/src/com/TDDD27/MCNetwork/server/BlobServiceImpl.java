@@ -19,7 +19,14 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 
-/**Används för uppladdning av bilder
+/**Används för uppladdning av bilder, lagrar dessa som blobs i Blobstore och deras id
+ * lagras i Datastore som har en representation av en bild men inte själva bildfilen (endast
+ * "länken" till Blobstore.
+ * 
+ * Här används dock Objectify istället för PersistenceManager som vi använt hittills i projektet
+ * (i DatabaseServiceImpl). Vi ville inte chans med att gå ifrån tutorialn allt för mycket.
+ * Det fungerar dock på ett liknande sätt och fungerade minst lika bra.
+ * 
  * Baseras på http://www.fishbonecloud.com/2010/12/tutorial-gwt-application-for-storing.html
  * @author Frida&Erik
  *
@@ -35,8 +42,7 @@ BlobService {
 	Objectify ofy = ObjectifyService.begin();
 
 
-	//Programmet klagar om vi gör detta i båda BlobService och UploadService, 
-	//testar att kommentera bort det här
+	
 	//Register the Objectify Service for the Picture entity
 	static {
 		ObjectifyService.register(Picture.class);

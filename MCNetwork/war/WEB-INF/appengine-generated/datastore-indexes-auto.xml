@@ -1,96 +1,17 @@
-<!-- Indices written at Wed, 30 May 2012 20:38:09 CEST -->
+<!-- Indices written at Thu, 31 May 2012 10:19:44 CEST -->
 
 <datastore-indexes>
 
-    <!-- Used 15 times in query history -->
+    <!-- Used 39 times in query history -->
     <datastore-index kind="MC" ancestor="true" source="auto">
         <property name="mcList_INTEGER_IDX" direction="asc"/>
     </datastore-index>
 
-    <!-- Used 2 times in query history -->
-    <datastore-index kind="MCUser" ancestor="false" source="auto">
-        <property name="firstName" direction="asc"/>
-        <property name="birthYear" direction="asc"/>
-    </datastore-index>
-
-    <!-- Used 1 time in query history -->
-    <datastore-index kind="MCUser" ancestor="false" source="auto">
-        <property name="firstName" direction="asc"/>
-        <property name="lastName" direction="asc"/>
-        <property name="birthYear" direction="asc"/>
-    </datastore-index>
-
-    <!-- Used 1 time in query history -->
-    <datastore-index kind="MCUser" ancestor="false" source="auto">
-        <property name="city" direction="asc"/>
-        <property name="firstName" direction="asc"/>
-        <property name="birthYear" direction="asc"/>
-    </datastore-index>
-
-    <!-- Used 2 times in query history -->
-    <datastore-index kind="MCUser" ancestor="false" source="auto">
-        <property name="city" direction="asc"/>
-        <property name="firstName" direction="asc"/>
-        <property name="region" direction="asc"/>
-        <property name="birthYear" direction="asc"/>
-    </datastore-index>
-
-    <!-- Used 1 time in query history -->
-    <datastore-index kind="MCUser" ancestor="false" source="auto">
-        <property name="city" direction="asc"/>
-        <property name="firstName" direction="asc"/>
-        <property name="lastName" direction="asc"/>
-        <property name="region" direction="asc"/>
-        <property name="birthYear" direction="asc"/>
-    </datastore-index>
-
-    <!-- Used 1 time in query history -->
-    <datastore-index kind="MCUser" ancestor="false" source="auto">
-        <property name="city" direction="asc"/>
-        <property name="lastName" direction="asc"/>
-        <property name="region" direction="asc"/>
-        <property name="birthYear" direction="asc"/>
-    </datastore-index>
-
-    <!-- Used 1 time in query history -->
-    <datastore-index kind="MCUser" ancestor="false" source="auto">
-        <property name="city" direction="asc"/>
-        <property name="lastName" direction="asc"/>
-        <property name="birthYear" direction="asc"/>
-    </datastore-index>
-
-    <!-- Used 1 time in query history -->
-    <datastore-index kind="MCUser" ancestor="false" source="auto">
-        <property name="lastName" direction="asc"/>
-        <property name="birthYear" direction="asc"/>
-    </datastore-index>
-
-    <!-- Used 1 time in query history -->
-    <datastore-index kind="MCUser" ancestor="false" source="auto">
-        <property name="lastName" direction="asc"/>
-        <property name="region" direction="asc"/>
-        <property name="birthYear" direction="asc"/>
-    </datastore-index>
-
-    <!-- Used 1 time in query history -->
-    <datastore-index kind="MCUser" ancestor="false" source="auto">
-        <property name="firstName" direction="asc"/>
-        <property name="lastName" direction="asc"/>
-        <property name="region" direction="asc"/>
-        <property name="birthYear" direction="asc"/>
-    </datastore-index>
-
-    <!-- Used 1 time in query history -->
-    <datastore-index kind="MCUser" ancestor="false" source="auto">
-        <property name="region" direction="asc"/>
-        <property name="birthYear" direction="asc"/>
-    </datastore-index>
-
-    <!-- Used 2 times in query history -->
-    <datastore-index kind="MCUser" ancestor="false" source="auto">
-        <property name="city" direction="asc"/>
-        <property name="region" direction="asc"/>
-        <property name="birthYear" direction="asc"/>
+    <!-- Used 4 times in query history -->
+    <datastore-index kind="Message" ancestor="false" source="auto">
+        <property name="priv" direction="asc"/>
+        <property name="resieverid" direction="asc"/>
+        <property name="datum" direction="desc"/>
     </datastore-index>
 
 </datastore-indexes>

@@ -182,8 +182,8 @@ public class MessageForm extends FormPanel implements ValueChangeHandler {
 		
 		//Knappen
 		SimplePanel sendBtn = new SimplePanel();
-		HTML removeFriendBtn = new HTML("Skicka", true);
-		ClickHandler removeFriendClickHandler = new ClickHandler() {
+		HTML sendMsgBtn = new HTML("Skicka", true);
+		ClickHandler sendMsgClickHandler = new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				String msgString = textAreaMeddelande.getText();
@@ -210,8 +210,10 @@ public class MessageForm extends FormPanel implements ValueChangeHandler {
 				testService.storeMsg(msg, callback);
 			}
 		};
-		removeFriendBtn.addClickHandler(removeFriendClickHandler);
-		sendBtn.add(removeFriendBtn);
+		sendMsgBtn.addClickHandler(sendMsgClickHandler);
+		sendMsgBtn.setWidth("68px");
+		sendMsgBtn.setHeight("18px");
+		sendBtn.add(sendMsgBtn);
 		sendBtn.setWidth("70px");
 		sendBtn.addStyleName("GreenBtn");
 		sendBtn.setHeight("20px");

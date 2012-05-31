@@ -134,6 +134,8 @@ public class MotorcyklarView extends VerticalPanel implements ValueChangeHandler
 					}
 				};
 				editBtn.addClickHandler(editClickHandler);
+				editBtn.setWidth("88px");
+				editBtn.setHeight("18px");
 				edit.add(editBtn);
 				edit.setWidth("90px");
 				edit.addStyleName("GreenBtn");

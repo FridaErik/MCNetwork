@@ -22,19 +22,25 @@ import com.google.gwt.user.client.ui.HTML;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 
-//The FormPanel must submit to a servlet that extends HttpServlet  
-//RemoteServiceServlet cannot be used
+/**
+ * Serverklass för hantering av uppladdning från ImageUploadGUI
+ * Baserat på http://www.fishbonecloud.com/2010/12/tutorial-gwt-application-for-storing.html
+ * @author Frida&Erik
+ *
+ */
 @SuppressWarnings("serial")
 public class UploadServiceImpl extends HttpServlet {
+	//The FormPanel must submit to a servlet that extends HttpServlet  
+	//RemoteServiceServlet cannot be used
 
 	//Start Blobstore and Objectify Sessions
 	BlobstoreService blobstoreService = BlobstoreServiceFactory
 			.getBlobstoreService();
 	Objectify ofy = ObjectifyService.begin();
 
-	static {
+	/*	static {
 		//ObjectifyService.register(Picture.class);
-	}
+	}*/
 
 	//Override the doPost method to store the Blob's meta-data
 	public void doPost(HttpServletRequest req, HttpServletResponse res)
@@ -43,9 +49,9 @@ public class UploadServiceImpl extends HttpServlet {
 		Map<String, BlobKey> blobs = blobstoreService.getUploadedBlobs(req);
 		BlobKey blobKey = blobs.get("upload");	
 
-		//Ta bort Blobs och Pictures innan ny lagras
+		//Ta bort Blobs och Pictures innan ny användarbild lagras
 		ArrayList<String> result=DatabaseServiceImpl.deleteUserPicKey(Long.parseLong(req.getParameter("idTextBox")));
-		
+
 		//Get the parameters from the request to populate the Picture object
 		Picture picture = new Picture();
 		picture.setDescription(req.getParameter("descriptionTextBox"));
@@ -53,8 +59,9 @@ public class UploadServiceImpl extends HttpServlet {
 		picture.setUserId(Long.parseLong(req.getParameter("idTextBox")));
 		//Map the ImageURL to the blobservice servlet, which will serve the image
 		picture.setImageUrl("/mcnetwork/blobservice?blob-key=" + blobKey.getKeyString());
-		
+
 		ofy.put(picture);
+		//Lagra bild id't hos användaren
 		DatabaseServiceImpl.setUserPic(Long.parseLong(req.getParameter("idTextBox")), picture.id);
 
 		//Redirect recursively to this servlet (calls doGet)
@@ -67,7 +74,6 @@ public class UploadServiceImpl extends HttpServlet {
 
 		//Send the meta-data id back to the client in the HttpServletResponse response
 		String id = req.getParameter("id");
-		System.out.println("doGet id: "+id);
 		resp.setHeader("Content-Type", "text/html");
 		resp.getWriter().println(id);
 

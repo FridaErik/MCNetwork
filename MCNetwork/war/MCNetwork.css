@@ -1,3 +1,12 @@
+body {
+	margin: auto;
+	align:center;
+	width: 22em;
+	position: absolute;
+	padding: 4px;
+	font-family: sans-serif;
+	text-align: center;
+}
 h1 {
 	font-size: 2em;
 	font-weight: bold;
@@ -5,7 +14,6 @@ h1 {
 	margin: 10px 0px 5px;
 	text-align: center;
 }
-
 h2 {
 	font-size: 1.5 em;
 	font-weight: bold;
@@ -22,14 +30,6 @@ h3{
 	margin: 6px 2px 1px 2px;
 }
 
-body {
-	margin: auto;
-	align:center;
-	width: 22em;
-	position: absolute;
-	padding: 4px;
-	font-family: sans-serif;
-}
 
 error {
 	font-size: 14px;
@@ -55,7 +55,36 @@ error {
 	cursor: pointer;
 	background-color: #6CA394;
 }
-/*--------------------START--------------------*/
+/*--------------------Huvudsidan--------------------*/
+.structurePanel {
+	background-color: #87CDB9;
+	margin: auto;
+	border: 15px solid #CAF0E5;
+	padding: 20px 0px 0px 0px;
+	font-family: sans-serif;
+	text-align: left;
+}
+
+.centerPanel {
+	padding: 15px;
+}
+
+.southwidget {
+	padding: 10px 10px 10px 10px;
+	background-color: #CAF0E5;
+}
+
+subtext {
+	color: white;
+}
+/*--------------------Startsidan--------------------*/
+MainTitle {
+	font-size: 3em;
+	font-weight: bold;
+	color: #456C61;
+	padding-left: 10px;
+	text-align: left;
+}
 .startView{
 	margin: auto;
 	padding: auto;
@@ -119,35 +148,6 @@ filterp {
 
 .cursor {
 	cursor: pointer;
-}
-/*--------------------Huvudsidan--------------------*/
-.structurePanel {
-	background-color: #87CDB9;
-	margin: auto;
-	border: 15px solid #CAF0E5;
-	padding: 20px 0px 0px 0px;
-	font-family: sans-serif;
-}
-
-.centerPanel {
-	padding: 15px;
-}
-
-.southwidget {
-	padding: 10px 10px 10px 10px;
-	background-color: #CAF0E5;
-}
-
-subtext {
-	color: white;
-}
-/*--------------------Startsidan--------------------*/
-MainTitle {
-	font-size: 3em;
-	font-weight: bold;
-	color: #456C61;
-	padding-left: 10px;
-	text-align: left;
 }
 /*--------------------Userview--------------------*/
 userH1 {

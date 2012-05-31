@@ -109,6 +109,8 @@ public class FilterForm extends FormPanel implements ValueChangeHandler{
 			}
 		};
 		submitBtn.addClickHandler(submitClickHandler);
+		submitBtn.setWidth("88px");
+		submitBtn.setHeight("18px");
 		submit.add(submitBtn);
 		submit.setWidth("90px");
 		submit.addStyleName("GreenBtn");

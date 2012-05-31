@@ -28,7 +28,7 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements Databas
 	 */
 	private static final long serialVersionUID = 1L;
 
-	
+
 	/**
 	 * Metod för att lagra användare
 	 */
@@ -66,24 +66,17 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements Databas
 	@SuppressWarnings("unchecked")
 	@Override
 	public Boolean storeMC(MC mc, MCUser user) {
-
 		PersistenceManager pm1 = PMF.get().getPersistenceManager();
-
 		try {
-
 			MCUser e = pm1.getObjectById(MCUser.class, user.getId());
 			mc.setOwner(e); 	//uppdatera mc
 			e.getMcList().add(mc); //Uppdatera user
 			System.out.println("e.getId(): "+e.getId()+" e.getMcList().size(): "+e.getMcList().size());
-
 		}
 		finally {
 			pm1.close(); //Spara till databasen
 		}
-
 		return true;
-
-
 	}
 	/**
 	 * Metod för att uppdatera användare
@@ -131,6 +124,15 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements Databas
 	 * en intervall för birthyear och om det finns ett fast värde angivet för
 	 * namn, län, stad osv. Och en med intervall för milesDriven
 	 * Returnerar användare som uppfyller filterparametrarna
+	 * 
+	 * Vi valde att konstruerar filtret på följande sätt för att datastore inte stödjer queries med
+	 * intervaller på två parametrar. Dvs en query med x<=milesDriven>=y OCH m<=birthyear<=n.
+	 * 
+	 * Istället körs en query med intervall för birthyear och eventuella likhetskrav för andra 
+	 * parametrar så som namn och län samt en query för milesDriven. Dessa två jämförs sedan och 
+	 * snittet av de två resultaten är det resultat som returneras.
+	 * 
+	 * Varje ifsats i koden är identisk förutom tillägg för olika likhetskrav.
 	 */
 	@Override
 	public ArrayList<MCUser> searchUsers(int yearup, int yeardown, int milesup,
@@ -622,7 +624,7 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements Databas
 
 		return null;
 	}
-	
+
 	/**
 	 * Metod som hämtar en användare med hjälp av ett Google ID
 	 */

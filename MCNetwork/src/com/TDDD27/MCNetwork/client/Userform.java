@@ -186,6 +186,8 @@ public class Userform extends FormPanel {
 			}
 		};
 		submitBtn.addClickHandler(updateClickHandler);
+		submitBtn.setWidth("118px");
+		submitBtn.setHeight("18px");
 		submit.add(submitBtn);
 		submit.setWidth("120px");
 		submit.addStyleName("GreenBtn");
@@ -251,9 +253,7 @@ public class Userform extends FormPanel {
 						errorMiles.setVisible(true);
 						submitOK=false;
 					}
-
 				}
-
 				if(submitOK){
 					MCUser mcuser = new MCUser(fn, ln, by, em, c, r, g, m, loginInfo.getUserID());
 					if(loggedInUser==null){

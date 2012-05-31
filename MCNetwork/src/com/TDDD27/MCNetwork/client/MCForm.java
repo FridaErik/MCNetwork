@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 /**
  * FormPanel för att registrera motorcyklar (MC)
@@ -79,13 +80,21 @@ public class MCForm extends FormPanel implements ValueChangeHandler{
 		setEncoding(FormPanel.ENCODING_MULTIPART);
 		setMethod(FormPanel.METHOD_POST);
 		setStyleName("formPanel");
-		submit.addClickHandler(new ClickHandler() {
-
+		SimplePanel submit = new SimplePanel();
+		HTML submitBtn = new HTML("Skicka", true);
+		ClickHandler submitClickHandler = new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				submit();	
 			}
-		});
+		};
+		submitBtn.addClickHandler(submitClickHandler);
+		submitBtn.setWidth("88px");
+		submitBtn.setHeight("18px");
+		submit.add(submitBtn);
+		submit.setWidth("90px");
+		submit.addStyleName("GreenBtn");
+		submit.setHeight("20px");
 		grid.setWidget(4, 1, submit);
 		grid.setWidget(5, 0, response);
 		this.add(grid);

@@ -9,7 +9,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 /**
  * Serverklass för all inloggningsfunktionalitet
  * Hämtar LoginInfo när användare loggar in
- * via sitt google-konto
+ * via sitt google-konto.
  * @author Frida&Erik
  *
  */
@@ -34,9 +34,6 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
 			loginInfo.setLoginUrl(userService.createLoginURL(requestUri));
 		}
 		return loginInfo;
-		//KOM IHÅG TILL NÄSTA GÅNG
-		//OM loginInfo.loggedIn==true och loginInfo.UserID==UserID för en användare i databasen så är
-		//en av våra användare inloggad annars behöver personen registrera sig. (På klienten)
 	}
 
 }

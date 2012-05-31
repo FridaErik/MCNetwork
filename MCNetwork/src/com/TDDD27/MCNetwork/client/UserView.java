@@ -179,6 +179,8 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 				}
 			};
 			privMsgBtn.addClickHandler(privMsgClickHandler);
+			privMsgBtn.setWidth("118px");
+			privMsgBtn.setHeight("18px");
 			btn1.addStyleName("GreenBtn");
 			btn1.setWidth("120px");
 			btn1.setHeight("20px");
@@ -193,6 +195,8 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 				}
 			};
 			pubMsgBtn.addClickHandler(pubMsgClickHandler);
+			pubMsgBtn.setWidth("98px");
+			pubMsgBtn.setHeight("18px");
 			btn2.addStyleName("GreenBtn");
 			btn2.setWidth("100px");
 			btn2.setHeight("20px");
@@ -222,6 +226,8 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 					}
 				};
 				addFriendBtn.addClickHandler(addFriendClickHandler);
+				addFriendBtn.setWidth("68px");
+				addFriendBtn.setHeight("18px");
 				btn3.add(addFriendBtn);
 				btn3.setWidth("70px");
 				btn3.addStyleName("GreenBtn");
@@ -237,6 +243,8 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 					}
 				};
 				removeFriendBtn.addClickHandler(removeFriendClickHandler);
+				removeFriendBtn.setWidth("88px");
+				removeFriendBtn.setHeight("18px");
 				btn3.add(removeFriendBtn);
 				btn3.setWidth("90px");
 				btn3.addStyleName("GreenBtn");
@@ -254,6 +262,8 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 					}
 				};
 				updateBtn.addClickHandler(updateClickHandler);
+				updateBtn.setWidth("118px");
+				updateBtn.setHeight("18px");
 				btn3.add(updateBtn);
 				btn3.setWidth("120px");
 				btn3.addStyleName("GreenBtn");
