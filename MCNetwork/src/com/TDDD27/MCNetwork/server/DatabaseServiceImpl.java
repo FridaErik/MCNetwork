@@ -35,12 +35,16 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements Databas
 	@SuppressWarnings("unchecked")
 	@Override
 	public Long storeUser(MCUser mcuser) {
-		System.out.println("En användare lagras");
-		PersistenceManager pm = PMF.get().getPersistenceManager();
-		MCUser storedUser = pm.makePersistent(mcuser);
-		MCUser tempUser= new MCUser();
-		tempUser=storedUser;
-		return tempUser.getId();//Test
+		MCUser dbUser=getUserByID(mcuser.getUserID());
+		if(dbUser==null){
+			System.out.println("En användare lagras");
+			PersistenceManager pm = PMF.get().getPersistenceManager();
+			MCUser storedUser = pm.makePersistent(mcuser);
+			MCUser tempUser= new MCUser();
+			tempUser=storedUser;
+			return tempUser.getId();//Test
+		}
+		return null;
 	}
 	/**
 	 * Metod för att hämta en användare baserat på

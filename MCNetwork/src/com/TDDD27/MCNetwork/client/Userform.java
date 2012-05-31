@@ -13,6 +13,7 @@ import com.TDDD27.MCNetwork.shared.MCUser;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DisclosurePanel;
@@ -65,6 +66,8 @@ public class Userform extends FormPanel {
 	private TextBox textBoxMiles = new TextBox();
 	private HTML textHTMLMiles = new HTML("Antal k&ouml;rda mil (ca)", true);
 	private HTML errorMiles = new HTML("", true);
+	
+	private SimplePanel submit = new SimplePanel();
 
 	private Boolean submitOK = true;
 
@@ -122,6 +125,7 @@ public class Userform extends FormPanel {
 				}
 				else{
 					loggedInUser=result;
+					parent.setLoggedInUser(loggedInUser);
 					setEmptyForm();
 					System.out.println("Hittade en!!!!");
 					fillForm(loggedInUser);
@@ -176,7 +180,7 @@ public class Userform extends FormPanel {
 		grid.setWidget(7, 1, textBoxMiles);
 		grid.setWidget(7, 2, errorMiles);
 	
-		SimplePanel submit = new SimplePanel();
+		
 		HTML submitBtn = new HTML("Uppdatera", true);
 		ClickHandler updateClickHandler = new ClickHandler() {
 			@Override
@@ -195,13 +199,6 @@ public class Userform extends FormPanel {
 		
 		
 		grid.setWidget(10, 0, submit);
-	/*	submit.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				
-			}
-		});*/
 
 		setEncoding(FormPanel.ENCODING_MULTIPART);
 		setMethod(FormPanel.METHOD_POST);
@@ -343,8 +340,31 @@ public class Userform extends FormPanel {
 			}
 			@Override
 			public void onSuccess(Long result) {
-				HTML notification = new HTML("Dina uppgifter &auml;r registrerade </br> Ladda om sidan om inte menyn uppdateras", true);
-				grid.setWidget(10, 1, notification);
+				if(result!=null){
+					grid.remove(submit);
+					HTML notification = new HTML("Dina uppgifter &auml;r registrerad", true);
+					grid.setWidget(10, 1, notification);
+					SimplePanel toStart = new SimplePanel();
+					HTML toStartBtn = new HTML("G&aring; vidare", true);
+					ClickHandler updateClickHandler = new ClickHandler() {
+						@Override
+						public void onClick(ClickEvent event) {
+							Window.Location.reload();
+						}
+					};
+					toStartBtn.addClickHandler(updateClickHandler);
+					toStartBtn.setWidth("118px");
+					toStartBtn.setHeight("18px");
+					toStart.add(toStartBtn);
+					toStart.setWidth("120px");
+					toStart.addStyleName("GreenBtn");
+					toStart.setHeight("20px");
+					grid.setWidget(11, 1, toStart);
+				}else{
+					HTML notification = new HTML("Du har redan en registrerad anv&auml;ndare", true);
+					grid.setWidget(10, 1, notification);
+				}
+				
 			}
 		};
 

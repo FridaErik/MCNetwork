@@ -69,7 +69,7 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 		this.add(title);
 		//Hämta användare och lagra i infoTable som läggs i leftPanel
 		getUser(id);
-		setMyself();
+		
 
 	}
 
@@ -214,8 +214,8 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 					friends=true;
 				}
 			}
-			//if(not friends)
-			System.out.println("viewUser.getId(): "+ viewUser.getId()+"myself.getId(): "+ myself.getId());
+			
+			
 			if(!friends && viewUser.getId()!=parent.getLoggedInUser().getId()){
 				btn3 = new SimplePanel();
 				HTML addFriendBtn = new HTML("Bli kompis", true);
@@ -469,6 +469,7 @@ public class UserView extends VerticalPanel implements ValueChangeHandler{
 				if(!(result.getFirstName()==null)){
 					System.out.println("McList: "+result.getMcList().size());
 					viewUser=result;
+					setMyself();
 				}
 				else{
 					setErrorMessage(userid);
